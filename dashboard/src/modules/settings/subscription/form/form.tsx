@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { schema } from "./schema";
 import { RuleItem } from "./rule-item";
 import {
-    HStack,
     Button,
     Form,
     Sortable,
@@ -73,33 +72,37 @@ export function SubscriptionRulesForm() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="flex w-full max-w-4xl flex-col gap-2"
+                className="flex w-full max-w-4xl flex-col space-y-4 sm:space-y-6"
             >
-                <ProfileTitleField />
-                <div className="md:grid grid-cols-2 gap-2 flex flex-col">
-                    <UpdateIntervalField />
-                    <SupportLinkField />
+                <div className="space-y-4 sm:space-y-6">
+                    <ProfileTitleField />
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                        <UpdateIntervalField />
+                        <SupportLinkField />
+                    </div>
+                    <CheckboxField
+                        name="template_on_acceptance"
+                        label={t("page.settings.subscription-settings.template-on-acceptance")}
+                    />
+                    <PlaceholderRemarkField />
+                    <CheckboxField
+                        name="placeholder_if_disabled"
+                        label={t("page.settings.subscription-settings.placeholder-if-disabled")}
+                    />
+                    <CheckboxField
+                        name="shuffle_configs"
+                        label={t("page.settings.subscription-settings.shuffle-configs")}
+                    />
                 </div>
-                <CheckboxField
-                    name="template_on_acceptance"
-                    label={t("page.settings.subscription-settings.template-on-acceptance")}
-                />
-                <PlaceholderRemarkField />
-                <CheckboxField
-                    name="placeholder_if_disabled"
-                    label={t("page.settings.subscription-settings.placeholder-if-disabled")}
-                />
-                <CheckboxField
-                    name="shuffle_configs"
-                    label={t("page.settings.subscription-settings.shuffle-configs")}
-                />
-                <Separator className="my-3" />
-                <h4 className="text-lg mt-2">
-                    {t("page.settings.subscription-settings.subscription-title")}
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                    {t("page.settings.subscription-settings.subscription-desc")}
-                </p>
+                <Separator className="my-4 sm:my-6" />
+                <div className="space-y-2 sm:space-y-3">
+                    <h4 className="text-lg sm:text-xl font-semibold">
+                        {t("page.settings.subscription-settings.subscription-title")}
+                    </h4>
+                    <p className="text-sm sm:text-base text-muted-foreground">
+                        {t("page.settings.subscription-settings.subscription-desc")}
+                    </p>
+                </div>
                 <Awaiting
                     isFetching={isFetching}
                     Skeleton={
@@ -140,11 +143,11 @@ export function SubscriptionRulesForm() {
                         </div>
                     }
                 />
-                <HStack className="w-full flex-end">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:justify-end pt-4 sm:pt-6 border-t">
                     <Button
                         type="button"
                         variant="destructive"
-                        className="w-fit"
+                        className="w-full h-12 sm:h-auto sm:w-auto text-sm sm:text-base"
                         onMouseDown={handleResetLocalChanges}
                     >
                         {t("page.settings.subscription-settings.reset-local-changes")}
@@ -152,7 +155,7 @@ export function SubscriptionRulesForm() {
                     <Button
                         type="button"
                         variant="outline"
-                        className="w-fit"
+                        className="w-full h-12 sm:h-auto sm:w-auto text-sm sm:text-base"
                         onClick={() =>
                             append({
                                 pattern: "",
@@ -162,10 +165,13 @@ export function SubscriptionRulesForm() {
                     >
                         {t("page.settings.subscription-settings.add-rule")}
                     </Button>
-                    <Button type="submit" className="w-fit">
+                    <Button 
+                        type="submit" 
+                        className="w-full h-12 sm:h-auto sm:w-auto text-sm sm:text-base font-semibold"
+                    >
                         {t("submit")}
                     </Button>
-                </HStack>
+                </div>
             </form>
         </Form>
     )

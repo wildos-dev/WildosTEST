@@ -3,7 +3,7 @@ import { useCertificateQuery } from '../api';
 import { CopyToClipboardButton } from '@wildosvpn/common/components';
 import { Icon } from '@wildosvpn/common/components/ui/icon';
 
-export const CertificateButton = () => {
+export const CertificateButton = ({ className }: { className?: string }) => {
     const { t } = useTranslation();
     const { data: certificate } = useCertificateQuery();
 
@@ -14,6 +14,7 @@ export const CertificateButton = () => {
             copyIcon={(props: any) => <Icon name="ClipboardCopy" {...props} />}
             copyLabel={t('page.settings.certificate.copy')}
             errorLabel={t('page.settings.certificate.error')}
+            className={className}
         />
     );
 };

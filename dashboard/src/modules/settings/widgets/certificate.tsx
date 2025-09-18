@@ -11,8 +11,11 @@ export const CertificateWidget = () => {
     return (
         <MiniWidget
             title={t("certificate")}
+            className="p-4 sm:p-6"
         >
-            <CertificateButton />
+            <div className="space-y-4 sm:space-y-6">
+                <CertificateButton className="w-full h-12 sm:h-auto sm:w-auto text-sm sm:text-base" />
+            </div>
         </MiniWidget>
     )
 }

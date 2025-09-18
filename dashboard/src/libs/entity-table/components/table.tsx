@@ -69,6 +69,7 @@ const Rows: React.FC<Readonly<DataTableProps<any, any>>> = ({
                 data-state={row.getIsSelected() ? "selected" : undefined}
                 data-testid="entity-table-row"
                 onClick={() => onRowClick?.(row.original)}
+                className="group hover:bg-muted/50 cursor-pointer"
             >
                 {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>

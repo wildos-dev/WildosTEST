@@ -7,14 +7,14 @@ import {
 } from "@wildosvpn/common/components";
 import { useFormContext } from "react-hook-form";
 
-export const CheckboxField = ({ name, label }: { name: string, label: string }) => {
+export const CheckboxField = ({ name, label, className }: { name: string, label: string, className?: string }) => {
     const form = useFormContext();
     return (
         <FormField
             control={form.control}
             name={name}
             render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md py-2">
+                <FormItem className={`flex flex-row items-start space-x-3 space-y-0 rounded-md py-2 ${className || ''}`}>
                     <FormControl>
                         <Checkbox
                             checked={field.value}

@@ -11,6 +11,9 @@ export const SubscriptionSettingsWidget = () => {
             title={t("page.settings.subscription-settings.title")}
             description={t("page.settings.subscription-settings.description")}
             content={<SubscriptionRulesForm />}
+            className="p-4 sm:p-6"
+            titleClassName="text-lg sm:text-xl"
+            descriptionClassName="text-sm sm:text-base"
         />
     )
 }

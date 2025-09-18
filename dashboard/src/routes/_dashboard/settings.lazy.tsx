@@ -1,4 +1,4 @@
-import { Page, VStack } from '@wildosvpn/common/components'
+import { Page } from '@wildosvpn/common/components'
 import { CertificateWidget } from '@wildosvpn/modules/settings'
 import { SubscriptionSettingsWidget } from '@wildosvpn/modules/settings/subscription'
 import { createLazyFileRoute } from '@tanstack/react-router'
@@ -10,13 +10,20 @@ export const Settings = () => {
   return (
     <Page
       title={t('settings')}
-      className="sm:flex flex-col lg:grid grid-cols-2 gap-3 h-full"
+      className="p-4 sm:p-6"
     >
-      {/* <ConfigurationWidget /> */}
-      <VStack className="gap-3">
-        <SubscriptionSettingsWidget />
-        <CertificateWidget />
-      </VStack>
+      <div className="space-y-4 sm:space-y-6 max-w-4xl">
+        {/* Settings sections with responsive layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div className="space-y-4 sm:space-y-6">
+            <SubscriptionSettingsWidget />
+          </div>
+          <div className="space-y-4 sm:space-y-6">
+            <CertificateWidget />
+            {/* Configuration Widget placeholder */}
+          </div>
+        </div>
+      </div>
     </Page>
   )
 }

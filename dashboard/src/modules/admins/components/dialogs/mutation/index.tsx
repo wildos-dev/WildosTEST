@@ -63,20 +63,20 @@ export const AdminsMutationDialog: React.FC<MutationDialogProps<AdminType>> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent className="min-w-full h-full md:h-auto md:min-w-[42rem]">
-                <ScrollArea className="flex flex-col justify-between h-full ">
-                    <DialogHeader className="mb-3">
-                        <DialogTitle className="text-primary">
-                            {t(entity ? "page.admins.dialogs.edition.title" : "page.admins.dialogs.creation.title")}
-                        </DialogTitle>
-                        <DialogDescription>
-                            {t(entity ? "page.admins.dialogs.edition.description" : "page.admins.dialogs.creation.description")}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Form {...form}>
-                        <form onSubmit={handleSubmit} >
-                            <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
-                                <div className="space-y-3">
+            <DialogContent className="h-screen max-w-full md:h-auto md:max-w-[32rem] p-4 sm:p-6">
+                <DialogHeader className="mb-4 sm:mb-6">
+                    <DialogTitle className="text-lg sm:text-xl text-primary">
+                        {t(entity ? "page.admins.dialogs.edition.title" : "page.admins.dialogs.creation.title")}
+                    </DialogTitle>
+                    <DialogDescription className="text-sm sm:text-base">
+                        {t(entity ? "page.admins.dialogs.edition.description" : "page.admins.dialogs.creation.description")}
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={handleSubmit} className="flex flex-col h-full">
+                        <ScrollArea className="flex-1 -mx-4 sm:-mx-6 px-4 sm:px-6">
+                            <div className="flex flex-col space-y-4 sm:space-y-6">
+                                <div className="space-y-4 sm:space-y-6">
                                     <UsernameField disabled={!!entity} />
                                     <PasswordField change={change} handleChange={setChange} />
                                     <SubscriptionUrlPrefixField />
@@ -85,20 +85,22 @@ export const AdminsMutationDialog: React.FC<MutationDialogProps<AdminType>> = ({
                                     <SudoPrivilageField />
                                     <AllServicesAccessField />
                                 </div>
-                                <VStack>
+                                <VStack className="space-y-4 sm:space-y-6">
                                     <ServicesField />
                                 </VStack>
                             </div>
+                        </ScrollArea>
+                        <div className="mt-4 sm:mt-6 pt-4 border-t">
                             <Button
-                                className="mt-3 w-full font-semibold"
+                                className="w-full h-12 sm:h-auto sm:w-auto sm:min-w-[120px] font-semibold"
                                 type="submit"
                                 disabled={form.formState.isSubmitting}
                             >
                                 {t("submit")}
                             </Button>
-                        </form>
-                    </Form>
-                </ScrollArea>
+                        </div>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     );
