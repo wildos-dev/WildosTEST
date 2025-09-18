@@ -1,6 +1,4 @@
-import {
-    HStack,
-} from "@wildosvpn/common/components";
+// No common components needed for this file
 import {
     RemarkField,
     AddressField,

@@ -2,7 +2,6 @@ import {
     AlertCard,
     Button,
     FormLabel,
-    ScrollArea,
 } from "@wildosvpn/common/components";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { DynamicField } from "@wildosvpn/libs/dynamic-field";

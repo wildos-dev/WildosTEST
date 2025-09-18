@@ -7,7 +7,6 @@ import {
 import {
     Accordion,
     ClearableTextField,
-    HStack,
 } from "@wildosvpn/common/components";
 import { SettingSection } from "@wildosvpn/modules/hosts";
 import { useTranslation } from "react-i18next";

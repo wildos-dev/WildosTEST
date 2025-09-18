@@ -41,8 +41,7 @@ export const columns = (actions: ColumnActions<HostType>): ColumnDef<HostType>[]
     {
         id: "type",
         header: ({ column }) => <DataTableColumnHeader title={i18n.t('type')} column={column} />,
-        cell: ({ row }) => {
-            const host = row.original;
+        cell: () => {
             return (
                 <div className="hidden md:block">
                     <Badge variant="outline" className="text-xs">
