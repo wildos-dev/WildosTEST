@@ -1,17 +1,12 @@
 import * as React from 'react';
 import {
     Separator,
-    DialogTitle,
-    DialogContent,
-    Dialog,
-    DialogHeader,
-    DialogDescription,
     Form,
     Button,
-    ScrollArea,
-    VStack,
 } from "@wildosvpn/common/components";
+import { ResponsiveModal } from "@wildosvpn/libs/responsive-modal";
 import { useTranslation } from "react-i18next";
+import { useScreenBreakpoint } from "@wildosvpn/common/hooks";
 import {
     DATA_LIMIT_METRIC,
     useUsersCreationMutation,
@@ -56,49 +51,76 @@ export const UsersMutationDialog: React.FC<MutationDialogProps<UserMutationType>
         }),
     });
 
+    const isMobile = !useScreenBreakpoint('md');
+
+    const footer = (
+        <Button
+            className="w-full font-semibold h-12 text-base"
+            size={isMobile ? "lg" : "default"}
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            data-testid="button-submit-user"
+        >
+            {t("submit")}
+        </Button>
+    );
+
     return (
-        <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent className="min-w-full h-full md:h-auto md:min-w-[42rem]">
-                <ScrollArea className="flex flex-col justify-between h-full ">
-                    <DialogHeader className="mb-3">
-                        <DialogTitle className="text-primary">
-                            {entity
-                                ? t("page.users.dialogs.edition.title")
-                                : t("page.users.dialogs.creation.title")}
-                        </DialogTitle>
-                        <DialogDescription>
-                            {entity
-                                ? t("page.users.dialogs.edition.description")
-                                : t("page.users.dialogs.creation.description")}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Form {...form}>
-                        <form onSubmit={handleSubmit}>
-                            <div className="flex-col grid-cols-2 gap-2 sm:flex md:grid h-full">
-                                <div className="space-y-3">
-                                    <UsernameField disabled={!!entity?.username} />
-                                    <Separator />
-                                    <DataLimitFields />
-                                    <Separator />
-                                    <ExpirationMethodFields entity={entity} />
-                                    <Separator />
-                                    <NoteField />
-                                </div>
-                                <VStack>
-                                    <ServicesField />
-                                </VStack>
+        <ResponsiveModal
+            isOpen={open}
+            onOpenChange={onOpenChange}
+            size={isMobile ? "full" : "xl"}
+            breakpoint="md"
+            title={entity
+                ? t("page.users.dialogs.edition.title")
+                : t("page.users.dialogs.creation.title")}
+            description={entity
+                ? t("page.users.dialogs.edition.description")
+                : t("page.users.dialogs.creation.description")}
+            footer={footer}
+            className="max-h-[95vh]"
+            contentClassName="overflow-y-auto"
+        >
+            <Form {...form}>
+                <form onSubmit={handleSubmit} className="space-y-6 pb-4">
+                    {/* Mobile: Single column layout, Desktop: Two column grid */}
+                    <div className={isMobile 
+                        ? "flex flex-col space-y-6" 
+                        : "grid grid-cols-1 lg:grid-cols-2 gap-6"
+                    }>
+                        {/* Left column / Primary fields */}
+                        <div className="space-y-6">
+                            <div className="space-y-4">
+                                <UsernameField disabled={!!entity?.username} />
                             </div>
-                            <Button
-                                className="mt-3 w-full font-semibold"
-                                type="submit"
-                                disabled={form.formState.isSubmitting}
-                            >
-                                {t("submit")}
-                            </Button>
-                        </form>
-                    </Form>
-                </ScrollArea>
-            </DialogContent>
-        </Dialog>
+                            <Separator className="my-4" />
+                            
+                            {/* Collapsible data limit section on mobile */}
+                            <div className="space-y-4">
+                                <DataLimitFields />
+                            </div>
+                            <Separator className="my-4" />
+                            
+                            {/* Collapsible expiration section on mobile */}
+                            <div className="space-y-4">
+                                <ExpirationMethodFields entity={entity} />
+                            </div>
+                            <Separator className="my-4" />
+                            
+                            <div className="space-y-4">
+                                <NoteField />
+                            </div>
+                        </div>
+                        
+                        {/* Right column / Services */}
+                        <div className={isMobile ? "mt-6" : ""}>
+                            <div className="space-y-4">
+                                <ServicesField />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </Form>
+        </ResponsiveModal>
     );
 };

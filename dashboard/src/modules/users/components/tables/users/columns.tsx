@@ -15,6 +15,7 @@ import {
 } from "@wildosvpn/common/components";
 import { Icon } from "@wildosvpn/common/components/ui/icon";
 import { getSubscriptionLink } from "@wildosvpn/common/utils";
+import { useScreenBreakpoint } from "@wildosvpn/common/hooks";
 import {
     DataTableColumnHeader,
     DataTableColumnHeaderFilterOption,
@@ -106,25 +107,32 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
     },
     {
         id: "actions",
+        header: () => <span className="sr-only">{i18n.t("actions")}</span>,
         cell: ({ row }) => {
             const user = row.original;
             if (!user) return null;
             
+            const isMobile = !useScreenBreakpoint('md');
+            
             return (
                 <NoPropogationButton row={row} actions={actions}>
-                    <CopyToClipboardButton
-                        text={getSubscriptionLink(user.subscription_url || '')}
-                        successMessage={i18n.t(
-                            "page.users.settings.subscription_link.copied",
-                        )}
-                        copyIcon={(props: any) => <Icon name="Link" {...props} />}
-                        className={buttonVariants({
-                            variant: "secondary",
-                            className: "size-8",
-                        })}
-                        tooltipMsg={i18n.t("page.users.settings.subscription_link.copy")}
-                    />
-                    <DataTableActionsCell {...actions} row={row} />
+                    <div className="flex items-center gap-1 sm:gap-2">
+                        <CopyToClipboardButton
+                            text={getSubscriptionLink(user.subscription_url || '')}
+                            successMessage={i18n.t(
+                                "page.users.settings.subscription_link.copied",
+                            )}
+                            copyIcon={(props: any) => <Icon name="Link" {...props} />}
+                            className={buttonVariants({
+                                variant: "secondary",
+                                size: isMobile ? "touch-sm" : "sm",
+                                className: isMobile ? "size-10" : "size-8",
+                            })}
+                            tooltipMsg={i18n.t("page.users.settings.subscription_link.copy")}
+                            data-testid={`button-copy-link-${user.username}`}
+                        />
+                        <DataTableActionsCell {...actions} row={row} />
+                    </div>
                 </NoPropogationButton>
             );
         }

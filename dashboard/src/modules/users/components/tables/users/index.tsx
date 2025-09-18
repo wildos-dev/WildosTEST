@@ -32,15 +32,19 @@ export const UsersTable: React.FC = () => {
 
     const columns = columnsFn({ onEdit, onDelete, onOpen });
     const noneSudoColumns = columns.filter((column) => !column.sudoVisibleOnly);
+    const finalColumns = isSudo() ? columns : noneSudoColumns;
+
 
     return (
-        <EntityTable
-            fetchEntity={fetchUsers}
-            columns={isSudo() ? columns : noneSudoColumns}
-            primaryFilter="username"
-            entityKey={UsersQueryFetchKey}
-            onCreate={() => navigate({ to: "/users/create" })}
-            onOpen={onOpen}
-        />
+        <div className="w-full overflow-x-auto">
+            <EntityTable
+                fetchEntity={fetchUsers}
+                columns={finalColumns}
+                primaryFilter="username"
+                entityKey={UsersQueryFetchKey}
+                onCreate={() => navigate({ to: "/users/create" })}
+                onOpen={onOpen}
+            />
+        </div>
     );
 };

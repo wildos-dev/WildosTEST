@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useScreenBreakpoint } from "@wildosvpn/common/hooks";
 import {
     SectionWidget,
     ChartLegendContent,
@@ -21,6 +22,7 @@ export const UserNodesUsageWidget: React.FC<UserNodesUsageWidgetProps> = ({
     user,
 }) => {
     const { t, i18n } = useTranslation();
+    const isMobile = !useScreenBreakpoint('md');
     const [timeRange, setTimeRange] = React.useState("1d")
     const { start, end } = useFromNowInterval(timeRange as ChartDateInterval);
     const { data, isPending } = useUserNodeUsagesQuery({ username: user.username, start, end })
@@ -32,29 +34,57 @@ export const UserNodesUsageWidget: React.FC<UserNodesUsageWidgetProps> = ({
         <Awaiting
             Component={
                 <SectionWidget
-                    title={<div className="hstack justify-between w-full">{t("page.users.settings.nodes-usage.title")}</div>}
-                    description={t("page.users.settings.nodes-usage.desc")}
+                    title={<div className="flex flex-col sm:flex-row sm:justify-between w-full gap-2">
+                        <span className="text-base sm:text-lg">{t("page.users.settings.nodes-usage.title")}</span>
+                        {isMobile && (
+                            <div className="text-right">
+                                <span className="text-lg font-semibold">
+                                    {totalAmount} {totalMetric}
+                                </span>
+                                <span className="text-sm text-muted-foreground ml-2">
+                                    {t("total")}
+                                </span>
+                            </div>
+                        )}
+                    </div>}
+                    description={!isMobile ? t("page.users.settings.nodes-usage.desc") : undefined}
                     options={
-                        <div className="vstack justify-end w-full">
-                            <span className="text-lg leading-none sm:text-2xl w-full">
-                                {totalAmount} {totalMetric}
-                            </span>
-                            <span className="text-sm flex justify-end  text-muted-foreground w-full">
-                                {t("total")}
-                            </span>
-                        </div>
+                        !isMobile ? (
+                            <div className="flex flex-col justify-end w-full text-right">
+                                <span className="text-lg leading-none sm:text-2xl w-full">
+                                    {totalAmount} {totalMetric}
+                                </span>
+                                <span className="text-sm text-muted-foreground w-full">
+                                    {t("total")}
+                                </span>
+                            </div>
+                        ) : undefined
                     }
                     footer={
-                        <SelectDateView timeRange={timeRange} setTimeRange={setTimeRange} />
+                        <div className="w-full">
+                            <SelectDateView 
+                                timeRange={timeRange} 
+                                setTimeRange={setTimeRange}
+                            />
+                        </div>
                     }
+                    className={isMobile ? "min-h-[400px]" : ""}
                 >
                     <ChartContainer
-                        className="aspect-auto h-[320px] w-full"
-                        config={config}>
+                        className={isMobile 
+                            ? "aspect-auto h-[280px] w-full" // Fixed height on mobile
+                            : "aspect-auto h-[320px] w-full"
+                        }
+                        config={config}
+                    >
                         <AreaChart
                             accessibilityLayer
                             data={chartData}
-                            margin={{
+                            margin={isMobile ? {
+                                left: 8,
+                                top: 8,
+                                right: 8,
+                            } : {
                                 left: 13,
                                 top: 13,
                                 right: 12,
@@ -64,17 +94,19 @@ export const UserNodesUsageWidget: React.FC<UserNodesUsageWidgetProps> = ({
                             <YAxis
                                 tickLine={false}
                                 axisLine={false}
-                                tickMargin={8}
+                                tickMargin={isMobile ? 4 : 8}
+                                fontSize={isMobile ? 10 : 12}
                                 tickFormatter={(value: number) => {
                                     const [amount, metric] = formatByte(value)
-                                    return `${amount} ${metric}`
+                                    return isMobile ? `${amount}${metric}` : `${amount} ${metric}`
                                 }}
                             />
                             <XAxis
                                 dataKey="datetime"
                                 tickLine={false}
                                 axisLine={false}
-                                tickMargin={8}
+                                tickMargin={isMobile ? 4 : 8}
+                                fontSize={isMobile ? 10 : 12}
                                 tickFormatter={(value: string | number) => dateXAxisTicks(String(value), timeRange as ChartDateInterval)}
                             />
                             <ChartTooltip
@@ -86,7 +118,7 @@ export const UserNodesUsageWidget: React.FC<UserNodesUsageWidgetProps> = ({
                                             return new Date(value).toLocaleDateString(i18n.language, {
                                                 month: "short",
                                                 day: "numeric",
-                                                year: "numeric",
+                                                year: isMobile ? "2-digit" : "numeric",
                                                 hour: "numeric"
                                             })
                                         }}
@@ -124,7 +156,10 @@ export const UserNodesUsageWidget: React.FC<UserNodesUsageWidgetProps> = ({
                                     stroke={config[node.node_name].color}
                                 />
                             )}
-                            <ChartLegend content={<ChartLegendContent />} />
+                            <ChartLegend 
+                                content={<ChartLegendContent />}
+                                wrapperStyle={isMobile ? { fontSize: '10px' } : {}}
+                            />
                         </AreaChart>
                     </ChartContainer>
                 </SectionWidget>
