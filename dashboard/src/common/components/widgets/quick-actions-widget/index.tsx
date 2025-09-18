@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UserPlus, Server, Settings, Shield } from '@wildosvpn/common/components/ui/icon/CommonIcons';
+import { CommonIcons } from '@wildosvpn/common/components/ui/icon';
 import { Icon } from '@wildosvpn/common/components/ui/icon';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
@@ -14,28 +14,28 @@ export const QuickActionsWidget: React.FC = () => {
     const quickActions = [
         {
             label: t('widgets.quick-actions.create-user'),
-            icon: UserPlus,
+            icon: CommonIcons.UserPlus,
             href: '/users/create',
             color: 'bg-blue-500 hover:bg-blue-600',
             textColor: 'text-white'
         },
         {
             label: t('widgets.quick-actions.add-node'),
-            icon: Server,
+            icon: CommonIcons.Server,
             href: '/nodes/create',
             color: 'bg-green-500 hover:bg-green-600',
             textColor: 'text-white'
         },
         {
             label: t('widgets.quick-actions.new-service'),
-            icon: Settings,
+            icon: CommonIcons.Settings,
             href: '/services/create',
             color: 'bg-purple-500 hover:bg-purple-600',
             textColor: 'text-white'
         },
         {
             label: t('widgets.quick-actions.add-admin'),
-            icon: Shield,
+            icon: CommonIcons.Shield,
             href: '/admins/create',
             color: 'bg-orange-500 hover:bg-orange-600',
             textColor: 'text-white'

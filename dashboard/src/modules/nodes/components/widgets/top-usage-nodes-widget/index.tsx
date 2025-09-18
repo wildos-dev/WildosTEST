@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon } from '@wildosvpn/common/components/ui/icon';
+import { Icon, CommonIcons } from '@wildosvpn/common/components/ui/icon';
 import { useTranslation } from 'react-i18next';
 import {
     SectionWidget,
@@ -92,7 +92,7 @@ export const TopUsageNodesWidget: React.FC = () => {
 
     return (
         <SectionWidget
-            title={<><TrendingUp /> {t('top-usage-nodes', 'Top Usage Nodes')}</>}
+            title={<><CommonIcons.TrendingUp /> {t('top-usage-nodes', 'Top Usage Nodes')}</>}
             description={t('top-usage-nodes.desc', 'Nodes with highest traffic usage (last 24h)')}
             className="h-full"
         >

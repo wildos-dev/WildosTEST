@@ -1,12 +1,5 @@
 import { ElementType } from "react";
-import { 
-    Users,
-    Server,
-    Box,
-    ServerCog,
-    Settings,
-    Shield
-} from "@wildosvpn/common/components/ui/icon/CommonIcons";
+import { CommonIcons } from "@wildosvpn/common/components/ui/icon";
 
 export interface CommandItemConfig {
     icon: ElementType;
@@ -25,31 +18,31 @@ export const commandItems: CommandGroupConfig[] = [
         group: "features.search.groups.pages",
         items: [
             {
-                icon: Users,
+                icon: CommonIcons.Users,
                 label: "users",
                 path: "/users",
                 sudo: false,
             },
             {
-                icon: Server,
+                icon: CommonIcons.Server,
                 label: "services",
                 path: "/services",
                 sudo: true,
             },
             {
-                icon: Box,
+                icon: CommonIcons.Box,
                 label: "nodes",
                 path: "/nodes",
                 sudo: true,
             },
             {
-                icon: ServerCog,
+                icon: CommonIcons.ServerCog,
                 label: "hosts",
                 path: "/hosts",
                 sudo: true,
             },
             {
-                icon: Shield,
+                icon: CommonIcons.Shield,
                 label: "admins",
                 path: "/admins",
                 sudo: true,
@@ -60,25 +53,25 @@ export const commandItems: CommandGroupConfig[] = [
         group: "features.search.groups.actions",
         items: [
             {
-                icon: Users,
+                icon: CommonIcons.Users,
                 label: "page.users.dialogs.creation.title",
                 path: "/users/create",
                 sudo: false,
             },
             {
-                icon: Server,
+                icon: CommonIcons.Server,
                 label: "page.services.dialogs.creation.title",
                 path: "/services/create",
                 sudo: true,
             },
             {
-                icon: Box,
+                icon: CommonIcons.Box,
                 label: "page.nodes.dialogs.creation.title",
                 path: "/nodes/create",
                 sudo: true,
             },
             {
-                icon: Shield,
+                icon: CommonIcons.Shield,
                 label: "page.admins.dialogs.creation.title",
                 path: "/admins/create",
                 sudo: true,
@@ -89,7 +82,7 @@ export const commandItems: CommandGroupConfig[] = [
         group: "features.search.groups.settings",
         items: [
             {
-                icon: Settings,
+                icon: CommonIcons.Settings,
                 label: "settings",
                 path: "/settings",
                 sudo: true,

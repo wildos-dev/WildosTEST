@@ -2,17 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge, Label } from '@wildosvpn/common/components';
 import { StatusType } from '@wildosvpn/common/types';
-import {
-    AlarmClock,
-    BrickWall,
-    CalendarX,
-    Cloud,
-    PowerCircle,
-    Radio,
-    ServerCrash,
-    Zap,
-    ZapOff
-} from '@wildosvpn/common/components/ui/icon/CommonIcons';
+import { CommonIcons } from '@wildosvpn/common/components/ui/icon';
 
 interface UsersStatusType {
     [key: string]: Omit<StatusType, 'label'> & { statusKey: string };
@@ -20,47 +10,47 @@ interface UsersStatusType {
 
 export const UsersStatus: UsersStatusType = {
     active: {
-        icon: PowerCircle,
+        icon: CommonIcons.PowerCircle,
         statusKey: "active",
         variant: "positive"
     },
     limited: {
-        icon: BrickWall,
+        icon: CommonIcons.BrickWall,
         statusKey: "limited",
         variant: "warning"
     },
     expired: {
-        icon: CalendarX,
+        icon: CommonIcons.CalendarX,
         statusKey: "expired",
         variant: "warning"
     },
     on_hold: {
-        icon: AlarmClock,
+        icon: CommonIcons.AlarmClock,
         statusKey: "on_hold",
         variant: "royal"
     },
     error: {
-        icon: ServerCrash,
+        icon: CommonIcons.ServerCrash,
         statusKey: "error",
         variant: "destructive"
     },
     connecting: {
-        icon: Radio,
+        icon: CommonIcons.Radio,
         statusKey: "connecting",
         variant: "warning"
     },
     connected: {
-        icon: Cloud,
+        icon: CommonIcons.Cloud,
         statusKey: "connected",
         variant: "positive"
     },
     healthy: {
-        icon: Zap,
+        icon: CommonIcons.Zap,
         statusKey: "healthy",
         variant: "positive"
     },
     unhealthy: {
-        icon: ZapOff,
+        icon: CommonIcons.ZapOff,
         statusKey: "unhealthy",
         variant: "destructive"
     },

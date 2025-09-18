@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon } from '@wildosvpn/common/components/ui/icon';
+import { Icon, CommonIcons } from '@wildosvpn/common/components/ui/icon';
 import { useTranslation } from 'react-i18next';
 import {
     SectionWidget,
@@ -183,7 +183,7 @@ export const PeakEventsWidget: React.FC = () => {
 
     return (
         <SectionWidget
-            title={<><AlertTriangle /> {t('peak-events', 'Peak Events')}</>}
+            title={<><CommonIcons.AlertTriangle /> {t('peak-events', 'Peak Events')}</>}
             description={t('peak-events.desc', 'Critical monitoring events from all nodes')}
             className="h-full"
         >

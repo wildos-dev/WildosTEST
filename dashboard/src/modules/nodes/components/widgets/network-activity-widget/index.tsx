@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon } from '@wildosvpn/common/components/ui/icon';
+import { Icon, CommonIcons } from '@wildosvpn/common/components/ui/icon';
 import { useTranslation } from 'react-i18next';
 import {
     SectionWidget,
@@ -149,7 +149,7 @@ export const NetworkActivityWidget: React.FC = () => {
 
     return (
         <SectionWidget
-            title={<><Network /> {t('network-activity', 'Network Activity')}</>}
+            title={<><CommonIcons.Network /> {t('network-activity', 'Network Activity')}</>}
             description={t('network-activity.desc', 'Real-time network traffic monitoring')}
             className="h-full"
         >

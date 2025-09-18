@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon } from '@wildosvpn/common/components/ui/icon';
+import { Icon, CommonIcons } from '@wildosvpn/common/components/ui/icon';
 import { useTranslation } from 'react-i18next';
 import { 
     SectionWidget,
@@ -32,7 +32,7 @@ export const RecentSubscriptionUpdatesWidget: React.FC = () => {
 
     return (
         <SectionWidget
-            title={<><Bell className="h-5 w-5" /> {t('widgets.recent_updates')}</>}
+            title={<><CommonIcons.Bell className="h-5 w-5" /> {t('widgets.recent_updates')}</>}
             description={t('widgets.latest_subscription_changes')}
             className="h-full"
         >

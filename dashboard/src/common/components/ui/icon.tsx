@@ -92,6 +92,17 @@ export const CommonIcons = {
   // Internationalization
   Languages: (props: Omit<IconProps, 'name'>) => <Icon name="Languages" {...props} />,
   
+  // User Status & States
+  AlarmClock: (props: Omit<IconProps, 'name'>) => <Icon name="AlarmClock" {...props} />,
+  BrickWall: (props: Omit<IconProps, 'name'>) => <Icon name="Brick" {...props} />,
+  CalendarX: (props: Omit<IconProps, 'name'>) => <Icon name="CalendarX" {...props} />,
+  Cloud: (props: Omit<IconProps, 'name'>) => <Icon name="Cloud" {...props} />,
+  PowerCircle: (props: Omit<IconProps, 'name'>) => <Icon name="Power" {...props} />,
+  Radio: (props: Omit<IconProps, 'name'>) => <Icon name="Radio" {...props} />,
+  ServerCrash: (props: Omit<IconProps, 'name'>) => <Icon name="ServerCrash" {...props} />,
+  Zap: (props: Omit<IconProps, 'name'>) => <Icon name="Zap" {...props} />,
+  ZapOff: (props: Omit<IconProps, 'name'>) => <Icon name="ZapOff" {...props} />,
+  
   // Misc
   HeartHandshake: (props: Omit<IconProps, 'name'>) => <Icon name="HeartHandshake" {...props} />,
   QrCode: (props: Omit<IconProps, 'name'>) => <Icon name="QrCode" {...props} />,

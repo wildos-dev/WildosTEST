@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon } from '@wildosvpn/common/components/ui/icon';
+import { Icon, CommonIcons } from '@wildosvpn/common/components/ui/icon';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
 import { 
@@ -29,7 +29,7 @@ export const SubscriptionSettingsWidget: React.FC = () => {
 
     return (
         <SectionWidget
-            title={<><Settings className="h-5 w-5" /> {t('Subscription Settings')}</>}
+            title={<><CommonIcons.Settings className="h-5 w-5" /> {t('Subscription Settings')}</>}
             description={t('Manage subscription configuration')}
             className="h-full"
         >
