@@ -1,0 +1,203 @@
+syntax = "proto3";
+
+package wildosnode;
+
+message Empty {}
+
+enum ConfigFormat {
+  PLAIN = 0;
+  JSON = 1;
+  YAML = 2;
+}
+
+message Backend {
+  string name = 1;
+  optional string type = 2;
+  optional string version = 3;
+  repeated Inbound inbounds = 4;
+}
+
+message BackendsResponse {
+  repeated Backend backends = 1;
+}
+
+message Inbound {
+  string tag = 1;
+  optional string config = 2;
+}
+
+message User {
+  uint32 id = 1;
+  string username = 2;
+  string key = 3;
+}
+
+message UserData {
+  User user = 1;
+  repeated Inbound inbounds = 2;
+}
+
+message UsersData {
+  repeated UserData users_data = 1;
+}
+
+message UsersStats {
+  message UserStats {
+    uint32 uid = 1;
+    uint64 usage = 2;
+  }
+  repeated UserStats users_stats = 1;
+}
+
+message LogLine {
+  string line = 1;
+}
+
+message BackendConfig {
+  string configuration = 1;
+  ConfigFormat config_format = 2;
+}
+
+message BackendLogsRequest {
+  string backend_name = 1;
+  bool include_buffer = 2;
+}
+
+message RestartBackendRequest {
+  string backend_name = 1;
+  optional BackendConfig config = 2;
+}
+
+message BackendStats {
+  bool running = 1;
+}
+
+// Host system monitoring messages
+message HostSystemMetrics {
+  double cpu_usage = 1;
+  double memory_usage = 2;
+  double memory_total = 3;
+  double disk_usage = 4;
+  double disk_total = 5;
+  repeated NetworkInterface network_interfaces = 6;
+  int64 uptime_seconds = 7;
+  double load_average_1m = 8;
+  double load_average_5m = 9;
+  double load_average_15m = 10;
+}
+
+message NetworkInterface {
+  string name = 1;
+  int64 bytes_sent = 2;
+  int64 bytes_received = 3;
+  int64 packets_sent = 4;
+  int64 packets_received = 5;
+}
+
+// Port management messages
+message PortActionRequest {
+  int32 port = 1;
+  string protocol = 2; // tcp/udp
+}
+
+message PortActionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Container management messages
+message ContainerLogsRequest {
+  int32 tail = 1; // number of lines to retrieve
+}
+
+message ContainerLogsResponse {
+  repeated string logs = 1;
+}
+
+message ContainerFilesRequest {
+  string path = 1; // directory path to explore
+}
+
+message ContainerFilesResponse {
+  repeated FileInfo files = 1;
+}
+
+message FileInfo {
+  string name = 1;
+  string path = 2;
+  bool is_directory = 3;
+  int64 size = 4;
+  int64 modified_time = 5;
+}
+
+message ContainerRestartResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Batch operations messages
+message AllBackendsStatsResponse {
+  map<string, BackendStats> backend_stats = 1;
+}
+
+// Peak Monitoring Messages
+enum PeakLevel {
+  WARNING = 0;
+  CRITICAL = 1;
+}
+
+enum PeakCategory {
+  CPU = 0;
+  MEMORY = 1;
+  DISK = 2;
+  NETWORK = 3;
+  BACKEND = 4;
+}
+
+message PeakEvent {
+  uint32 node_id = 1;
+  PeakCategory category = 2;
+  string metric = 3;
+  double value = 4;
+  double threshold = 5;
+  PeakLevel level = 6;
+  string dedupe_key = 7;
+  string context_json = 8;
+  uint64 started_at_ms = 9;
+  optional uint64 resolved_at_ms = 10;
+  uint64 seq = 11;
+}
+
+message PeakQuery {
+  uint64 since_ms = 1;
+  optional uint64 until_ms = 2;
+  optional PeakCategory category = 3;
+}
+
+service WildosService {
+  rpc SyncUsers(stream UserData) returns (Empty);
+  rpc RepopulateUsers(UsersData) returns (Empty);
+  rpc FetchBackends(Empty) returns (BackendsResponse);
+  rpc FetchUsersStats(Empty) returns (UsersStats);
+  rpc FetchBackendConfig(Backend) returns (BackendConfig);
+  rpc RestartBackend(RestartBackendRequest) returns (Empty);
+  rpc StreamBackendLogs(BackendLogsRequest) returns (stream LogLine);
+  rpc GetBackendStats(Backend) returns (BackendStats);
+  
+  // Host system monitoring
+  rpc GetHostSystemMetrics(Empty) returns (HostSystemMetrics);
+  rpc OpenHostPort(PortActionRequest) returns (PortActionResponse);
+  rpc CloseHostPort(PortActionRequest) returns (PortActionResponse);
+  
+  // Container management
+  rpc GetContainerLogs(ContainerLogsRequest) returns (ContainerLogsResponse);
+  rpc GetContainerFiles(ContainerFilesRequest) returns (ContainerFilesResponse);
+  rpc RestartContainer(Empty) returns (ContainerRestartResponse);
+  
+  // Batch operations
+  rpc GetAllBackendsStats(Empty) returns (AllBackendsStatsResponse);
+  
+  // Peak Monitoring RPCs
+  rpc StreamPeakEvents(Empty) returns (stream PeakEvent);
+  rpc FetchPeakEvents(PeakQuery) returns (stream PeakEvent);
+}
