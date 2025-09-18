@@ -5,7 +5,7 @@ import * as React from 'react';
 export type IconName = keyof typeof Icons;
 
 // Props interface for Icon component
-export interface IconProps extends React.ComponentPropsWithoutRef<'svg'> {
+export interface IconProps extends Omit<React.ComponentPropsWithoutRef<'svg'>, 'name'> {
   name: IconName;
   size?: number | string;
   className?: string;
@@ -47,6 +47,7 @@ export const CommonIcons = {
   User: (props: Omit<IconProps, 'name'>) => <Icon name="User" {...props} />,
   UserCheck: (props: Omit<IconProps, 'name'>) => <Icon name="UserCheck" {...props} />,
   UserX: (props: Omit<IconProps, 'name'>) => <Icon name="UserX" {...props} />,
+  UserPlus: (props: Omit<IconProps, 'name'>) => <Icon name="UserPlus" {...props} />,
   LogOut: (props: Omit<IconProps, 'name'>) => <Icon name="LogOut" {...props} />,
   ShieldCheck: (props: Omit<IconProps, 'name'>) => <Icon name="ShieldCheck" {...props} />,
   Shield: (props: Omit<IconProps, 'name'>) => <Icon name="Shield" {...props} />,
@@ -66,6 +67,7 @@ export const CommonIcons = {
   CheckCircle: (props: Omit<IconProps, 'name'>) => <Icon name="CheckCircle" {...props} />,
   Circle: (props: Omit<IconProps, 'name'>) => <Icon name="Circle" {...props} />,
   Loader: (props: Omit<IconProps, 'name'>) => <Icon name="Loader" {...props} />,
+  Bell: (props: Omit<IconProps, 'name'>) => <Icon name="Bell" {...props} />,
   
   // Actions
   Edit: (props: Omit<IconProps, 'name'>) => <Icon name="Edit" {...props} />,
@@ -73,6 +75,7 @@ export const CommonIcons = {
   Plus: (props: Omit<IconProps, 'name'>) => <Icon name="Plus" {...props} />,
   RefreshCw: (props: Omit<IconProps, 'name'>) => <Icon name="RefreshCw" {...props} />,
   Copy: (props: Omit<IconProps, 'name'>) => <Icon name="Copy" {...props} />,
+  TrendingUp: (props: Omit<IconProps, 'name'>) => <Icon name="TrendingUp" {...props} />,
   
   // UI Elements
   ChevronDown: (props: Omit<IconProps, 'name'>) => <Icon name="ChevronDown" {...props} />,
