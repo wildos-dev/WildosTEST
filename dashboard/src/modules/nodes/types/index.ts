@@ -1,25 +1,25 @@
 import type { StatusType } from "@wildosvpn/common/types/status";
-import { Icon } from "@wildosvpn/common/components/ui/icon";
 import { z } from "zod";
 
-export const NodesStatus = {
+
+export const NodesStatus: Record<string, StatusType> = {
     healthy: {
         label: "healthy",
-        icon: (props: any) => <Icon name="Zap" {...props} />,
+        icon: "Zap" as any,
     },
     unhealthy: {
         label: "unhealthy",
-        icon: (props: any) => <Icon name="ZapOff" {...props} />,
+        icon: "ZapOff" as any,
     },
     disabled: {
         label: "disabled",
-        icon: (props: any) => <Icon name="PowerOff" {...props} />,
+        icon: "PowerOff" as any,
     },
     none: {
         label: "none",
         icon: null,
     },
-} as Record<string, StatusType>;
+};
 
 export const NodeSchema = z.object({
     name: z.string().min(1),

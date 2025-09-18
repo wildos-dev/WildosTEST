@@ -65,7 +65,11 @@ export const SystemOverviewWidget: React.FC = () => {
 
     return (
         <SectionWidget
-            title={<> <Icon name="Activity" /> {t('system-overview', 'System Overview')} <//>}
+            title={
+                <>
+                    <Icon name="Activity" /> {t('system-overview', 'System Overview')}
+                </>
+            }
             description={t('page.home.system-overview.desc', 'Key system metrics at a glance')}
             className="h-full"
         >
