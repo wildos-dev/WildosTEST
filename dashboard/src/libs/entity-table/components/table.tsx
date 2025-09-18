@@ -159,17 +159,19 @@ export function EntityDataTable<TData, TValue>({
     const { isLoading, isError } = context;
 
     return (
-        <Table className="w-full">
-            <TableHeader><Headers /></TableHeader>
-            <TableBody>
-                {isLoading ? (
-                    <Loading />
-                ) : isError ? (
-                    <ErrorDisplay columns={columns.length} />
-                ) : (
-                    <Rows onRowClick={onRowClick} columns={columns} />
-                )}
-            </TableBody>
-        </Table>
+        <div className="overflow-x-auto">
+            <Table className="w-full">
+                <TableHeader><Headers /></TableHeader>
+                <TableBody>
+                    {isLoading ? (
+                        <Loading />
+                    ) : isError ? (
+                        <ErrorDisplay columns={columns.length} />
+                    ) : (
+                        <Rows onRowClick={onRowClick} columns={columns} />
+                    )}
+                </TableBody>
+            </Table>
+        </div>
     );
 }
