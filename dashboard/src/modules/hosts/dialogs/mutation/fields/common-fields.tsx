@@ -9,12 +9,13 @@ import {
 } from ".";
 
 export const CommonFields = () => (
-    <>
+    <div className="space-y-4 sm:space-y-6">
         <RemarkField />
-        <HStack className="gap-2 items-start">
+        {/* Vertical stacking on mobile, horizontal on desktop */}
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-2 items-start">
             <AddressField />
             <PortField />
             <WeightField />
-        </HStack>
-    </>
+        </div>
+    </div>
 )

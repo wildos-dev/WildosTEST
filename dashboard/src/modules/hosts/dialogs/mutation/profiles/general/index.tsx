@@ -20,17 +20,18 @@ export const GeneralProfileFields = () => {
     const { t } = useTranslation();
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-4 sm:space-y-6">
             <CommonFields />
-            <Accordion className="space-y-2" type="single" collapsible>
+            <Accordion className="space-y-4 sm:space-y-2" type="single" collapsible>
                 <SettingSection
                     value="network"
                     triggerText={t("page.hosts.network-settings")}
                 >
-                    <HStack>
+                    {/* Vertical stacking on mobile */}
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-2">
                         <ClearableTextField name="host" label={t("host")} />
                         <ClearableTextField name="path" label={t("path")} />
-                    </HStack>
+                    </div>
                     <EarlyDataField />
                     <HttpHeadersDynamicFields />
                 </SettingSection>
@@ -44,8 +45,10 @@ export const GeneralProfileFields = () => {
                     value="camouflage"
                     triggerText={t("page.hosts.camouflage-settings")}
                 >
-                    <FragmentField />
-                    <NoiseField />
+                    <div className="space-y-4 sm:space-y-6">
+                        <FragmentField />
+                        <NoiseField />
+                    </div>
                 </SettingSection>
                 <SettingSection
                     value="mux"

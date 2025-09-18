@@ -42,29 +42,33 @@ export const InboundHostsTable = () => {
     };
 
     return (
-        <div className="w-full">
+        <div className="w-full space-y-4 sm:space-y-6">
             <InboundNotSelectedAlertDialog
                 open={inboundSelectionAlert}
                 onOpenChange={setInboundSelectionAlert}
             />
-            <SidebarEntityTable
-                fetchEntity={fetchHosts}
-                entityKey="inbounds"
-                secondaryEntityKey="hosts"
-                sidebarEntities={data?.entities || []}
-                sidebarEntityId={selectedInbound}
-                columnsFn={columns}
-                filteredColumn='remark'
-                setSidebarEntityId={setSelectedInbound}
-                onCreate={onCreate}
-                onOpen={onOpen}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                sidebarCardProps={{
-                    header: InboundCardHeader,
-                    content: InboundCardContent
-                }}
-            />
+            
+            {/* Mobile-adapted table with responsive controls */}
+            <div className="flex flex-col space-y-4">
+                <SidebarEntityTable
+                    fetchEntity={fetchHosts}
+                    entityKey="inbounds"
+                    secondaryEntityKey="hosts"
+                    sidebarEntities={data?.entities || []}
+                    sidebarEntityId={selectedInbound}
+                    columnsFn={columns}
+                    filteredColumn='remark'
+                    setSidebarEntityId={setSelectedInbound}
+                    onCreate={onCreate}
+                    onOpen={onOpen}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    sidebarCardProps={{
+                        header: InboundCardHeader,
+                        content: InboundCardContent
+                    }}
+                />
+            </div>
         </div>
     )
 }

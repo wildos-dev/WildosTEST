@@ -94,16 +94,20 @@ export function EntityTable<T>({
     return (
         <EntityTableContext.Provider value={contextValue}>
             <div className="flex w-full flex-col">
-                <div className="flex flex-col md:flex-row-reverse items-center py-4 gap-2 w-full">
-                    <div className="flex flex-row items-center w-full">
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between py-4">
+                    <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                        <TableSearch />
                         <DataTableViewOptions table={table} />
-                        {onCreate && (
-                            <Button aria-label={`create-${entityKey}`} onClick={onCreate}>
-                                {t("create")}
-                            </Button>
-                        )}
                     </div>
-                    <TableSearch />
+                    {onCreate && (
+                        <Button 
+                            aria-label={`create-${entityKey}`} 
+                            onClick={onCreate}
+                            className="shrink-0"
+                        >
+                            {t("create")}
+                        </Button>
+                    )}
                 </div>
                 <div className="w-full rounded-md border">
                     <EntityDataTable columns={columns} onRowClick={onOpen} />

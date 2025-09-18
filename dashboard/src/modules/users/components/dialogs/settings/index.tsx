@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-    ScrollArea,
     Tabs,
     TabsContent,
     TabsList,
@@ -8,8 +7,11 @@ import {
     Awaiting,
     SettingsInfoSkeleton,
     SettingsDialogProps,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@wildosvpn/common/components";
-import { ResponsiveModal } from "@wildosvpn/libs/responsive-modal";
 import { useScreenBreakpoint } from "@wildosvpn/common/hooks";
 import {
     UserServicesTable,
@@ -33,23 +35,19 @@ export const UsersSettingsDialog: React.FC<UsersSettingsDialogProps> = ({
     onOpenChange,
     open,
     entity,
-    onClose,
     isPending,
 }) => {
     const { t } = useTranslation();
     const isMobile = !useScreenBreakpoint('md');
 
     return (
-        <ResponsiveModal
-            isOpen={open}
-            onOpenChange={onOpenChange}
-            size={isMobile ? "full" : "xl"}
-            breakpoint="md"
-            title={entity ? `${entity.username} - ${t("page.users.settings.title")}` : t("page.users.settings.title")}
-            description={t("page.users.settings.description")}
-            className="max-h-[95vh]"
-            contentClassName="overflow-hidden"
-        >
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className={`max-w-4xl max-h-[95vh] ${isMobile ? 'h-screen max-w-full' : ''}`}>
+                <DialogHeader>
+                    <DialogTitle>
+                        {entity ? `${entity.username} - ${t("page.users.settings.title")}` : t("page.users.settings.title")}
+                    </DialogTitle>
+                </DialogHeader>
             <Awaiting
                 Component={
                     entity ? (
@@ -117,6 +115,7 @@ export const UsersSettingsDialog: React.FC<UsersSettingsDialogProps> = ({
                 Skeleton={<SettingsInfoSkeleton />}
                 isFetching={isPending}
             />
-        </ResponsiveModal>
+            </DialogContent>
+        </Dialog>
     );
 };

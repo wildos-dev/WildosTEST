@@ -11,12 +11,14 @@ interface ServicesUsersTableProps {
 export const ServicesUsersTable: React.FC<ServicesUsersTableProps> = ({ service }) => {
 
     return (
-        <DoubleEntityTable
-            columns={columns}
-            entityId={service.id}
-            fetchEntity={fetchServiceUsers}
-            primaryFilter="username"
-            entityKey='services'
-        />
+        <div className="p-4 sm:p-6">
+            <DoubleEntityTable
+                columns={columns}
+                entityId={service.id}
+                fetchEntity={fetchServiceUsers}
+                primaryFilter="username"
+                entityKey='services'
+            />
+        </div>
     )
 }

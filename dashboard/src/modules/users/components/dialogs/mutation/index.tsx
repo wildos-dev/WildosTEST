@@ -3,8 +3,12 @@ import {
     Separator,
     Form,
     Button,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
 } from "@wildosvpn/common/components";
-import { ResponsiveModal } from "@wildosvpn/libs/responsive-modal";
 import { useTranslation } from "react-i18next";
 import { useScreenBreakpoint } from "@wildosvpn/common/hooks";
 import {
@@ -66,21 +70,15 @@ export const UsersMutationDialog: React.FC<MutationDialogProps<UserMutationType>
     );
 
     return (
-        <ResponsiveModal
-            isOpen={open}
-            onOpenChange={onOpenChange}
-            size={isMobile ? "full" : "xl"}
-            breakpoint="md"
-            title={entity
-                ? t("page.users.dialogs.edition.title")
-                : t("page.users.dialogs.creation.title")}
-            description={entity
-                ? t("page.users.dialogs.edition.description")
-                : t("page.users.dialogs.creation.description")}
-            footer={footer}
-            className="max-h-[95vh]"
-            contentClassName="overflow-y-auto"
-        >
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className={`max-w-4xl max-h-[95vh] ${isMobile ? 'h-screen max-w-full' : ''}`}>
+                <DialogHeader>
+                    <DialogTitle>
+                        {entity
+                            ? t("page.users.dialogs.edition.title")
+                            : t("page.users.dialogs.creation.title")}
+                    </DialogTitle>
+                </DialogHeader>
             <Form {...form}>
                 <form onSubmit={handleSubmit} className="space-y-6 pb-4">
                     {/* Mobile: Single column layout, Desktop: Two column grid */}
@@ -121,6 +119,10 @@ export const UsersMutationDialog: React.FC<MutationDialogProps<UserMutationType>
                     </div>
                 </form>
             </Form>
-        </ResponsiveModal>
+            <DialogFooter>
+                {footer}
+            </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };

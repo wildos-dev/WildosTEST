@@ -11,11 +11,18 @@ export const SettingSection: React.FC<SettingSectionProps & React.PropsWithChild
 }) => {
     return (
         <AccordionItem
-            className="data-[state=open]:bg-muted/40 rounded-lg data-[state=close]:border-muted data-[state=open]:border-muted-foreground border-1 px-3"
+            className="data-[state=open]:bg-muted/40 rounded-lg data-[state=close]:border-muted data-[state=open]:border-muted-foreground border-1 p-4 sm:p-6"
             value={value}
         >
-            <AccordionTrigger>{triggerText}</AccordionTrigger>
-            <AccordionContent>{children}</AccordionContent>
+            <AccordionTrigger className="text-sm sm:text-base font-medium hover:no-underline py-4 sm:py-2">
+                {triggerText}
+            </AccordionTrigger>
+            <AccordionContent className="pt-4 pb-2">
+                {/* Single column layout on mobile */}
+                <div className="space-y-4 sm:space-y-6">
+                    {children}
+                </div>
+            </AccordionContent>
         </AccordionItem>
     );
 }

@@ -48,7 +48,7 @@ export const MutationDialog: React.FC<MutationDialogProps<ServiceType>> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent>
+            <DialogContent className="h-screen max-w-full sm:h-auto sm:max-w-md md:max-w-lg lg:max-w-xl">
                 <DialogHeader>
                     <DialogTitle className="text-primary">
                         {entity
@@ -62,16 +62,22 @@ export const MutationDialog: React.FC<MutationDialogProps<ServiceType>> = ({
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={handleSubmit} className="h-full">
-                        <NameField />
-                        <InboundsField />
-                        <Button
-                            className="mt-3 w-full font-semibold"
-                            type="submit"
-                            disabled={form.formState.isSubmitting}
-                        >
-                            {t("submit")}
-                        </Button>
+                    <form onSubmit={handleSubmit} className="h-full flex flex-col">
+                        <div className="flex-1 space-y-6 overflow-y-auto">
+                            <div className="space-y-4 p-1">
+                                <NameField />
+                                <InboundsField />
+                            </div>
+                        </div>
+                        <div className="flex-shrink-0 pt-6 border-t">
+                            <Button
+                                className="w-full h-12 font-semibold text-base"
+                                type="submit"
+                                disabled={form.formState.isSubmitting}
+                            >
+                                {t("submit")}
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </DialogContent>

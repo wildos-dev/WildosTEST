@@ -10,9 +10,9 @@ import {
 
 export const TuicProfileFields = () => {
     return (
-        <div className="space-y-2">
+        <div className="space-y-4 sm:space-y-6">
             <CommonFields />
-            <Accordion className="space-y-2" type="single" collapsible>
+            <Accordion className="space-y-4 sm:space-y-2" type="single" collapsible>
                 <TlsFields />
             </Accordion>
         </div>

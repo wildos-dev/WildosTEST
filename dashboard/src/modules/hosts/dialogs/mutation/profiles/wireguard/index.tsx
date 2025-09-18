@@ -15,22 +15,25 @@ import { useTranslation } from "react-i18next";
 export const WireguardProfileFields = () => {
     const { t } = useTranslation();
     return (
-        <>
+        <div className="space-y-4 sm:space-y-6">
             <CommonFields />
-            <Accordion type="single" collapsible>
+            <Accordion className="space-y-4 sm:space-y-2" type="single" collapsible>
                 <SettingSection value="wireguard" triggerText={t("wireguard")}>
-                    <HStack>
+                    {/* Vertical stacking on mobile */}
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-2">
                         <ClearableTextField
                             name="path"
                             label={t("page.hosts.server-public-key")}
                         />
                         <MtuField />
-                    </HStack>
-                    <DNSServersField />
-                    <AllowedIpsField />
+                    </div>
+                    <div className="space-y-4 sm:space-y-6">
+                        <DNSServersField />
+                        <AllowedIpsField />
+                    </div>
                 </SettingSection>
             </Accordion>
-        </>
+        </div>
     );
 };
 

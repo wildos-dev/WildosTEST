@@ -25,7 +25,7 @@ export const ServiceInboundsTable: React.FC<ServiceInboundsTableProps> = ({
     const disabled = Object.keys(selectedRow).length < 1;
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 p-4 sm:p-6">
             <SelectableEntityTable
                 columns={columns}
                 entityKey="inbounds"
@@ -38,7 +38,11 @@ export const ServiceInboundsTable: React.FC<ServiceInboundsTableProps> = ({
                 entitySelection={{ selectedEntity: selectedInbound, setSelectedEntity: setSelectedInbound }}
             />
 
-            <Button onClick={handleApply} disabled={disabled}>
+            <Button 
+                onClick={handleApply} 
+                disabled={disabled}
+                className="w-full sm:w-auto h-12 sm:h-10 font-semibold"
+            >
                 {t("apply")}
             </Button>
         </div>

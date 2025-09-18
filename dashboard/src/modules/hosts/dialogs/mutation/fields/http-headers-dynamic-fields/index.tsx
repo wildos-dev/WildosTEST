@@ -68,67 +68,74 @@ export const HttpHeadersDynamicFields = () => {
     }, [previousValues, replace]);
 
     return (
-        <div className="mt-2 flex flex-col gap-2">
-            <FormLabel className="hstack justify-between items-center">
-                {t("page.hosts.http_headers")}
-                <div className="hstack gap-1 items-center [*>button]:p-1">
+        <div className="mt-2 flex flex-col gap-4 sm:gap-2">
+            <FormLabel className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+                <span className="text-sm sm:text-base">{t("page.hosts.http_headers")}</span>
+                <div className="flex flex-row gap-2 sm:gap-1 items-center w-full sm:w-auto justify-end">
                     <Button
                         variant="secondary"
-                        size="icon"
+                        size="touch-sm"
                         disabled={previousValues.length === 0}
-                        className="p-1"
+                        className="h-10 w-10 sm:h-8 sm:w-8 p-0 focus-visible:opacity-100"
                         onClick={handleRestorePrevious}
                         title={t("common.restore_previous_values") || "Restore previous values"}
                     >
-                        <Icon name="RotateCcw" className="h-4 w-4" />
+                        <Icon name="RotateCcw" className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
                     <Button
                         variant="secondary-destructive"
-                        size="icon"
+                        size="touch-sm"
                         disabled={!fields.length}
-                        className="p-1"
+                        className="h-10 w-10 sm:h-8 sm:w-8 p-0 focus-visible:opacity-100"
                         onClick={handleReplaceAll}
                     >
-                        <Icon name="Trash" className="h-4 w-4" />
+                        <Icon name="Trash" className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
                     <Button
                         variant="ghost"
-                        size="icon"
-                        className="p-1"
+                        size="touch-sm"
+                        className="h-10 w-10 sm:h-8 sm:w-8 p-0 focus-visible:opacity-100"
                         onClick={handleAppend}
                     >
-                        <Icon name="ListPlus" className="h-4 w-4" />
+                        <Icon name="ListPlus" className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
                 </div>
             </FormLabel>
-            <ScrollArea className="p-2 border-2  h-[7rem] max-h-[10rem]  bg-background grid grid-cols-1 gap-2 rounded-md">
+            
+            {/* Mobile-first layout for headers */}
+            <div className="flex flex-col space-y-4">
                 {fields.length !== 0 ? (
-                    fields.map((field, index) => {
-                        const isRemoving = removingItems.has(field.id);
-                        return (
-                            <div
-                                key={field.id}
-                                className={`transition-all duration-200 ease-in-out transform ${
-                                    isRemoving 
-                                        ? 'opacity-0 scale-95 -translate-y-2' 
-                                        : 'opacity-100 scale-100 translate-y-0 animate-in slide-in-from-bottom-2 duration-300'
-                                }`}
-                            >
-                                <DynamicField
-                                    fieldIndex={index}
-                                    parentFieldName="http_headers"
-                                    onRemove={() => handleRemove(index, field.id)}
-                                />
-                            </div>
-                        );
-                    })
+                    <div className="space-y-3 sm:space-y-2">
+                        {fields.map((field, index) => {
+                            const isRemoving = removingItems.has(field.id);
+                            return (
+                                <div
+                                    key={field.id}
+                                    className={`transition-all duration-200 ease-in-out transform ${
+                                        isRemoving 
+                                            ? 'opacity-0 scale-95 -translate-y-2' 
+                                            : 'opacity-100 scale-100 translate-y-0 animate-in slide-in-from-bottom-2 duration-300'
+                                    }`}
+                                >
+                                    {/* Each header as separate card/item on mobile */}
+                                    <div className="p-4 sm:p-3 border rounded-lg bg-card">
+                                        <DynamicField
+                                            fieldIndex={index}
+                                            parentFieldName="http_headers"
+                                            onRemove={() => handleRemove(index, field.id)}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 ) : (
                     <AlertCard
                         size="wide-full"
                         title={t("page.hosts.no-http-headers")}
-                    ></AlertCard>
+                    />
                 )}
-            </ScrollArea>
+            </div>
         </div>
     );
 };

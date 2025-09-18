@@ -144,15 +144,15 @@ export const HostsMutationDialog: React.FC<HostMutationDialogProps> = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} defaultOpen={true}>
-            <DialogContent className="min-w-full h-full md:h-auto md:min-w-[32rem]">
-                <ScrollArea className="flex flex-col h-full p-0">
-                    <DialogHeader className="mb-3">
-                        <DialogTitle className="text-primary">
+            <DialogContent className="h-screen max-w-full md:h-auto md:max-w-[32rem] lg:max-w-[40rem]">
+                <ScrollArea className="flex flex-col h-full p-4 sm:p-6">
+                    <DialogHeader className="mb-4 sm:mb-6">
+                        <DialogTitle className="text-lg sm:text-xl text-primary">
                             {entity
                                 ? t("page.hosts.dialogs.edition.title")
                                 : t("page.hosts.dialogs.creation.title")}
                         </DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription className="text-sm sm:text-base">
                             {entity
                                 ? t("page.hosts.dialogs.edition.description")
                                 : t("page.hosts.dialogs.creation.description")}
@@ -161,11 +161,13 @@ export const HostsMutationDialog: React.FC<HostMutationDialogProps> = ({
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(submit)}
-                            className="h-full flex flex-col justify-between"
+                            className="h-full flex flex-col justify-between space-y-4 sm:space-y-6"
                         >
-                            <ProfileFields />
+                            <div className="flex-1">
+                                <ProfileFields />
+                            </div>
                             <Button
-                                className="mt-3 w-full font-semibold"
+                                className="w-full h-12 sm:h-auto sm:w-auto font-semibold mt-6"
                                 type="submit"
                                 disabled={form.formState.isSubmitting}
                             >
