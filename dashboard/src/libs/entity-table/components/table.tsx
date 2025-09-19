@@ -10,7 +10,8 @@ import {
     TableHeader,
     TableRow,
     Skeleton,
-    Button
+    Button,
+    ScrollableTable
 } from "@wildosvpn/common/components";
 import { useTranslation } from "react-i18next";
 import { useEntityTableContext } from "@wildosvpn/libs/entity-table/contexts";
@@ -159,8 +160,8 @@ export function EntityDataTable<TData, TValue>({
     const { isLoading, isError } = context;
 
     return (
-        <div className="overflow-x-auto">
-            <Table className="w-full">
+        <ScrollableTable minWidth="640px">
+            <Table className="w-full min-w-0">
                 <TableHeader><Headers /></TableHeader>
                 <TableBody>
                     {isLoading ? (
@@ -172,6 +173,6 @@ export function EntityDataTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
-        </div>
+        </ScrollableTable>
     );
 }

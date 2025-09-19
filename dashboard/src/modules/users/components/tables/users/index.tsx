@@ -36,15 +36,13 @@ export const UsersTable: React.FC = () => {
 
 
     return (
-        <div className="w-full overflow-x-auto">
-            <EntityTable
-                fetchEntity={fetchUsers}
-                columns={finalColumns}
-                primaryFilter="username"
-                entityKey={UsersQueryFetchKey}
-                onCreate={() => navigate({ to: "/users/create" })}
-                onOpen={onOpen}
-            />
-        </div>
+        <EntityTable
+            fetchEntity={fetchUsers}
+            columns={finalColumns}
+            primaryFilter="username"
+            entityKey={UsersQueryFetchKey}
+            onCreate={() => navigate({ to: "/users/create" })}
+            onOpen={onOpen}
+        />
     );
 };

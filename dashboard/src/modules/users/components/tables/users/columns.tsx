@@ -61,6 +61,9 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
         enableSorting: false,
         sudoVisibleOnly: true,
         header: ({ column }) => <AdminsColumnsHeaderOptionFilter column={column} />,
+        meta: {
+            className: "hidden lg:table-cell"
+        }
     },
     {
         accessorKey: "used_traffic",
@@ -68,13 +71,17 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
             <DataTableColumnHeader
                 title={i18n.t("page.users.used_traffic")}
                 column={column}
+                className="hidden sm:table-cell"
             />
         ),
         cell: ({ row }) => {
             const user = row.original;
             if (!user) return null;
-            return <UserUsedTraffic user={user} />;
+            return <div className="hidden sm:table-cell"><UserUsedTraffic user={user} /></div>;
         },
+        meta: {
+            className: "hidden sm:table-cell"
+        }
     },
     {
         accessorKey: "expire_strategy",
@@ -82,14 +89,18 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
             <DataTableColumnHeader
                 title={i18n.t("page.users.expire_method")}
                 column={column}
+                className="hidden md:table-cell"
             />
         ),
         cell: ({ row }) => {
             const user = row.original;
             if (!user) return null;
-            return <UserExpireStrategyPill user={user} />;
+            return <div className="hidden md:table-cell"><UserExpireStrategyPill user={user} /></div>;
         },
         enableSorting: false,
+        meta: {
+            className: "hidden md:table-cell"
+        }
     },
     {
         accessorKey: "expire_date",
@@ -97,13 +108,17 @@ export const columns = (actions: ColumnActions<UserType>): ColumnDefWithSudoRole
             <DataTableColumnHeader
                 title={i18n.t("page.users.expire_date")}
                 column={column}
+                className="hidden md:table-cell"
             />
         ),
         cell: ({ row }) => {
             const user = row.original;
             if (!user) return null;
-            return <UserExpirationValue user={user} />;
+            return <div className="hidden md:table-cell"><UserExpirationValue user={user} /></div>;
         },
+        meta: {
+            className: "hidden md:table-cell"
+        }
     },
     {
         id: "actions",
