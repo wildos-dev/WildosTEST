@@ -3,7 +3,11 @@
   "info": "Информация",
   "type": "Тип",
   "version": "Версия",
-  "loading": "Загрузка",
+  "loading": {
+    "network-data": "Загрузка сетевых данных...",
+    "disk-data": "Загрузка данных диска...",
+    "files": "Загрузка файлов..."
+  },
   "yes": "Да",
   "no": "Нет",
   "total": "Всего",
@@ -11,7 +15,9 @@
   "on_hold": "В ожидании",
   "limited": "Ограничено",
   "unhealthy": "Неисправно",
-  "status": "Статус",
+  "status": {
+    "temporarily_unavailable": "временно недоступен"
+  },
   "address": "Адрес",
   "users": "Пользователи",
   "nodes": "Узлы",
@@ -67,7 +73,18 @@
   "cancel": "Отмена",
   "dark": "Тёмная",
   "light": "Светлая",
-  "system": "Системная",
+  "system": {
+    "no-network-interfaces": "Сетевые интерфейсы не найдены",
+    "no-disk-partitions": "Разделы диска не найдены",
+    "no-open-ports": "Открытые порты не обнаружены",
+    "open-port": "Открытый порт",
+    "port-number": "Номер порта",
+    "protected-ports": "Защищённые порты",
+    "open-ports": "Открытые порты",
+    "total-traffic": "Общий трафик",
+    "no-files-found": "Файлы не найдены",
+    "no-files-available": "Файлы недоступны"
+  },
   "disabled": "Отключено",
   "advanced-options": "Дополнительные параметры",
   "language": "Язык",
@@ -113,7 +130,25 @@
   },
   "features": {
     "search": {
-      "no-results-found": "Результаты не найдены"
+      "no-results-found": "Результаты не найдены.",
+      "groups": {
+        "pages": "Страницы",
+        "actions": "Действия",
+        "settings": "Настройки"
+      }
+    },
+    "sidebar": {
+      "expand-sidebar": "Развернуть боковую панель",
+      "collapse-sidebar": "Свернуть боковую панель"
+    },
+    "support-us": {
+      "close": "Закрыть"
+    },
+    "total-traffic-widget": {
+      "chart": {
+        "traffic-label": "Трафик"
+      },
+      "total": "Всего"
     }
   },
   "widget-names": {
@@ -132,12 +167,21 @@
     "host": "Хост не найден"
   },
   "options": {
-    "none": "Нет"
+    "none": "Нет",
+    "tls": "TLS",
+    "inbound-default": "По умолчанию для входящих",
+    "copy": "Копировать",
+    "copied": "Скопировано",
+    "loading": "Загрузка...",
+    "search": "Поиск"
   },
   "table": {
-    "selected": "Выбрано",
+    "no-result-found": "Результаты не найдены.",
     "row-per-page": "Строк на странице",
-    "no-result-found": "Результаты не найдены"
+    "no-result": "Нет результата",
+    "selected": "Выбрано",
+    "toggle-column": "Переключить столбцы",
+    "filter-placeholder": "Фильтр {{name}}"
   },
   "pagination": {
     "page": "Страница",
@@ -153,16 +197,19 @@
     "navigate-to": "Перейти к",
     "select-page-to-navigate": "Выберите страницу для перехода",
     "toggle-menu": "Переключить меню",
-    "toggle-menu-alt": "Переключить меню"
+    "toggle-menu-alt": "Переключить меню",
+    "drag-to-reorder": "Перетащите для изменения порядка"
   },
   "accessibility": {
-    "clear": "Очистить",
-    "breadcrumb": "Хлебные крошки",
-    "draggable": "Перетаскиваемый",
-    "drag_to_reorder": "Перетащите для изменения порядка",
-    "more": "Ещё",
     "select_all": "Выбрать все",
-    "select_row": "Выбрать строку"
+    "select_row": "Выбрать строку",
+    "drag_to_reorder": "Перетащите для изменения порядка",
+    "draggable": "перетаскиваемый",
+    "breadcrumb": "хлебные крошки",
+    "clear": "Очистить",
+    "more": "Ещё",
+    "close": "Закрыть",
+    "remove": "Удалить"
   },
   "form": {
     "pick-a-date": "Выберите дату"
@@ -648,14 +695,6 @@
     "title": "Вы уверены в этом?",
     "desc": "Это действие нельзя отменить."
   },
-  "table": {
-    "no-result-found": "Результаты не найдены.",
-    "row-per-page": "Строк на странице",
-    "no-result": "Нет результата",
-    "selected": "Выбрано",
-    "toggle-column": "Переключить столбцы",
-    "filter-placeholder": "Фильтр {{name}}"
-  },
   "statuses": {
     "active": "Активен",
     "connected": "Подключён",
@@ -691,15 +730,6 @@
     "filter-options": "Параметры фильтра...",
     "header-name": "Имя заголовка",
     "header-value": "Значение заголовка"
-  },
-  "options": {
-    "none": "Нет",
-    "tls": "TLS",
-    "inbound-default": "По умолчанию для входящих",
-    "copy": "Копировать",
-    "copied": "Скопировано",
-    "loading": "Загрузка...",
-    "search": "Поиск"
   },
   "buttons": {
     "restart-container": "Перезапустить контейнер",
@@ -795,64 +825,10 @@
       "services_required": "Необходим хотя бы один сервис"
     }
   },
-  "accessibility": {
-    "select_all": "Выбрать все",
-    "select_row": "Выбрать строку",
-    "drag_to_reorder": "Перетащите для изменения порядка",
-    "draggable": "перетаскиваемый",
-    "breadcrumb": "хлебные крошки",
-    "clear": "Очистить",
-    "more": "Ещё",
-    "close": "Закрыть",
-    "remove": "Удалить"
-  },
   "copyright": {
     "text": "© 2025 WildosVPN. Все права защищены."
   },
-  "status": {
-    "temporarily_unavailable": "временно недоступно"
-  },
-  "features": {
-    "search": {
-      "no-results-found": "Результаты не найдены.",
-      "groups": {
-        "pages": "Страницы",
-        "actions": "Действия",
-        "settings": "Настройки"
-      }
-    },
-    "sidebar": {
-      "expand-sidebar": "Развернуть боковую панель",
-      "collapse-sidebar": "Свернуть боковую панель"
-    },
-    "support-us": {
-      "close": "Закрыть"
-    },
-    "total-traffic-widget": {
-      "chart": {
-        "traffic-label": "Трафик"
-      },
-      "total": "Всего"
-    }
-  },
-  "form": {
-    "pick-a-date": "Выберите дату"
-  },
-  "loading": {
-    "network-data": "Загрузка сетевых данных...",
-    "disk-data": "Загрузка данных диска...",
-    "files": "Загрузка файлов..."
-  },
-  "system": {
-    "no-network-interfaces": "Сетевые интерфейсы не найдены",
-    "no-disk-partitions": "Разделы диска не найдены",
-    "no-open-ports": "Открытые порты не обнаружены",
-    "open-port": "Открытый порт",
-    "port-number": "Номер порта",
-    "protected-ports": "Защищённые порты",
-    "open-ports": "Открытые порты",
-    "total-traffic": "Общий трафик",
-    "no-files-found": "Файлы не найдены",
-    "no-files-available": "Файлы недоступны"
+  "not_found": {
+    "host": "Хост не найден"
   }
 }
