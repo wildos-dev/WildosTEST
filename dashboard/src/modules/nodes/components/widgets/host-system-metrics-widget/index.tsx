@@ -7,7 +7,7 @@ import {
     ChartContainer,
     ChartTooltip,
 } from "@wildosvpn/common/components";
-import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import { useAggregateHostSystemMetricsQuery } from "@wildosvpn/modules/nodes/api/aggregate-metrics.query";
 
 const chartConfig = {
@@ -101,44 +101,38 @@ export const HostSystemMetricsWidget: React.FC = () => {
                     </h4>
                     <ChartContainer
                         config={chartConfig}
-                        className="w-full h-[200px]"
+                        className="mx-auto w-full aspect-[5/3]"
                     >
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                                <XAxis 
-                                    dataKey="name" 
-                                    axisLine={false}
-                                    tickLine={false}
-                                    className="text-xs fill-muted-foreground"
-                                />
-                                <YAxis 
-                                    domain={[0, 100]}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    className="text-xs fill-muted-foreground"
-                                />
-                                <ChartTooltip
-                                    content={({ active, payload }: { active?: boolean; payload?: any[] }) => {
-                                        if (active && payload && payload.length) {
-                                            return (
-                                                <div className="bg-background border rounded p-2 shadow-md">
-                                                    <p className="text-sm">
-                                                        <span className="font-medium">{payload[0].payload.name}:</span>
-                                                        <span className="ml-1">{payload[0].value}%</span>
-                                                    </p>
-                                                </div>
-                                            );
-                                        }
-                                        return null;
-                                    }}
-                                />
-                                <Bar 
-                                    dataKey="value" 
-                                    radius={[4, 4, 0, 0]}
-                                    className="fill-current"
-                                />
-                            </BarChart>
-                        </ResponsiveContainer>
+                        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                            <XAxis 
+                                dataKey="name" 
+                                axisLine={false}
+                                tickLine={false}
+                                className="text-xs fill-muted-foreground"
+                            />
+                            <YAxis 
+                                domain={[0, 100]}
+                                axisLine={false}
+                                tickLine={false}
+                                className="text-xs fill-muted-foreground"
+                            />
+                            <ChartTooltip
+                                content={({ active, payload }: { active?: boolean; payload?: any[] }) => {
+                                    if (active && payload && payload.length) {
+                                        return (
+                                            <div className="bg-background border rounded p-2 shadow-md">
+                                                <p className="text-sm">
+                                                    <span className="font-medium">{payload[0].payload.name}:</span>
+                                                    <span className="ml-1">{payload[0].value}%</span>
+                                                </p>
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                }}
+                            />
+                            <Bar dataKey="value" radius={4} />
+                        </BarChart>
                     </ChartContainer>
                 </div>
 

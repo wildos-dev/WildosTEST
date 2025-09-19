@@ -62,7 +62,7 @@ const TotalTrafficsWidget: React.FC = () => {
                 >
                     <ChartContainer
                         config={chartConfigWithI18n}
-                        className="aspect-auto h-[320px] w-full"
+                        className="mx-auto w-full aspect-[4/3] md:aspect-[16/9]"
                     >
                         <BarChart
                             accessibilityLayer

@@ -68,12 +68,12 @@ export const UserNodesUsageWidget: React.FC<UserNodesUsageWidgetProps> = ({
                             />
                         </div>
                     }
-                    className={isMobile ? "min-h-[400px]" : ""}
+                    className="h-full"
                 >
                     <ChartContainer
                         className={isMobile 
-                            ? "aspect-auto h-[280px] w-full" // Fixed height on mobile
-                            : "aspect-auto h-[320px] w-full"
+                            ? "mx-auto w-full aspect-[5/4]"
+                            : "mx-auto w-full aspect-[4/3]"
                         }
                         config={config}
                     >

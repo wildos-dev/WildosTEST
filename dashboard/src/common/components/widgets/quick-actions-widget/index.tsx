@@ -48,17 +48,17 @@ export const QuickActionsWidget: React.FC = () => {
             description={t('widgets.quick-actions.desc')}
             className="h-full"
         >
-            <div className="grid grid-cols-2 gap-3 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
                 {quickActions.map((action) => {
                     const Icon = action.icon;
                     return (
                         <Link key={action.href} to={action.href}>
                             <Button
-                                className={`w-full h-20 flex flex-col gap-2 ${action.color} ${action.textColor} transition-colors`}
+                                className={`w-full h-16 sm:h-20 flex flex-col gap-2 ${action.color} ${action.textColor} transition-colors`}
                                 variant="default"
                             >
-                                <Icon className="h-6 w-6" />
-                                <span className="text-sm font-medium">{action.label}</span>
+                                <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                                <span className="text-xs sm:text-sm font-medium">{action.label}</span>
                             </Button>
                         </Link>
                     );

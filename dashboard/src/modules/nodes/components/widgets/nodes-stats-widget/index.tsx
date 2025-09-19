@@ -47,7 +47,7 @@ export const NodesStatsWidget: React.FC<NodesStatsProps> = ({ total, healthy, un
         >
             <ChartContainer
                 config={chartConfig}
-                className="mx-auto aspect-square min-h-[300px] w-full"
+                className="mx-auto aspect-square w-full"
             >
                 <PieChart>
                     <ChartTooltip

@@ -63,7 +63,7 @@ export const UsersStatsWidget: React.FC<UsersStatsProps> = ({ total, limited, ac
         <SectionWidget
             title={<> <Icon name="Users" className="h-5 w-5" /> {t('users')} </>}
             description={t('page.home.users-stats.desc')}
-            className={`w-full ${isMobile ? 'min-h-[320px]' : 'h-full'}`}
+            className="w-full h-full"
         >
             <div className="flex flex-col space-y-4">
                 {/* Mobile: Show key metrics as cards above chart */}
@@ -83,8 +83,8 @@ export const UsersStatsWidget: React.FC<UsersStatsProps> = ({ total, limited, ac
                 <ChartContainer
                     config={chartConfig}
                     className={isMobile 
-                        ? "mx-auto w-full h-[240px]" // Fixed height on mobile
-                        : "mx-auto aspect-square min-h-[300px] w-full"
+                        ? "mx-auto w-full aspect-[4/3]" // Better responsive ratio
+                        : "mx-auto aspect-square w-full"
                     }
                 >
                     <PieChart>
