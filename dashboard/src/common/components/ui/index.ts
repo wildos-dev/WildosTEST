@@ -36,3 +36,6 @@ export * from "./sortable";
 export * from "./skeleton";
 export * from "./chart";
 export * from "./icon";
+export * from "./truncated-text";
+export * from "./scrollable-table";
+export * from "./responsive-grid";

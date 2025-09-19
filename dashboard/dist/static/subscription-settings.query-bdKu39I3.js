@@ -1,1 +1,0 @@
-import{u as t}from"./query-Defzi8th.js";import{a as s}from"./index-D3aQFQ9F.js";import"./react-core-DN74h41Q.js";async function e(){return s("/system/settings/subscription")}const i=["system","settings","subscription"],o=()=>t({queryKey:i,queryFn:e,initialData:{template_on_acceptance:!1,profile_title:"",support_link:"",update_interval:0,rules:[]}});export{i as s,o as u};

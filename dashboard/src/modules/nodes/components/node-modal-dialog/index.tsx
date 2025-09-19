@@ -2,12 +2,11 @@ import * as React from "react";
 import { 
     Dialog,
     DialogContent,
-    DialogPortal,
-    DialogOverlay,
     DialogTitle,
     DialogDescription,
     ScrollArea,
-    Button
+    Button,
+    TruncatedText
 } from "@wildosvpn/common/components";
 import { Icon } from "@wildosvpn/common/components/ui/icon";
 import { cn } from "@wildosvpn/common/utils";
@@ -88,17 +87,17 @@ export const NodeModalDialog: React.FC<NodeModalDialogProps & React.PropsWithChi
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogPortal>
-                <DialogOverlay />
-                <DialogContent 
-                    className={getModalClasses()}
-                    onPointerDownOutside={(e) => {
-                        // Prevent closing when clicking outside in minimized state
-                        if (windowState === 'minimized') {
-                            e.preventDefault();
-                        }
-                    }}
-                >
+            <DialogContent 
+                className={getModalClasses()}
+                hideCloseButton={true}
+                disableDefaultPositioning={true}
+                onPointerDownOutside={(e) => {
+                    // Prevent closing when clicking outside in minimized state
+                    if (windowState === 'minimized') {
+                        e.preventDefault();
+                    }
+                }}
+            >
                     {/* Dialog Title - Keep accessible for screen readers */}
                     <DialogTitle className="sr-only">
                         Node Settings - {node.name} (ID: {node.id})
@@ -109,9 +108,22 @@ export const NodeModalDialog: React.FC<NodeModalDialogProps & React.PropsWithChi
                     {/* Custom Header - Sticky */}
                     <div className="flex items-center justify-between border-b px-6 py-4 bg-muted/50 shrink-0">
                         <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <h2 className="text-lg font-semibold text-foreground truncate" title={node.name}>
-                                {node.name} — #{node.id}
-                            </h2>
+                            <div className="min-w-0 flex-1 space-y-1">
+                                <TruncatedText 
+                                    className="text-lg font-semibold text-foreground"
+                                    tooltip={true}
+                                    tooltipContent={`${t('name')}: ${node.name}`}
+                                >
+                                    {node.name}
+                                </TruncatedText>
+                                <TruncatedText 
+                                    className="text-sm text-muted-foreground"
+                                    tooltip={true}
+                                    tooltipContent={`ID: ${node.id}`}
+                                >
+                                    ID: {node.id}
+                                </TruncatedText>
+                            </div>
                         </div>
                         
                         {/* Window Controls */}
@@ -167,14 +179,17 @@ export const NodeModalDialog: React.FC<NodeModalDialogProps & React.PropsWithChi
 
                     {/* Minimized state content */}
                     {windowState === 'minimized' && (
-                        <div className="flex items-center px-4 py-2">
-                            <span className="text-sm text-muted-foreground truncate">
-                                Node: {node.name}
-                            </span>
+                        <div className="flex items-center px-4 py-2 min-w-0">
+                            <TruncatedText 
+                                className="text-sm text-muted-foreground"
+                                tooltip={true}
+                                tooltipContent={`${t('nodes')}: ${node.name} (ID: ${node.id})`}
+                            >
+                                {t('nodes')}: {node.name}
+                            </TruncatedText>
                         </div>
                     )}
-                </DialogContent>
-            </DialogPortal>
+            </DialogContent>
         </Dialog>
     );
 };
