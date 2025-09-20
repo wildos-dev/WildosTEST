@@ -1,0 +1,1 @@
+# Mock hysteria2 module

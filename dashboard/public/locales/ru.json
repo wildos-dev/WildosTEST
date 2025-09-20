@@ -1,0 +1,818 @@
+{
+  "name": "Имя",
+  "info": "Информация",
+  "type": "Тип",
+  "version": "Версия",
+  "loading": "Загрузка",
+  "yes": "Да",
+  "no": "Нет",
+  "total": "Всего",
+  "unknown": "Неизвестно",
+  "on_hold": "В ожидании",
+  "limited": "Ограничено",
+  "unhealthy": "Неисправно",
+  "healthy": "Исправен",
+  "active-users": "Активные пользователи",
+  "total-nodes": "Всего узлов",
+  "total-users": "Всего пользователей", 
+  "total-admins": "Всего администраторов",
+  "system-overview": "Обзор системы",
+  "status": "Статус",
+  "address": "Адрес",
+  "users": "Пользователи",
+  "nodes": "Узлы",
+  "services": "Сервисы",
+  "hosts": "Хосты",
+  "username": "Имя пользователя",
+  "password": "Пароль",
+  "inbounds": "Входящие соединения",
+  "submit": "Отправить",
+  "login": "Войти",
+  "edit": "Редактировать",
+  "actions": "Действия",
+  "settings": "Настройки",
+  "logs": "Логи",
+  "note": "Заметка",
+  "config": "Конфигурация",
+  "tag": "Тег",
+  "protocol": "Протокол",
+  "online": "Онлайн",
+  "offline": "Офлайн",
+  "not_connected": "Не подключен",
+  "apply": "Применить",
+  "open": "Открыть",
+  "delete": "Удалить",
+  "port": "Порт",
+  "create": "Создать",
+  "path": "Путь",
+  "host": "Хост",
+  "alpn": "ALPN",
+  "security": "Безопасность",
+  "user_info": "Информация о пользователе",
+  "admin_info": "Информация об администраторе",
+  "subscription": "Подписка",
+  "subscription_link": "Ссылка на подписку",
+  "fingerprint": "Отпечаток",
+  "mux": "Мультиплексирование",
+  "fragment": "Фрагмент",
+  "enable": "Включить",
+  "enabled": "Включено",
+  "activated": "Активировано",
+  "unlimited": "Неограниченно",
+  "left": "Осталось",
+  "reached": "Достигнуто",
+  "inactive": "Неактивно",
+  "active": "Активно",
+  "disable": "Отключить",
+  "close": "Закрыть",
+  "save": "Сохранить",
+  "days": "Дни",
+  "home": "Главная",
+  "dashboard": "Панель управления",
+  "management": "Управление",
+  "cancel": "Отмена",
+  "dark": "Тёмная",
+  "light": "Светлая",
+  "system": "Система",
+  "disabled": "Отключено",
+  "advanced-options": "Дополнительные параметры",
+  "language": "Язык",
+  "theme": "Тема",
+  "languages": {
+    "english": "English",
+    "russian": "Русский"
+  },
+  "pattern": "Шаблон",
+  "result": "Результат",
+  "deselect": "Отменить выбор",
+  "view": "Просмотр",
+  "certificate": "Сертификат",
+  "valid": "Действителен",
+  "finished": "Завершено",
+  "expired": "Истёк",
+  "change": "Изменить",
+  "admins": "Администраторы",
+  "normal": "Обычный",
+  "sudo": "Sudo",
+  "owner": "Владелец",
+  "running": "Работает",
+  "down": "Не работает",
+  "weight": "Вес",
+  "id": "ID",
+  "message": "Сообщение",
+  "restart": "Перезапустить",
+  "created_at": "Создано",
+  "remark": "Примечание",
+  "all": "Все",
+  "found": "Найдено",
+  "no-nodes-available": "No nodes available",
+  "create-first-node": "Create first node",
+  "support-us": {
+    "title": "Поддержите нас",
+    "desc": "WildosVPN — это бесплатное программное обеспечение с открытым исходным кодом (FOSS), присоединяйтесь к нам и поддержите проект пожертвованием.",
+    "donate": "Пожертвовать"
+  },
+  "dashboard_ui": {
+    "settings-label": "Настройки панели управления",
+    "no-widgets-configured": "Виджеты не настроены",
+    "configure-widgets-description": "Настройте виджеты в настройках панели управления, чтобы персонализировать обзор"
+  },
+  "features": {
+    "search": {
+      "no-results-found": "No results found.",
+      "groups": {
+        "pages": "Pages",
+        "actions": "Actions",
+        "settings": "Settings"
+      }
+    },
+    "sidebar": {
+      "expand-sidebar": "Expand sidebar",
+      "collapse-sidebar": "Collapse sidebar"
+    },
+    "support-us": {
+      "close": "Close"
+    },
+    "total-traffic-widget": {
+      "chart": {
+        "traffic-label": "Traffic"
+      },
+      "total": "Total"
+    }
+  },
+  "widget-names": {
+    "traffic-analytics": "Traffic Analytics",
+    "host-system-metrics": "Host System Metrics",
+    "peak-events": "Peak Events",
+    "top-usage-nodes": "Top Usage Nodes",
+    "network-activity": "Network Activity",
+    "quick-actions": "Quick Actions"
+  },
+  "not-found": {
+    "admin": "Admin not found",
+    "node": "Node not found",
+    "service": "Service not found",
+    "user": "User not found",
+    "host": "Host not found"
+  },
+  "options": {
+    "none": "None",
+    "tls": "TLS",
+    "inbound-default": "Inbound Default",
+    "copy": "Copy",
+    "copied": "Copied",
+    "loading": "Loading...",
+    "search": "Search"
+  },
+  "table": {
+    "no-result-found": "No results found.",
+    "row-per-page": "Rows per page",
+    "no-result": "No result",
+    "selected": "Selected",
+    "toggle-column": "Toggle columns",
+    "filter-placeholder": "Filter {{name}}"
+  },
+  "pagination": {
+    "page": "Page",
+    "of": "of"
+  },
+  "navigation": {
+    "go-to-first-page": "Go to first page",
+    "go-to-previous-page": "Go to previous page",
+    "go-to-next-page": "Go to next page",
+    "go-to-last-page": "Go to last page",
+    "open-menu": "Open menu",
+    "navigate-to": "Navigate to",
+    "toggle-menu": "Toggle menu",
+    "toggle-menu-alt": "Toggle Menu",
+    "drag-to-reorder": "Drag to reorder",
+    "select-page-to-navigate": "Select a page to navigate to."
+  },
+  "accessibility": {
+    "select_all": "Select all",
+    "select_row": "Select row",
+    "drag_to_reorder": "Drag to reorder",
+    "draggable": "draggable",
+    "breadcrumb": "breadcrumb",
+    "clear": "Clear",
+    "more": "More",
+    "close": "Close",
+    "remove": "Remove"
+  },
+  "form": {
+    "pick-a-date": "Pick a date"
+  },
+  "logo": {
+    "wildos-vpn": "WildosVPN Logo",
+    "wildos-icon": "WildosVPN Icon"
+  },
+  "metrics": {
+    "traffic": "Traffic"
+  },
+  "network": {
+    "rx": "RX",
+    "tx": "TX"
+  },
+  "time-periods": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  },
+  "widgets": {
+    "default_widget_name": "Widget",
+    "quick-actions": {
+      "create-user": "Create User",
+      "add-node": "Add Node",
+      "new-service": "New Service",
+      "add-admin": "Add Admin",
+      "title": "Quick Actions",
+      "desc": "Perform common administrative tasks"
+    },
+    "certificate-status": {
+      "title": "Certificate Status",
+      "desc": "SSL certificate status and management",
+      "overall-status": "Overall Status",
+      "ca-certificate": "CA Certificate",
+      "server-certificate": "Server Certificate",
+      "time-left": "Time Left",
+      "manage-certificates": "Manage Certificates",
+      "status": {
+        "healthy": "Healthy",
+        "warning": "Warning",
+        "critical": "Critical",
+        "unknown": "Unknown"
+      },
+      "time-units": {
+        "days": "days",
+        "days-short": "d",
+        "years-short": "y"
+      }
+    },
+    "latest_subscription_changes": "Latest subscription changes",
+    "no_recent_updates": "No recent updates",
+    "recently": "Recently",
+    "recent_updates": "Recent Updates",
+    "subscription_updated": "Subscription updated",
+    "subscription_updates_will_appear": "Subscription updates will appear here",
+    "subscription-settings": {
+      "profile-title": "Profile Title",
+      "update-interval": "Update Interval",
+      "support-link": "Support Link",
+      "template-on-accept": "Template on Accept",
+      "rules-count": "Rules Count",
+      "configure-settings": "Configure Settings",
+      "not-set": "Not set",
+      "configured": "Configured",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "minutes": "minutes",
+      "rules": "rules"
+    }
+  },
+  "page": {
+    "home": {
+      "users-stats": {
+        "desc": "Overview of user's statuses"
+      },
+      "nodes-stats": {
+        "desc": "Overview of node status and health"
+      },
+      "total-traffics": {
+        "title": "Total System Traffic",
+        "desc": "Traffics combined from all nodes"
+      }
+    },
+    "settings": {
+      "description": "Configure and customize system settings",
+      "subscription-settings": {
+        "template-on-acceptance": "Template on Acceptance",
+        "placeholder-remark": "Placeholder Remark",
+        "placeholder-if-disabled": "Placeholder if Disabled",
+        "shuffle-configs": "Shuffle Configs",
+        "url-prefix": "URL Prefix",
+        "profile-title": "Profile Title",
+        "support-link": "Support Link",
+        "update-interval": "Update Interval",
+        "add-rule": "Add Rule",
+        "reset-local-changes": "Reset Changes",
+        "title": "Subscription",
+        "description": "Manage and customize subscription settings with configurable rules and update options.",
+        "subscription-title": "Subscription Rules",
+        "subscription-desc": "Add your subscription rules in order of priority.",
+        "alert": {
+          "title": "No rules",
+          "desc": "No rules have been defined for subscription"
+        }
+      },
+      "certificate": {
+        "copy": "Copy Certificate",
+        "error": "Certificate Unavailable",
+        "copied": "Certificate Copied"
+      }
+    },
+    "login": {
+      "username": {
+        "error": {
+          "is-required": "Username is required"
+        }
+      },
+      "password": {
+        "error": {
+          "is-required": "Password is required"
+        }
+      }
+    },
+    "nodes": {
+      "nodes-usage-widget": {
+        "title": "Node Traffic Usage",
+        "desc": "Total traffic usage on this node"
+      },
+      "status": {
+        "healthy": "Healthy",
+        "unhealthy": "Unhealthy",
+        "disabled": "Disabled",
+        "none": "none"
+      },
+      "peak_events": {
+        "title": "Peak Events ({{count}})",
+        "edit_node": "Edit node",
+        "delete_node": "Delete node",
+        "ongoing": "Ongoing",
+        "users": "Users",
+        "connections": "Connections",
+        "backend": "Backend",
+        "traffic": "Traffic",
+        "no_additional_info": "No additional information",
+        "connected_to_stream": "Connected to event stream",
+        "no_events_detected": "No peak events detected",
+        "system_tracking": "System tracks CPU > 75% and RAM > 80%",
+        "active_peaks": "Active peaks ({{count}})",
+        "event_history": "Event History",
+        "threshold": "threshold",
+        "since": "since",
+        "values": "Values",
+        "peak_value": "Peak",
+        "threshold_value": "Threshold",
+        "metric": "Metric",
+        "time": "Time",
+        "start": "Start",
+        "end": "End",
+        "diagnostic_context": "Diagnostic Context",
+        "connection_status": "Connection status",
+        "connected_to_event_stream": "✓ Connected to event stream",
+        "reconnecting": "⚠ Reconnecting...",
+        "duration_min": "min",
+        "duration_less_than_min": "<1 min",
+        "levels": {
+          "high": "High",
+          "critical": "Critical"
+        },
+        "categories": {
+          "cpu": "CPU",
+          "memory": "Memory",
+          "disk": "Disk",
+          "network": "Network",
+          "backend": "Backend"
+        }
+      },
+      "settings": {
+        "no-backend-alert": {
+          "title": "No backend is configured for this node",
+          "desc": "Please take required measures and configure a backend for this node."
+        },
+        "title": "Nodes Settings",
+        "detail": "Details",
+        "log-container": {
+          "title": "Xray logs"
+        }
+      },
+      "dialogs": {
+        "creation": {
+          "title": "Add Node",
+          "description": "Add a new node to your network"
+        },
+        "deletion": {
+          "title": "Remove Node"
+        },
+        "edition": {
+          "title": "Edit Node",
+          "description": "Edit node configuration and settings"
+        }
+      },
+      "usage_coefficient": "Usage Coefficient",
+      "connection_backend": "Connection Backend",
+      "connection_backend_desc": "Used for the remote connection",
+      "certificate-alert": {
+        "title": "Nodes Certificate Configuration",
+        "desc": "If you aim to configure your nodes certificate, checkout settings page.",
+        "click": "Click Here"
+      },
+      "xray_version": "Xray Version",
+      "last_status_change": "Last Status Change",
+      "uplink": "Uplink",
+      "downlink": "Downlink",
+      "backend": "Backend",
+      "restart": {
+        "success": {
+          "title": "Backend {backend} restarted successfully",
+          "desc": "The backend has been restarted"
+        },
+        "error": "Failed to restart backend for node {name}"
+      },
+      "backends_running": "Backends Running",
+      "traffic_usage": "Traffic Usage"
+    },
+    "services": {
+      "settings": {
+        "title": "Service Settings",
+        "detail": "Details"
+      },
+      "dialogs": {
+        "creation": {
+          "title": "Create Service",
+          "description": "Create a new service by defining its name and associated inbound connections"
+        },
+        "deletion": {
+          "title": "Remove Service"
+        },
+        "edition": {
+          "title": "Edit Service",
+          "description": "Modify service configuration and inbound connection assignments"
+        }
+      }
+    },
+    "users": {
+      "created_at": "Created At",
+      "no_use": "No Use",
+      "data_limit_reached": "Data Limit Reached",
+      "sub_updated_at": "Last subscription update",
+      "sub_last_user_agent": "Last User Agent",
+      "traffic_reset_at": "Last traffic reset",
+      "lifetime_used_traffic": "Lifetime Used Traffic",
+      "note-placeholder": "Additional information about user",
+      "data_limit": "Data Limit",
+      "traffic": "Traffic",
+      "used_traffic": "Used Traffic",
+      "data_limit_reset_strategy": "Data Reset Period",
+      "online_at": "Last Use",
+      "expire_date": "Expire Date",
+      "unlimited": "Unlimited",
+      "never": "Never",
+      "limited": "Limited",
+      "data_limit_method": "Data Limit",
+      "fixed_date": "Fixed Date",
+      "expire_method": "Expiration",
+      "on_first_use": "On first use",
+      "reset_usage": "Reset Usage",
+      "revoke_subscription": "Revoke Subscription",
+      "usage_duration": "Usage Duration",
+      "activation_deadline": "Activation Deadline",
+      "nodes-usage": "Nodes Usage",
+      "settings": {
+        "nodes-usage": {
+          "last-days": "Last {{count}} days",
+          "last-months": "Last {{count}} months",
+          "last-hours": "Last {{count}} hours",
+          "title": "User Nodes Usage",
+          "desc": "The amount of user usage on each node in time."
+        },
+        "subscription_link": {
+          "copied": "Subscription Link Copied",
+          "copy": "Subscription Link",
+          "error": "Unable to copy Subscription Link"
+        }
+      },
+      "services-alert": {
+        "title": "No Service found",
+        "desc": "Make sure you create services to enable your users with inbounds to connect with.",
+        "click": "Click Here"
+      },
+      "dialogs": {
+        "edition": {
+          "title": "Edit User",
+          "description": "Modify user account settings, data limits, and service permissions"
+        },
+        "creation": {
+          "title": "Create User",
+          "description": "Create a new user account with data limits and service access"
+        },
+        "deletion": {
+          "title": "Remove User"
+        },
+        "mutation": {
+          "note": {
+            "desc": "Leave a note about your user"
+          }
+        }
+      }
+    },
+    "admins": {
+      "disable_users": "Disable users",
+      "enable_users": "Enable users",
+      "permission": "Permission",
+      "dialogs": {
+        "creation": {
+          "title": "Create admin",
+          "description": "Create a new administrator account with specific permissions and access rights"
+        },
+        "edition": {
+          "title": "Edit admin",
+          "description": "Modify administrator account settings and permissions"
+        },
+        "deletion": {
+          "title": "Delete admin"
+        }
+      },
+      "modify-users-access": "Modify users access",
+      "subscription-url-prefix": "Subscription URL prefix",
+      "sudo-privilage": "Sudo privilage",
+      "all-services-access": "All services access",
+      "users-data-usage": "Users Data Usage",
+      "token": {
+        "copy": "Copy token",
+        "copied": "Token copied to clipboard",
+        "error": "Failed to copy token"
+      }
+    },
+    "hosts": {
+      "xmux-settings": "Xmux Settings",
+      "split-http-settings": "Split HTTP Settings",
+      "no-grpc-header": "No GRPC Header",
+      "early-data": "Early Data",
+      "http_headers": "HTTP Headers",
+      "no-http-headers": "No HTTP headers",
+      "mux-settings": "Mux Settings",
+      "dns-servers": "DNS Servers",
+      "obfuscation-password": "Obfuscation Password",
+      "server-public-key": "Server public key",
+      "tls-config": "TLS Config",
+      "network-settings": "Network Settings",
+      "security-settings": "Security Settings",
+      "allowed-ips": "Allowed Ips",
+      "allowed-ips-placeholder": "127.0.0.1,...",
+      "camouflage-settings": "Camouflage Settings",
+      "fragment": {
+        "interval": "Interval",
+        "length": "Length",
+        "packets": "Packets",
+        "length-error": "Length can not exceed 32 char and must be number-number",
+        "interval-error": "Interval can not exceed 32 char and must be number-number",
+        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
+      },
+      "noise": {
+        "interval": "Interval",
+        "length": "Length",
+        "packets": "Packets",
+        "length-error": "Length can not exceed 32 char and must be number-number",
+        "interval-error": "Interval can not exceed 32 char and must be number-number",
+        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
+      },
+      "popover-guide": {
+        "title": "Using this setting, you are able to assign specific address for each inbound.",
+        "desc": "Use these variables to make it dynamic",
+        "username": "Username of the user",
+        "dataUsage": "Current usage of the user",
+        "remainingData": "Remaining data of the user",
+        "dataLimit": "Data limit of the user",
+        "remainingDays": "Remaining days of the user",
+        "expireDate": "Expiry date of the user",
+        "jalaliExpireDate": "Expiry date of the user in jalali calendar",
+        "remainingTime": "Remaining time of the user",
+        "statusEmoji": "User status as an emoji (✅,⌛,🪫,❌,🔌)",
+        "proxyProtocol": "Proxy protocol (e.g. VMess)",
+        "proxyMethod": "Proxy transport method (e.g. ws)",
+        "currentServer": "WildosVPN server ip address",
+        "security": "Security Layer",
+        "host": "Request Host",
+        "port": "Port",
+        "path": "Path",
+        "sni": "SNI",
+        "advancedOptions": "Advanced options",
+        "addHost": "Add host",
+        "savedSuccess": "Host has been saved successfully",
+        "loading": "loading...",
+        "apply": "Apply",
+        "port.info": "By default, the inbound port is advertised to the user. You can set a custom port in case this host forwards traffic from another port to your inbound. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
+        "path.info": "Set a path for host users, useful behind a reverse proxy.",
+        "sni.info": "By default, a host uses the SNI from the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
+        "host.info": "By default, if a request host is set in the Xray config, this host is used. However, you can set a custom request host here if needed.",
+        "security.info": "If the middleware server of this host uses a different security layer than the inbound's default, you can set a custom security layer here.",
+        "alpn": "ALPN",
+        "fingerprint": "Fingerprint",
+        "host.multiHost": "To set multiple addresses, separate them with <badge>,</badge> Each time an address is chosen randomly.",
+        "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
+      },
+      "mux": {
+        "title": "Connection multiplexing",
+        "desc": "Currently supported by v2rayng while using custom config"
+      },
+      "no-inbound-selection-alert": {
+        "title": "No inbound is selected",
+        "desc": "You must select an inbound in order to add a host."
+      },
+      "settings": {
+        "title": "Host Settings"
+      },
+      "allowinsecure": "Allow Insecure",
+      "dialogs": {
+        "edition": {
+          "title": "Edit Host",
+          "description": "Modify host configuration, connection parameters, and network settings"
+        },
+        "creation": {
+          "title": "Add Host",
+          "description": "Add a new host configuration with connection details and network settings"
+        },
+        "deletion": {
+          "title": "Remove Host"
+        },
+        "mutation": {
+          "allowinsecure": {
+            "alert": "Due to security concerns, it's not recommended to enable Allow Insecure"
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "delete": {
+      "error": "Failed to remove {{name}}",
+      "success": {
+        "title": "{{name}} has been successfully removed",
+        "desc": ""
+      }
+    },
+    "create": {
+      "error": "Failed to create {{name}}",
+      "success": {
+        "title": "{{name}} is successfully created",
+        "desc": ""
+      }
+    },
+    "update": {
+      "error": "Failed to update {{name}}",
+      "success": {
+        "title": "{{name}} is successfully updated",
+        "desc": ""
+      }
+    },
+    "user_revoke": {
+      "error": "Failed to revoke {{name}} subscription",
+      "success": {
+        "title": "{{name}} is successfully created",
+        "desc": ""
+      }
+    },
+    "user_reset": {
+      "error": "Failed to reset {{name}} data usage",
+      "success": {
+        "title": "{{name}} data usage has been successfully reset",
+        "desc": ""
+      }
+    },
+    "user_status": {
+      "error": "Failed to toggle {{name}} enable status",
+      "success": {
+        "title": "{{name}} enable status has been successfully updated",
+        "desc": ""
+      }
+    }
+  },
+  "delete-confirmation": {
+    "title": "Are you sure of this?",
+    "desc": "This action cannot be undone."
+  },
+  "statuses": {
+    "active": "Active",
+    "connected": "Connected",
+    "healthy": "Healthy",
+    "disabled": "Disabled",
+    "expired": "Expired",
+    "on_hold": "On Hold",
+    "connecting": "Connecting",
+    "unhealthy": "Unhealthy",
+    "limited": "Limited",
+    "error": "Error"
+  },
+  "placeholders": {
+    "search": "Search...",
+    "select-security": "Select security type",
+    "select-fingerprint": "Select fingerprint",
+    "select-alpn": "Select ALPN",
+    "select-protocol": "Select protocol",
+    "select-mode": "Select mode",
+    "select-date": "Pick a date",
+    "filter-logs": "Filter logs...",
+    "gb": "GB",
+    "packet": "Packet",
+    "delay": "Delay",
+    "noise-type": "Noise Type",
+    "port-number": "Enter port number",
+    "select-config": "Select a configuration file to edit...",
+    "nodes-connection": "Nodes Connection",
+    "search-filter": "Search...",
+    "type-to-search": "Type to search...",
+    "allowed-ips": "Enter allowed IPs",
+    "enter-value": "Enter value",
+    "filter-options": "Filter options...",
+    "header-name": "Header Name",
+    "header-value": "Header Value"
+  },
+  "buttons": {
+    "restart-container": "Restart Container",
+    "clear-logs": "Clear Logs",
+    "refresh": "Refresh",
+    "download": "Download",
+    "edit": "Edit",
+    "enable-form": "Enable Form",
+    "close": "Close",
+    "open": "Open",
+    "save": "Save",
+    "filter": "Filter",
+    "export": "Export",
+    "restore": "Restore",
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "try_again": "Try Again",
+    "go_home": "Go Home",
+    "reload_page": "Reload Page"
+  },
+  "labels": {
+    "container-management": "Container Management",
+    "container-logs": "Container Logs",
+    "file-explorer": "File Explorer",
+    "status-running": "Status: Running",
+    "system-overview": "System Overview",
+    "cpu-usage": "CPU Usage",
+    "memory-usage": "Memory Usage",
+    "disk-usage": "Disk Usage",
+    "configuration-editor": "Configuration Editor",
+    "root-partition": "Root partition",
+    "load": "Load",
+    "uptime": "Uptime",
+    "network-usage": "Network Usage",
+    "loading-logs": "Loading logs...",
+    "no-logs-available": "No logs available or matching filter",
+    "system-uptime": "System uptime"
+  },
+  "ui": {
+    "command": {
+      "searchDescription": "Search and execute commands"
+    }
+  },
+  "common": {
+    "system_configuration": "System Configuration"
+  },
+  "error": {
+    "something_went_wrong": "Something went wrong",
+    "unexpected_error_description": "An unexpected error occurred. Please try refreshing the page or return to the home page.",
+    "details": "Error details",
+    "try_again": "Try again",
+    "loading_data_failed": "An error occurred while loading data",
+    "submission_failed": "An error occurred",
+    "application_failed_to_load": "Application Failed to Load",
+    "react_mount_error": "There was an error mounting the React application.",
+    "check_console": "Please check the browser console for more details.",
+    "component_crashed": "A component has crashed. This might be due to a temporary issue.",
+    "technical_details": "Technical details",
+    "critical_error": "Critical Error",
+    "initialization_failed": "The application failed to initialize properly.",
+    "component_error": "Component Error",
+    "component_crashed_refresh": "A component has crashed. Please try refreshing the page.",
+    "network_connection": "Network connection error. Please check your internet connection.",
+    "request_timeout": "Request timeout. The server is taking too long to respond."
+  },
+  "validation": {
+    "username_required": "Username is required",
+    "password_required": "Password is required",
+    "minimum_zero": "The minimum number is 0",
+    "usage_duration_max": "usage_duration must be less than 3649635",
+    "usage_duration_min": "usage_duration must be more than 0",
+    "services": {
+      "min_one_inbound": "You have to select at least one inbound."
+    },
+    "hosts": {
+      "remark_required": "Remark is required",
+      "address_required": "Address is required",
+      "port_min": "Port must be more than 1",
+      "port_max": "Port cannot be more than 65535"
+    },
+    "users": {
+      "username_required": "Username is required",
+      "services_required": "At least one service is required"
+    }
+  },
+  "copyright": {
+    "text": "© 2025 WildosVPN. All rights reserved."
+  },
+  "not_found": {
+    "host": "Host not found"
+  },
+  "healthy": "Исправен",
+  "active-users": "Активные пользователи",
+  "total-nodes": "Всего узлов",
+  "total-users": "Всего пользователей",
+  "total-admins": "Всего администраторов",
+  "system-overview": "Обзор системы"
+}

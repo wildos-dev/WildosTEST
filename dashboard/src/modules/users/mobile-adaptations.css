@@ -1,0 +1,116 @@
+/* Mobile adaptations for Users module */
+
+/* Hide hover states on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:bg-muted\/50:hover {
+    background-color: initial !important;
+  }
+  
+  .hover\:shadow-lg:hover {
+    box-shadow: initial !important;
+  }
+  
+  .group:hover .group-hover\:opacity-100 {
+    opacity: initial !important;
+  }
+  
+  /* Keep focus states for accessibility */
+  .focus-visible\:opacity-100:focus-visible {
+    opacity: 1 !important;
+  }
+}
+
+/* Ensure minimum touch targets on mobile */
+@media (max-width: 768px) {
+  /* Touch-friendly button sizes */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improved spacing for touch */
+  .touch-spacing {
+    padding: 12px;
+    margin: 8px 0;
+  }
+  
+  /* Better table scrolling on mobile */
+  .entity-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  
+  .entity-table-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .entity-table-container::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  
+  .entity-table-container::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+  
+  /* Improved tab buttons on mobile */
+  .mobile-tabs .tab-trigger {
+    min-height: 48px;
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+  
+  /* Better spacing in forms */
+  .mobile-form .form-field {
+    margin-bottom: 20px;
+  }
+  
+  .mobile-form .form-input {
+    min-height: 48px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
+  }
+  
+  /* Improved chart legends */
+  .mobile-chart-legend {
+    font-size: 12px;
+    gap: 8px;
+  }
+  
+  /* Better button spacing in action groups */
+  .mobile-action-group {
+    gap: 12px;
+  }
+  
+  .mobile-action-group .button {
+    min-height: 48px;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  
+  .responsive-widget {
+    min-height: 300px;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .tablet-dialog {
+    max-width: 90vw;
+    margin: 20px;
+  }
+}

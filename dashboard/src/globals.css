@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-accent: 0 27% 100%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 147 100% 40%;
+    --success-accent: 147 100% 80%;
+    --success-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  :root {
+    /* Dark theme as default */
+    --background: 220 13% 9%;
+    --foreground: 220 9% 98%;
+
+    --card: 224 15% 11%;
+    --card-foreground: 220 9% 98%;
+
+    --popover: 224 15% 11%;
+    --popover-foreground: 220 9% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 220 9% 98%;
+
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 11% 65%;
+
+    --accent: 215 28% 17%;
+    --accent-foreground: 220 9% 98%;
+
+    --success: 142 76% 36%;
+    --success-accent: 142 76% 76%;
+    --success-foreground: 220 9% 98%;
+
+    --destructive: 0 63% 57%;
+    --destructive-accent: 0 63% 30%;
+    --destructive-foreground: 220 9% 98%;
+
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 217 91% 60%;
+
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 268 83% 67%;
+    --chart-5: 10 79% 66%;
+  }
+}
+
+@layer base {
+  .font-body {
+    font-family: "Lato", sans-serif;
+  }
+
+  .font-header {
+    font-family: "Ubuntu", sans-serif;
+  }
+
+  .vstack {
+    @apply flex flex-col;
+  }
+
+  .hstack {
+    @apply flex flex-row;
+  }
+
+  * {
+    @apply border-border font-body;
+  }
+
+  body {
+    @apply bg-slate-900 text-slate-100;
+  }
+
+  /* Enhanced scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-800/50;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-600/80;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-500/90;
+  }
+
+  /* Enhanced card styling */
+  .dark .card,
+  .card {
+    @apply bg-slate-800/50 border-slate-700/50 backdrop-blur-sm;
+  }
+
+  /* Button enhancements */
+  .dark .btn-secondary,
+  .btn-secondary {
+    @apply bg-slate-700/80 hover:bg-slate-600/80 border-slate-600/50;
+  }
+}
+
+.recharts-responsive-container {
+  height: initial !important;
+}
