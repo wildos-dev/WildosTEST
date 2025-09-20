@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
             rollupOptions: {
                 output: {
                     manualChunks: (id: string) => {
-                        // Core React dependencies - keep together for caching
+                        // Core React dependencies - keep minimal and clean
                         if (id.includes('react-dom') || id.includes('react/') || id.includes('react\\')) {
                             return 'react-core';
                         }
@@ -74,17 +74,6 @@ export default defineConfig(({ mode }) => {
                         // DND Kit - lazy loaded, separate chunk  
                         if (id.includes('@dnd-kit/')) {
                             return 'dnd-kit';
-                        }
-                        
-                        // Radix UI - split into smaller chunks for better caching
-                        if (id.includes('@radix-ui/react-dialog') || id.includes('@radix-ui/react-popover') || id.includes('@radix-ui/react-tooltip')) {
-                            return 'radix-overlays';
-                        }
-                        if (id.includes('@radix-ui/react-select') || id.includes('@radix-ui/react-dropdown-menu') || id.includes('@radix-ui/react-tabs')) {
-                            return 'radix-navigation';
-                        }
-                        if (id.includes('@radix-ui/')) {
-                            return 'radix-core';
                         }
                         
                         // TanStack - split by functionality
@@ -119,11 +108,6 @@ export default defineConfig(({ mode }) => {
                             return 'date-utils';
                         }
                         
-                        // Internationalization
-                        if (id.includes('i18next') || id.includes('react-i18next')) {
-                            return 'i18n';
-                        }
-                        
                         // Network and data libraries
                         if (id.includes('ofetch') || id.includes('yaml')) {
                             return 'network';
@@ -132,11 +116,6 @@ export default defineConfig(({ mode }) => {
                         // Development and testing tools (only in dev builds)
                         if (isDev && (id.includes('@testing-library') || id.includes('vitest') || id.includes('@hookform/devtools'))) {
                             return 'dev-tools';
-                        }
-                        
-                        // Small React components - group together
-                        if (id.includes('react-copy-to-clipboard') || id.includes('react-qr-code') || id.includes('sonner') || id.includes('vaul')) {
-                            return 'react-components';
                         }
                         
                         // Command palette and search
@@ -152,6 +131,18 @@ export default defineConfig(({ mode }) => {
                         // Layout and panels
                         if (id.includes('react-resizable-panels') || id.includes('react-day-picker')) {
                             return 'layout';
+                        }
+                        
+                        // React ecosystem - group all React-dependent libraries together
+                        // This includes Radix UI, i18n, and small React components
+                        if (id.includes('@radix-ui/') || 
+                            id.includes('i18next') || 
+                            id.includes('react-i18next') ||
+                            id.includes('react-copy-to-clipboard') || 
+                            id.includes('react-qr-code') || 
+                            id.includes('sonner') || 
+                            id.includes('vaul')) {
+                            return 'react-ecosystem';
                         }
                         
                         // Large vendor dependencies that should be separate

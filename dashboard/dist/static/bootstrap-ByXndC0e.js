@@ -1,1 +1,0 @@
-import{i as t}from"./i18n-BPeR8mCs.js";import"./react-core-DN74h41Q.js";import"./monaco-D6sUsa5W.js";const n=async()=>{try{const r=Array.isArray(t.options.defaultNS)?t.options.defaultNS[0]:t.options.defaultNS||"translation";return t.isInitialized&&t.hasResourceBundle(t.language,r),!0}catch{return!1}};export{n as initializeReactI18n};

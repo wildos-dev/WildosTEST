@@ -1,3 +1,6 @@
+// Import React for react-i18next createContext usage in production builds
+// @ts-ignore - React is needed for runtime but not directly used in code
+import React from 'react';
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';

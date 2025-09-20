@@ -5,6 +5,7 @@ import './globals.css'
 
 import { routeTree } from './routeTree.gen'
 import { ErrorBoundary } from '@wildosvpn/common/components/error-boundary'
+import { useAuth } from '@wildosvpn/modules/auth/auth.store'
 
 // Secure error logging system with DEV/PROD separation
 let isLogging = false; // Flag to prevent recursion
@@ -343,8 +344,8 @@ const initializeHashRouting = async () => {
         
         // Check authentication and redirect accordingly
         try {
-            const { useAuth } = await import('@wildosvpn/modules/auth');
-            const isLoggedIn = await useAuth.getState().isLoggedIn();
+            const authToken = useAuth.getState().getAuthToken();
+            const isLoggedIn = !!authToken;
             
             if (isLoggedIn) {
                 console.log('🔄 User authenticated, redirecting to dashboard');
