@@ -5,9 +5,10 @@ import { VariantProps } from "class-variance-authority"
 import { cn } from "@wildosvpn/common/utils"
 import { toggleVariants } from "@wildosvpn/common/components/ui/toggle"
 
-const ToggleGroupContext = React.createContext<
-    VariantProps<typeof toggleVariants>
->({
+// Safe createContext with fallback
+const ToggleGroupContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<VariantProps<typeof toggleVariants>>({
     size: "default",
     variant: "default",
 })
@@ -35,7 +36,9 @@ const ToggleGroupItem = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &
     VariantProps<typeof toggleVariants>
 >(({ className, children, variant, size, ...props }, ref) => {
-    const context = React.useContext(ToggleGroupContext)
+    const context = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(ToggleGroupContext)
 
     return (
         <ToggleGroupPrimitive.Item

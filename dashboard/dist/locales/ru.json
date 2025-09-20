@@ -3,11 +3,7 @@
   "info": "Информация",
   "type": "Тип",
   "version": "Версия",
-  "loading": {
-    "network-data": "Загрузка сетевых данных...",
-    "disk-data": "Загрузка данных диска...",
-    "files": "Загрузка файлов..."
-  },
+  "loading": "Загрузка",
   "yes": "Да",
   "no": "Нет",
   "total": "Всего",
@@ -15,9 +11,13 @@
   "on_hold": "В ожидании",
   "limited": "Ограничено",
   "unhealthy": "Неисправно",
-  "status": {
-    "temporarily_unavailable": "временно недоступен"
-  },
+  "healthy": "Исправен",
+  "active-users": "Активные пользователи",
+  "total-nodes": "Всего узлов",
+  "total-users": "Всего пользователей", 
+  "total-admins": "Всего администраторов",
+  "system-overview": "Обзор системы",
+  "status": "Статус",
   "address": "Адрес",
   "users": "Пользователи",
   "nodes": "Узлы",
@@ -73,18 +73,7 @@
   "cancel": "Отмена",
   "dark": "Тёмная",
   "light": "Светлая",
-  "system": {
-    "no-network-interfaces": "Сетевые интерфейсы не найдены",
-    "no-disk-partitions": "Разделы диска не найдены",
-    "no-open-ports": "Открытые порты не обнаружены",
-    "open-port": "Открытый порт",
-    "port-number": "Номер порта",
-    "protected-ports": "Защищённые порты",
-    "open-ports": "Открытые порты",
-    "total-traffic": "Общий трафик",
-    "no-files-found": "Файлы не найдены",
-    "no-files-available": "Файлы недоступны"
-  },
+  "system": "Система",
   "disabled": "Отключено",
   "advanced-options": "Дополнительные параметры",
   "language": "Язык",
@@ -116,8 +105,8 @@
   "remark": "Примечание",
   "all": "Все",
   "found": "Найдено",
-  "no-nodes-available": "Узлы недоступны",
-  "create-first-node": "Создать первый узел",
+  "no-nodes-available": "No nodes available",
+  "create-first-node": "Create first node",
   "support-us": {
     "title": "Поддержите нас",
     "desc": "WildosVPN — это бесплатное программное обеспечение с открытым исходным кодом (FOSS), присоединяйтесь к нам и поддержите проект пожертвованием.",
@@ -130,518 +119,517 @@
   },
   "features": {
     "search": {
-      "no-results-found": "Результаты не найдены.",
+      "no-results-found": "No results found.",
       "groups": {
-        "pages": "Страницы",
-        "actions": "Действия",
-        "settings": "Настройки"
+        "pages": "Pages",
+        "actions": "Actions",
+        "settings": "Settings"
       }
     },
     "sidebar": {
-      "expand-sidebar": "Развернуть боковую панель",
-      "collapse-sidebar": "Свернуть боковую панель"
+      "expand-sidebar": "Expand sidebar",
+      "collapse-sidebar": "Collapse sidebar"
     },
     "support-us": {
-      "close": "Закрыть"
+      "close": "Close"
     },
     "total-traffic-widget": {
       "chart": {
-        "traffic-label": "Трафик"
+        "traffic-label": "Traffic"
       },
-      "total": "Всего"
+      "total": "Total"
     }
   },
   "widget-names": {
-    "traffic-analytics": "Аналитика трафика",
-    "host-system-metrics": "Метрики системы хоста",
-    "peak-events": "Пиковые события",
-    "top-usage-nodes": "Узлы с наибольшим использованием",
-    "network-activity": "Сетевая активность",
-    "quick-actions": "Быстрые действия"
+    "traffic-analytics": "Traffic Analytics",
+    "host-system-metrics": "Host System Metrics",
+    "peak-events": "Peak Events",
+    "top-usage-nodes": "Top Usage Nodes",
+    "network-activity": "Network Activity",
+    "quick-actions": "Quick Actions"
   },
   "not-found": {
-    "admin": "Администратор не найден",
-    "node": "Узел не найден",
-    "service": "Сервис не найден",
-    "user": "Пользователь не найден",
-    "host": "Хост не найден"
+    "admin": "Admin not found",
+    "node": "Node not found",
+    "service": "Service not found",
+    "user": "User not found",
+    "host": "Host not found"
   },
   "options": {
-    "none": "Нет",
+    "none": "None",
     "tls": "TLS",
-    "inbound-default": "По умолчанию для входящих",
-    "copy": "Копировать",
-    "copied": "Скопировано",
-    "loading": "Загрузка...",
-    "search": "Поиск"
+    "inbound-default": "Inbound Default",
+    "copy": "Copy",
+    "copied": "Copied",
+    "loading": "Loading...",
+    "search": "Search"
   },
   "table": {
-    "no-result-found": "Результаты не найдены.",
-    "row-per-page": "Строк на странице",
-    "no-result": "Нет результата",
-    "selected": "Выбрано",
-    "toggle-column": "Переключить столбцы",
-    "filter-placeholder": "Фильтр {{name}}"
+    "no-result-found": "No results found.",
+    "row-per-page": "Rows per page",
+    "no-result": "No result",
+    "selected": "Selected",
+    "toggle-column": "Toggle columns",
+    "filter-placeholder": "Filter {{name}}"
   },
   "pagination": {
-    "page": "Страница",
-    "of": "из"
+    "page": "Page",
+    "of": "of"
   },
   "navigation": {
-    "open-menu": "Открыть меню",
-    "menu": "Меню",
-    "go-to-first-page": "Перейти на первую страницу",
-    "go-to-last-page": "Перейти на последнюю страницу",
-    "go-to-next-page": "Перейти на следующую страницу",
-    "go-to-previous-page": "Перейти на предыдущую страницу",
-    "navigate-to": "Перейти к",
-    "select-page-to-navigate": "Выберите страницу для перехода",
-    "toggle-menu": "Переключить меню",
-    "toggle-menu-alt": "Переключить меню",
-    "drag-to-reorder": "Перетащите для изменения порядка"
+    "go-to-first-page": "Go to first page",
+    "go-to-previous-page": "Go to previous page",
+    "go-to-next-page": "Go to next page",
+    "go-to-last-page": "Go to last page",
+    "open-menu": "Open menu",
+    "navigate-to": "Navigate to",
+    "toggle-menu": "Toggle menu",
+    "toggle-menu-alt": "Toggle Menu",
+    "drag-to-reorder": "Drag to reorder",
+    "select-page-to-navigate": "Select a page to navigate to."
   },
   "accessibility": {
-    "select_all": "Выбрать все",
-    "select_row": "Выбрать строку",
-    "drag_to_reorder": "Перетащите для изменения порядка",
-    "draggable": "перетаскиваемый",
-    "breadcrumb": "хлебные крошки",
-    "clear": "Очистить",
-    "more": "Ещё",
-    "close": "Закрыть",
-    "remove": "Удалить"
+    "select_all": "Select all",
+    "select_row": "Select row",
+    "drag_to_reorder": "Drag to reorder",
+    "draggable": "draggable",
+    "breadcrumb": "breadcrumb",
+    "clear": "Clear",
+    "more": "More",
+    "close": "Close",
+    "remove": "Remove"
   },
   "form": {
-    "pick-a-date": "Выберите дату"
+    "pick-a-date": "Pick a date"
   },
   "logo": {
-    "wildos-vpn": "Логотип WildosVPN",
-    "wildos-icon": "Иконка WildosVPN"
+    "wildos-vpn": "WildosVPN Logo",
+    "wildos-icon": "WildosVPN Icon"
   },
   "metrics": {
-    "traffic": "Трафик"
+    "traffic": "Traffic"
   },
   "network": {
     "rx": "RX",
     "tx": "TX"
   },
   "time-periods": {
-    "daily": "Ежедневно",
-    "weekly": "Еженедельно",
-    "monthly": "Ежемесячно",
-    "yearly": "Ежегодно"
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
   },
   "widgets": {
-    "default_widget_name": "Виджет",
+    "default_widget_name": "Widget",
     "quick-actions": {
-      "create-user": "Создать пользователя",
-      "add-node": "Добавить узел",
-      "new-service": "Новый сервис",
-      "add-admin": "Добавить администратора",
-      "title": "Быстрые действия",
-      "desc": "Выполнение общих административных задач"
+      "create-user": "Create User",
+      "add-node": "Add Node",
+      "new-service": "New Service",
+      "add-admin": "Add Admin",
+      "title": "Quick Actions",
+      "desc": "Perform common administrative tasks"
     },
     "certificate-status": {
-      "title": "Статус сертификата",
-      "desc": "Статус и управление SSL сертификатами",
-      "overall-status": "Общий статус",
-      "ca-certificate": "CA Сертификат",
-      "server-certificate": "Сертификат сервера",
-      "time-left": "Времени осталось",
-      "manage-certificates": "Управление сертификатами",
+      "title": "Certificate Status",
+      "desc": "SSL certificate status and management",
+      "overall-status": "Overall Status",
+      "ca-certificate": "CA Certificate",
+      "server-certificate": "Server Certificate",
+      "time-left": "Time Left",
+      "manage-certificates": "Manage Certificates",
       "status": {
-        "healthy": "Исправен",
-        "warning": "Предупреждение",
-        "critical": "Критично",
-        "unknown": "Неизвестно"
+        "healthy": "Healthy",
+        "warning": "Warning",
+        "critical": "Critical",
+        "unknown": "Unknown"
       },
       "time-units": {
-        "days": "дни",
-        "days-short": "д",
-        "years-short": "г"
+        "days": "days",
+        "days-short": "d",
+        "years-short": "y"
       }
     },
-    "latest_subscription_changes": "Последние изменения подписки",
-    "no_recent_updates": "Нет последних обновлений",
-    "recently": "Недавно",
-    "recent_updates": "Последние обновления",
-    "subscription_updated": "Подписка обновлена",
-    "subscription_updates_will_appear": "Обновления подписки будут отображаться здесь",
+    "latest_subscription_changes": "Latest subscription changes",
+    "no_recent_updates": "No recent updates",
+    "recently": "Recently",
+    "recent_updates": "Recent Updates",
+    "subscription_updated": "Subscription updated",
+    "subscription_updates_will_appear": "Subscription updates will appear here",
     "subscription-settings": {
-      "profile-title": "Заголовок профиля",
-      "update-interval": "Интервал обновления",
-      "support-link": "Ссылка поддержки",
-      "template-on-accept": "Шаблон при принятии",
-      "rules-count": "Количество правил",
-      "configure-settings": "Настройки конфигурации",
-      "not-set": "Не установлено",
-      "configured": "Настроено",
-      "enabled": "Включено",
-      "disabled": "Отключено",
-      "minutes": "минуты",
-      "rules": "правила"
+      "profile-title": "Profile Title",
+      "update-interval": "Update Interval",
+      "support-link": "Support Link",
+      "template-on-accept": "Template on Accept",
+      "rules-count": "Rules Count",
+      "configure-settings": "Configure Settings",
+      "not-set": "Not set",
+      "configured": "Configured",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "minutes": "minutes",
+      "rules": "rules"
     }
   },
   "page": {
     "home": {
       "users-stats": {
-        "desc": "Обзор статусов пользователей"
+        "desc": "Overview of user's statuses"
       },
       "nodes-stats": {
-        "desc": "Обзор статуса и состояния узлов"
+        "desc": "Overview of node status and health"
       },
       "total-traffics": {
-        "title": "Общий системный трафик",
-        "desc": "Трафик со всех узлов"
+        "title": "Total System Traffic",
+        "desc": "Traffics combined from all nodes"
       }
     },
     "settings": {
-      "description": "Настройка и кастомизация системных параметров",
+      "description": "Configure and customize system settings",
       "subscription-settings": {
-        "template-on-acceptance": "Шаблон при принятии",
-        "placeholder-remark": "Замещающее примечание",
-        "placeholder-if-disabled": "Замещающий текст при отключении",
-        "shuffle-configs": "Перемешивать конфигурации",
-        "url-prefix": "Префикс URL",
-        "profile-title": "Заголовок профиля",
-        "support-link": "Ссылка поддержки",
-        "update-interval": "Интервал обновления",
-        "add-rule": "Добавить правило",
-        "reset-local-changes": "Сбросить изменения",
-        "title": "Подписка",
-        "description": "Управление и настройка параметров подписки с настраиваемыми правилами и опциями обновления.",
-        "subscription-title": "Правила подписки",
-        "subscription-desc": "Добавьте правила подписки в порядке приоритета.",
+        "template-on-acceptance": "Template on Acceptance",
+        "placeholder-remark": "Placeholder Remark",
+        "placeholder-if-disabled": "Placeholder if Disabled",
+        "shuffle-configs": "Shuffle Configs",
+        "url-prefix": "URL Prefix",
+        "profile-title": "Profile Title",
+        "support-link": "Support Link",
+        "update-interval": "Update Interval",
+        "add-rule": "Add Rule",
+        "reset-local-changes": "Reset Changes",
+        "title": "Subscription",
+        "description": "Manage and customize subscription settings with configurable rules and update options.",
+        "subscription-title": "Subscription Rules",
+        "subscription-desc": "Add your subscription rules in order of priority.",
         "alert": {
-          "title": "Нет правил",
-          "desc": "Не определены правила для подписки"
+          "title": "No rules",
+          "desc": "No rules have been defined for subscription"
         }
       },
       "certificate": {
-        "copy": "Скопировать сертификат",
-        "error": "Сертификат недоступен",
-        "copied": "Сертификат скопирован"
+        "copy": "Copy Certificate",
+        "error": "Certificate Unavailable",
+        "copied": "Certificate Copied"
       }
     },
     "login": {
       "username": {
         "error": {
-          "is-required": "Имя пользователя обязательно"
+          "is-required": "Username is required"
         }
       },
       "password": {
         "error": {
-          "is-required": "Пароль обязателен"
+          "is-required": "Password is required"
         }
       }
     },
     "nodes": {
       "nodes-usage-widget": {
-        "title": "Использование трафика узла",
-        "desc": "Общее использование трафика на этом узле"
+        "title": "Node Traffic Usage",
+        "desc": "Total traffic usage on this node"
       },
       "status": {
-        "healthy": "Исправен",
-        "unhealthy": "Неисправен",
-        "disabled": "Отключен",
-        "none": "нет"
+        "healthy": "Healthy",
+        "unhealthy": "Unhealthy",
+        "disabled": "Disabled",
+        "none": "none"
       },
       "peak_events": {
-        "title": "Пиковые события ({{count}})",
-        "edit_node": "Редактировать узел",
-        "delete_node": "Удалить узел",
-        "ongoing": "Текущие",
-        "users": "Пользователи",
-        "connections": "Соединения",
-        "backend": "Бэкенд",
-        "traffic": "Трафик",
-        "no_additional_info": "Нет дополнительной информации",
-        "connected_to_stream": "Подключено к потоку событий",
-        "no_events_detected": "Пиковые события не обнаружены",
-        "system_tracking": "Система отслеживает CPU > 75% и RAM > 80%",
-        "active_peaks": "Активные пики ({{count}})",
-        "event_history": "История событий",
-        "threshold": "порог",
-        "since": "с",
-        "values": "Значения",
-        "peak_value": "Пик",
-        "threshold_value": "Порог",
-        "metric": "Метрика",
-        "time": "Время",
-        "start": "Начало",
-        "end": "Конец",
-        "diagnostic_context": "Диагностический контекст",
-        "connection_status": "Статус соединения",
-        "connected_to_event_stream": "✓ Подключено к потоку событий",
-        "reconnecting": "⚠ Переподключение...",
-        "duration_min": "мин",
-        "duration_less_than_min": "<1 мин",
+        "title": "Peak Events ({{count}})",
+        "edit_node": "Edit node",
+        "delete_node": "Delete node",
+        "ongoing": "Ongoing",
+        "users": "Users",
+        "connections": "Connections",
+        "backend": "Backend",
+        "traffic": "Traffic",
+        "no_additional_info": "No additional information",
+        "connected_to_stream": "Connected to event stream",
+        "no_events_detected": "No peak events detected",
+        "system_tracking": "System tracks CPU > 75% and RAM > 80%",
+        "active_peaks": "Active peaks ({{count}})",
+        "event_history": "Event History",
+        "threshold": "threshold",
+        "since": "since",
+        "values": "Values",
+        "peak_value": "Peak",
+        "threshold_value": "Threshold",
+        "metric": "Metric",
+        "time": "Time",
+        "start": "Start",
+        "end": "End",
+        "diagnostic_context": "Diagnostic Context",
+        "connection_status": "Connection status",
+        "connected_to_event_stream": "✓ Connected to event stream",
+        "reconnecting": "⚠ Reconnecting...",
+        "duration_min": "min",
+        "duration_less_than_min": "<1 min",
         "levels": {
-          "high": "Высокий",
-          "critical": "Критический"
+          "high": "High",
+          "critical": "Critical"
         },
         "categories": {
           "cpu": "CPU",
-          "memory": "Память",
-          "disk": "Диск",
-          "network": "Сеть",
-          "backend": "Бэкенд"
+          "memory": "Memory",
+          "disk": "Disk",
+          "network": "Network",
+          "backend": "Backend"
         }
       },
       "settings": {
         "no-backend-alert": {
-          "title": "Не настроен бэкенд для этого узла",
-          "desc": "Пожалуйста, примите необходимые меры и настройте бэкенд для этого узла."
+          "title": "No backend is configured for this node",
+          "desc": "Please take required measures and configure a backend for this node."
         },
-        "title": "Настройки узлов",
-        "detail": "Детали",
+        "title": "Nodes Settings",
+        "detail": "Details",
         "log-container": {
-          "title": "Логи Xray"
+          "title": "Xray logs"
         }
       },
       "dialogs": {
         "creation": {
-          "title": "Добавить узел",
-          "description": "Добавить новый узел в вашу сеть"
+          "title": "Add Node",
+          "description": "Add a new node to your network"
         },
         "deletion": {
-          "title": "Удалить узел"
+          "title": "Remove Node"
         },
         "edition": {
-          "title": "Редактировать узел",
-          "description": "Изменить конфигурацию и настройки узла"
+          "title": "Edit Node",
+          "description": "Edit node configuration and settings"
         }
       },
-      "usage_coefficient": "Коэффициент использования",
-      "connection_backend": "Бэкенд соединения",
-      "connection_backend_desc": "Используется для удалённого соединения",
+      "usage_coefficient": "Usage Coefficient",
+      "connection_backend": "Connection Backend",
+      "connection_backend_desc": "Used for the remote connection",
       "certificate-alert": {
-        "title": "Настройка сертификата узлов",
-        "desc": "Если вы хотите настроить сертификат узлов, перейдите на страницу настроек.",
-        "click": "Нажмите здесь"
+        "title": "Nodes Certificate Configuration",
+        "desc": "If you aim to configure your nodes certificate, checkout settings page.",
+        "click": "Click Here"
       },
-      "xray_version": "Версия Xray",
-      "last_status_change": "Последнее изменение статуса",
-      "uplink": "Исходящий канал",
-      "downlink": "Входящий канал",
-      "backend": "Бэкенд",
+      "xray_version": "Xray Version",
+      "last_status_change": "Last Status Change",
+      "uplink": "Uplink",
+      "downlink": "Downlink",
+      "backend": "Backend",
       "restart": {
         "success": {
-          "title": "Бэкенд {backend} успешно перезапущен",
-          "desc": "Бэкенд был перезапущен"
+          "title": "Backend {backend} restarted successfully",
+          "desc": "The backend has been restarted"
         },
-        "error": "Не удалось перезапустить бэкенд для узла {name}"
+        "error": "Failed to restart backend for node {name}"
       },
-      "backends_running": "Работающие бэкенды",
-      "traffic_usage": "Использование трафика"
+      "backends_running": "Backends Running",
+      "traffic_usage": "Traffic Usage"
     },
     "services": {
       "settings": {
-        "title": "Настройки сервиса",
-        "detail": "Детали"
+        "title": "Service Settings",
+        "detail": "Details"
       },
       "dialogs": {
         "creation": {
-          "title": "Создать сервис",
-          "description": "Создать новый сервис, определив его имя и связанные входящие соединения"
+          "title": "Create Service",
+          "description": "Create a new service by defining its name and associated inbound connections"
         },
         "deletion": {
-          "title": "Удалить сервис"
+          "title": "Remove Service"
         },
         "edition": {
-          "title": "Редактировать сервис",
-          "description": "Изменить конфигурацию сервиса и назначения входящих соединений"
+          "title": "Edit Service",
+          "description": "Modify service configuration and inbound connection assignments"
         }
       }
     },
     "users": {
-      "created_at": "Создан",
-      "no_use": "Не используется",
-      "data_limit_reached": "Лимит данных достигнут",
-      "sub_updated_at": "Последнее обновление подписки",
-      "sub_last_user_agent": "Последний User Agent",
-      "traffic_reset_at": "Последний сброс трафика",
-      "lifetime_used_traffic": "Общий использованный трафик",
-      "note-placeholder": "Дополнительная информация о пользователе",
-      "data_limit": "Лимит данных",
-      "traffic": "Трафик",
-      "used_traffic": "Использованный трафик",
-      "data_limit_reset_strategy": "Период сброса данных",
-      "online_at": "Последнее использование",
-      "expire_date": "Дата истечения",
-      "unlimited": "Неограниченно",
-      "never": "Никогда",
-      "limited": "Ограничено",
-      "data_limit_method": "Лимит данных",
-      "fixed_date": "Фиксированная дата",
-      "expire_method": "Истечение",
-      "on_first_use": "При первом использовании",
-      "reset_usage": "Сбросить использование",
-      "revoke_subscription": "Отозвать подписку",
-      "usage_duration": "Длительность использования",
-      "activation_deadline": "Срок активации",
-      "nodes-usage": "Использование узлов",
+      "created_at": "Created At",
+      "no_use": "No Use",
+      "data_limit_reached": "Data Limit Reached",
+      "sub_updated_at": "Last subscription update",
+      "sub_last_user_agent": "Last User Agent",
+      "traffic_reset_at": "Last traffic reset",
+      "lifetime_used_traffic": "Lifetime Used Traffic",
+      "note-placeholder": "Additional information about user",
+      "data_limit": "Data Limit",
+      "traffic": "Traffic",
+      "used_traffic": "Used Traffic",
+      "data_limit_reset_strategy": "Data Reset Period",
+      "online_at": "Last Use",
+      "expire_date": "Expire Date",
+      "unlimited": "Unlimited",
+      "never": "Never",
+      "limited": "Limited",
+      "data_limit_method": "Data Limit",
+      "fixed_date": "Fixed Date",
+      "expire_method": "Expiration",
+      "on_first_use": "On first use",
+      "reset_usage": "Reset Usage",
+      "revoke_subscription": "Revoke Subscription",
+      "usage_duration": "Usage Duration",
+      "activation_deadline": "Activation Deadline",
+      "nodes-usage": "Nodes Usage",
       "settings": {
         "nodes-usage": {
-          "last-days": "Последние {{count}} дней",
-          "last-months": "Последние {{count}} месяцев",
-          "last-hours": "Последние {{count}} часов",
-          "title": "Использование узлов пользователем",
-          "desc": "Количество использования пользователем на каждом узле во времени."
+          "last-days": "Last {{count}} days",
+          "last-months": "Last {{count}} months",
+          "last-hours": "Last {{count}} hours",
+          "title": "User Nodes Usage",
+          "desc": "The amount of user usage on each node in time."
         },
         "subscription_link": {
-          "copied": "Ссылка на подписку скопирована",
-          "copy": "Ссылка на подписку",
-          "error": "Не удалось скопировать ссылку на подписку"
+          "copied": "Subscription Link Copied",
+          "copy": "Subscription Link",
+          "error": "Unable to copy Subscription Link"
         }
       },
       "services-alert": {
-        "title": "Сервис не найден",
-        "desc": "Убедитесь, что вы создали сервисы, чтобы ваши пользователи могли подключаться через входящие соединения.",
-        "click": "Нажмите здесь"
+        "title": "No Service found",
+        "desc": "Make sure you create services to enable your users with inbounds to connect with.",
+        "click": "Click Here"
       },
       "dialogs": {
         "edition": {
-          "title": "Редактировать пользователя",
-          "description": "Изменить настройки аккаунта пользователя, лимиты данных и разрешения сервисов"
+          "title": "Edit User",
+          "description": "Modify user account settings, data limits, and service permissions"
         },
         "creation": {
-          "title": "Создать пользователя",
-          "description": "Создать новый аккаунт пользователя с лимитами данных и доступом к сервисам"
+          "title": "Create User",
+          "description": "Create a new user account with data limits and service access"
         },
         "deletion": {
-          "title": "Удалить пользователя"
+          "title": "Remove User"
         },
         "mutation": {
           "note": {
-            "desc": "Оставьте заметку о вашем пользователе"
+            "desc": "Leave a note about your user"
           }
         }
       }
     },
     "admins": {
-      "disable_users": "Отключить пользователей",
-      "enable_users": "Включить пользователей",
-      "permission": "Разрешение",
+      "disable_users": "Disable users",
+      "enable_users": "Enable users",
+      "permission": "Permission",
       "dialogs": {
         "creation": {
-          "title": "Создать администратора",
-          "description": "Создать новый аккаунт администратора с определёнными разрешениями и правами доступа"
+          "title": "Create admin",
+          "description": "Create a new administrator account with specific permissions and access rights"
         },
         "edition": {
-          "title": "Редактировать администратора",
-          "description": "Изменить настройки аккаунта администратора и разрешения"
+          "title": "Edit admin",
+          "description": "Modify administrator account settings and permissions"
         },
         "deletion": {
-          "title": "Удалить администратора"
+          "title": "Delete admin"
         }
       },
-      "modify-users-access": "Изменить доступ пользователей",
-      "subscription-url-prefix": "Префикс URL подписки",
-      "sudo-privilage": "Sudo привилегии",
-      "all-services-access": "Доступ ко всем сервисам",
-      "users-data-usage": "Использование данных пользователями",
+      "modify-users-access": "Modify users access",
+      "subscription-url-prefix": "Subscription URL prefix",
+      "sudo-privilage": "Sudo privilage",
+      "all-services-access": "All services access",
+      "users-data-usage": "Users Data Usage",
       "token": {
-        "copy": "Скопировать токен",
-        "copied": "Токен скопирован в буфер обмена",
-        "error": "Не удалось скопировать токен"
+        "copy": "Copy token",
+        "copied": "Token copied to clipboard",
+        "error": "Failed to copy token"
       }
     },
     "hosts": {
-      "xmux-settings": "Настройки Xmux",
-      "split-http-settings": "Настройки Split HTTP",
-      "no-grpc-header": "Нет GRPC заголовка",
-      "early-data": "Ранние данные",
-      "http_headers": "HTTP заголовки",
-      "no-http-headers": "Нет HTTP заголовков",
-      "mux-settings": "Настройки мультиплексирования",
-      "dns-servers": "DNS серверы",
-      "obfuscation-password": "Пароль обфускации",
-      "server-public-key": "Публичный ключ сервера",
-      "tls-config": "Конфигурация TLS",
-      "network-settings": "Настройки сети",
-      "security-settings": "Настройки безопасности",
-      "allowed-ips": "Разрешённые IP",
+      "xmux-settings": "Xmux Settings",
+      "split-http-settings": "Split HTTP Settings",
+      "no-grpc-header": "No GRPC Header",
+      "early-data": "Early Data",
+      "http_headers": "HTTP Headers",
+      "no-http-headers": "No HTTP headers",
+      "mux-settings": "Mux Settings",
+      "dns-servers": "DNS Servers",
+      "obfuscation-password": "Obfuscation Password",
+      "server-public-key": "Server public key",
+      "tls-config": "TLS Config",
+      "network-settings": "Network Settings",
+      "security-settings": "Security Settings",
+      "allowed-ips": "Allowed Ips",
       "allowed-ips-placeholder": "127.0.0.1,...",
-      "camouflage-settings": "Настройки маскировки",
+      "camouflage-settings": "Camouflage Settings",
       "fragment": {
-        "interval": "Интервал",
-        "length": "Длина",
-        "packets": "Пакеты",
-        "length-error": "Длина не может превышать 32 символа и должна быть число-число",
-        "interval-error": "Интервал не может превышать 32 символа и должен быть число-число",
-        "packets-error": "Пакеты не могут превышать 32 символа и должны быть число-число или tlshello"
+        "interval": "Interval",
+        "length": "Length",
+        "packets": "Packets",
+        "length-error": "Length can not exceed 32 char and must be number-number",
+        "interval-error": "Interval can not exceed 32 char and must be number-number",
+        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
       },
       "noise": {
-        "interval": "Интервал",
-        "length": "Длина",
-        "packets": "Пакеты",
-        "length-error": "Длина не может превышать 32 символа и должна быть число-число",
-        "interval-error": "Интервал не может превышать 32 символа и должен быть число-число",
-        "packets-error": "Пакеты не могут превышать 32 символа и должны быть число-число или tlshello"
+        "interval": "Interval",
+        "length": "Length",
+        "packets": "Packets",
+        "length-error": "Length can not exceed 32 char and must be number-number",
+        "interval-error": "Interval can not exceed 32 char and must be number-number",
+        "packets-error": "Packets can not exceed 32 char and must be number-number or be tlshello"
       },
       "popover-guide": {
-        "title": "Используя эту настройку, вы можете назначить конкретный адрес для каждого входящего соединения.",
-        "desc": "Используйте эти переменные для динамизации",
-        "username": "Имя пользователя",
-        "dataUsage": "Текущее использование пользователем",
-        "remainingData": "Оставшиеся данные пользователя",
-        "dataLimit": "Лимит данных пользователя",
-        "remainingDays": "Оставшиеся дни пользователя",
-        "expireDate": "Дата истечения пользователя",
-        "jalaliExpireDate": "Дата истечения пользователя в календаре джалали",
-        "remainingTime": "Оставшееся время пользователя",
-        "statusEmoji": "Статус пользователя в виде эмодзи (✅,⌛,🪫,❌,🔌)",
-        "proxyProtocol": "Протокол прокси (например, VMess)",
-        "proxyMethod": "Метод транспорта прокси (например, ws)",
-        "currentServer": "IP-адрес сервера WildosVPN",
-        "security": "Уровень безопасности",
-        "host": "Хост запроса",
-        "port": "Порт",
-        "path": "Путь",
+        "title": "Using this setting, you are able to assign specific address for each inbound.",
+        "desc": "Use these variables to make it dynamic",
+        "username": "Username of the user",
+        "dataUsage": "Current usage of the user",
+        "remainingData": "Remaining data of the user",
+        "dataLimit": "Data limit of the user",
+        "remainingDays": "Remaining days of the user",
+        "expireDate": "Expiry date of the user",
+        "jalaliExpireDate": "Expiry date of the user in jalali calendar",
+        "remainingTime": "Remaining time of the user",
+        "statusEmoji": "User status as an emoji (✅,⌛,🪫,❌,🔌)",
+        "proxyProtocol": "Proxy protocol (e.g. VMess)",
+        "proxyMethod": "Proxy transport method (e.g. ws)",
+        "currentServer": "WildosVPN server ip address",
+        "security": "Security Layer",
+        "host": "Request Host",
+        "port": "Port",
+        "path": "Path",
         "sni": "SNI",
-        "advancedOptions": "Дополнительные параметры",
-        "addHost": "Добавить хост",
-        "savedSuccess": "Хост успешно сохранён",
-        "loading": "загрузка...",
-        "apply": "Применить",
-        "port.info": "По умолчанию пользователю предлагается порт входящего соединения. Вы можете установить пользовательский порт, если этот хост перенаправляет трафик с другого порта на ваше входящее соединение. Например, сервер может перенаправлять трафик с порта 8443 на порт по умолчанию вашего входящего сервера.",
-        "path.info": "Установите путь для пользователей хоста, полезно за обратным прокси.",
-        "sni.info": "По умолчанию хост использует SNI из входящего соединения. Вы можете установить пользовательский SNI, если этот хост является сервером с другим SNI. Например, сервер может получать трафик с другим SSL сертификатом, выполнять завершение SSL и перенаправлять его на ваш входящий сервер.",
-        "host.info": "По умолчанию, если хост запроса установлен в конфигурации Xray, используется этот хост. Однако вы можете установить пользовательский хост запроса здесь при необходимости.",
-        "security.info": "Если промежуточный сервер этого хоста использует другой уровень безопасности, чем по умолчанию для входящего соединения, вы можете установить пользовательский уровень безопасности здесь.",
+        "advancedOptions": "Advanced options",
+        "addHost": "Add host",
+        "savedSuccess": "Host has been saved successfully",
+        "loading": "loading...",
+        "apply": "Apply",
+        "port.info": "By default, the inbound port is advertised to the user. You can set a custom port in case this host forwards traffic from another port to your inbound. For example, the server may forward traffic from port 8443 to the default port of your inbound server.",
+        "path.info": "Set a path for host users, useful behind a reverse proxy.",
+        "sni.info": "By default, a host uses the SNI from the inbound. You can set a custom SNI in case this host is a server that has a different SNI. For example, the server may receive traffic with a different SSL certificate, perform SSL termination, and forward it to your inbound server.",
+        "host.info": "By default, if a request host is set in the Xray config, this host is used. However, you can set a custom request host here if needed.",
+        "security.info": "If the middleware server of this host uses a different security layer than the inbound's default, you can set a custom security layer here.",
         "alpn": "ALPN",
-        "fingerprint": "Отпечаток",
-        "host.multiHost": "Для установки нескольких адресов разделите их символом <badge>,</badge> Каждый раз адрес выбирается случайно.",
-        "host.wildcard": "Используйте <badge>*</badge> для генерации случайной строки (работает для масочных доменных имён)"
+        "fingerprint": "Fingerprint",
+        "host.multiHost": "To set multiple addresses, separate them with <badge>,</badge> Each time an address is chosen randomly.",
+        "host.wildcard": "Use <badge>*</badge> to generate a random string (works for wildcard domain names)"
       },
       "mux": {
-        "title": "Мультиплексирование соединений",
-        "desc": "В настоящее время поддерживается v2rayng при использовании пользовательской конфигурации"
+        "title": "Connection multiplexing",
+        "desc": "Currently supported by v2rayng while using custom config"
       },
       "no-inbound-selection-alert": {
-        "title": "Не выбрано входящее соединение",
-        "desc": "Вы должны выбрать входящее соединение для добавления хоста."
+        "title": "No inbound is selected",
+        "desc": "You must select an inbound in order to add a host."
       },
       "settings": {
-        "title": "Настройки хоста"
+        "title": "Host Settings"
       },
-      "allowinsecure": "Разрешить небезопасное",
+      "allowinsecure": "Allow Insecure",
       "dialogs": {
         "edition": {
-          "title": "Редактировать хост",
-          "description": "Изменить конфигурацию хоста, параметры соединения и настройки сети"
+          "title": "Edit Host",
+          "description": "Modify host configuration, connection parameters, and network settings"
         },
         "creation": {
-          "title": "Добавить хост",
-          "description": "Добавить новую конфигурацию хоста с деталями соединения и настройками сети"
+          "title": "Add Host",
+          "description": "Add a new host configuration with connection details and network settings"
         },
         "deletion": {
-          "title": "Удалить хост"
+          "title": "Remove Host"
         },
         "mutation": {
           "allowinsecure": {
-            "alert": "По соображениям безопасности не рекомендуется включать \"Разрешить небезопасное\""
+            "alert": "Due to security concerns, it's not recommended to enable Allow Insecure"
           }
         }
       }
@@ -649,186 +637,182 @@
   },
   "events": {
     "delete": {
-      "error": "Не удалось удалить {{name}}",
+      "error": "Failed to remove {{name}}",
       "success": {
-        "title": "{{name}} успешно удалён",
+        "title": "{{name}} has been successfully removed",
         "desc": ""
       }
     },
     "create": {
-      "error": "Не удалось создать {{name}}",
+      "error": "Failed to create {{name}}",
       "success": {
-        "title": "{{name}} успешно создан",
+        "title": "{{name}} is successfully created",
         "desc": ""
       }
     },
     "update": {
-      "error": "Не удалось обновить {{name}}",
+      "error": "Failed to update {{name}}",
       "success": {
-        "title": "{{name}} успешно обновлён",
+        "title": "{{name}} is successfully updated",
         "desc": ""
       }
     },
     "user_revoke": {
-      "error": "Не удалось отозвать подписку {{name}}",
+      "error": "Failed to revoke {{name}} subscription",
       "success": {
-        "title": "{{name}} успешно создан",
+        "title": "{{name}} is successfully created",
         "desc": ""
       }
     },
     "user_reset": {
-      "error": "Не удалось сбросить использование данных {{name}}",
+      "error": "Failed to reset {{name}} data usage",
       "success": {
-        "title": "Использование данных {{name}} успешно сброшено",
+        "title": "{{name}} data usage has been successfully reset",
         "desc": ""
       }
     },
     "user_status": {
-      "error": "Не удалось переключить статус включения {{name}}",
+      "error": "Failed to toggle {{name}} enable status",
       "success": {
-        "title": "Статус включения {{name}} успешно обновлён",
+        "title": "{{name}} enable status has been successfully updated",
         "desc": ""
       }
     }
   },
   "delete-confirmation": {
-    "title": "Вы уверены в этом?",
-    "desc": "Это действие нельзя отменить."
+    "title": "Are you sure of this?",
+    "desc": "This action cannot be undone."
   },
   "statuses": {
-    "active": "Активен",
-    "connected": "Подключён",
-    "healthy": "Исправен",
-    "disabled": "Отключён",
-    "expired": "Истёк",
-    "on_hold": "В ожидании",
-    "connecting": "Подключение",
-    "unhealthy": "Неисправен",
-    "limited": "Ограничен",
-    "error": "Ошибка"
+    "active": "Active",
+    "connected": "Connected",
+    "healthy": "Healthy",
+    "disabled": "Disabled",
+    "expired": "Expired",
+    "on_hold": "On Hold",
+    "connecting": "Connecting",
+    "unhealthy": "Unhealthy",
+    "limited": "Limited",
+    "error": "Error"
   },
   "placeholders": {
-    "search": "Поиск...",
-    "select-security": "Выберите тип безопасности",
-    "select-fingerprint": "Выберите отпечаток",
-    "select-alpn": "Выберите ALPN",
-    "select-protocol": "Выберите протокол",
-    "select-mode": "Выберите режим",
-    "select-date": "Выберите дату",
-    "filter-logs": "Фильтр логов...",
-    "gb": "ГБ",
-    "packet": "Пакет",
-    "delay": "Задержка",
-    "noise-type": "Тип шума",
-    "port-number": "Введите номер порта",
-    "select-config": "Выберите файл конфигурации для редактирования...",
-    "nodes-connection": "Соединение узлов",
-    "search-filter": "Поиск...",
-    "type-to-search": "Введите для поиска...",
-    "allowed-ips": "Введите разрешённые IP",
-    "enter-value": "Введите значение",
-    "filter-options": "Параметры фильтра...",
-    "header-name": "Имя заголовка",
-    "header-value": "Значение заголовка"
+    "search": "Search...",
+    "select-security": "Select security type",
+    "select-fingerprint": "Select fingerprint",
+    "select-alpn": "Select ALPN",
+    "select-protocol": "Select protocol",
+    "select-mode": "Select mode",
+    "select-date": "Pick a date",
+    "filter-logs": "Filter logs...",
+    "gb": "GB",
+    "packet": "Packet",
+    "delay": "Delay",
+    "noise-type": "Noise Type",
+    "port-number": "Enter port number",
+    "select-config": "Select a configuration file to edit...",
+    "nodes-connection": "Nodes Connection",
+    "search-filter": "Search...",
+    "type-to-search": "Type to search...",
+    "allowed-ips": "Enter allowed IPs",
+    "enter-value": "Enter value",
+    "filter-options": "Filter options...",
+    "header-name": "Header Name",
+    "header-value": "Header Value"
   },
   "buttons": {
-    "restart-container": "Перезапустить контейнер",
-    "clear-logs": "Очистить логи",
-    "refresh": "Обновить",
-    "download": "Скачать",
-    "edit": "Редактировать",
-    "enable-form": "Включить форму",
-    "close": "Закрыть",
-    "open": "Открыть",
-    "save": "Сохранить",
-    "filter": "Фильтр",
-    "export": "Экспорт",
-    "restore": "Восстановить",
-    "minimize": "Свернуть",
-    "maximize": "Развернуть",
-    "try_again": "Попробовать снова",
-    "go_home": "На главную",
-    "reload_page": "Перезагрузить страницу"
+    "restart-container": "Restart Container",
+    "clear-logs": "Clear Logs",
+    "refresh": "Refresh",
+    "download": "Download",
+    "edit": "Edit",
+    "enable-form": "Enable Form",
+    "close": "Close",
+    "open": "Open",
+    "save": "Save",
+    "filter": "Filter",
+    "export": "Export",
+    "restore": "Restore",
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "try_again": "Try Again",
+    "go_home": "Go Home",
+    "reload_page": "Reload Page"
   },
   "labels": {
-    "container-management": "Управление контейнерами",
-    "container-logs": "Логи контейнера",
-    "file-explorer": "Файловый менеджер",
-    "status-running": "Статус: Работает",
-    "system-overview": "Обзор системы",
-    "cpu-usage": "Использование CPU",
-    "memory-usage": "Использование памяти",
-    "disk-usage": "Использование диска",
-    "configuration-editor": "Редактор конфигурации",
-    "root-partition": "Корневой раздел",
-    "load": "Нагрузка",
-    "uptime": "Время работы",
-    "network-usage": "Использование сети",
-    "loading-logs": "Загрузка логов...",
-    "no-logs-available": "Логи недоступны или не соответствуют фильтру",
-    "system-uptime": "Время работы системы"
+    "container-management": "Container Management",
+    "container-logs": "Container Logs",
+    "file-explorer": "File Explorer",
+    "status-running": "Status: Running",
+    "system-overview": "System Overview",
+    "cpu-usage": "CPU Usage",
+    "memory-usage": "Memory Usage",
+    "disk-usage": "Disk Usage",
+    "configuration-editor": "Configuration Editor",
+    "root-partition": "Root partition",
+    "load": "Load",
+    "uptime": "Uptime",
+    "network-usage": "Network Usage",
+    "loading-logs": "Loading logs...",
+    "no-logs-available": "No logs available or matching filter",
+    "system-uptime": "System uptime"
   },
   "ui": {
     "command": {
-      "searchDescription": "Поиск и выполнение команд"
+      "searchDescription": "Search and execute commands"
     }
   },
   "common": {
-    "not_found": "Не найдено",
-    "no_data": "Нет данных для отображения",
-    "time": {
-      "ago": " назад",
-      "minutes_short": "мин"
-    },
-    "status": {
-      "none": "нет",
-      "temporarily_unavailable": "временно недоступно"
-    },
-    "system_configuration": "Конфигурация системы"
+    "system_configuration": "System Configuration"
   },
   "error": {
-    "something_went_wrong": "Что-то пошло не так",
-    "unexpected_error_description": "Произошла неожиданная ошибка. Пожалуйста, попробуйте обновить страницу или вернитесь на главную страницу.",
-    "details": "Детали ошибки",
-    "try_again": "Попробовать снова",
-    "loading_data_failed": "Произошла ошибка при загрузке данных",
-    "submission_failed": "Произошла ошибка",
-    "application_failed_to_load": "Не удалось загрузить приложение",
-    "react_mount_error": "Произошла ошибка при монтировании React приложения.",
-    "check_console": "Пожалуйста, проверьте консоль браузера для получения дополнительной информации.",
-    "component_crashed": "Компонент упал. Это может быть связано с временной проблемой.",
-    "technical_details": "Технические детали",
-    "critical_error": "Критическая ошибка",
-    "initialization_failed": "Приложение не удалось инициализировать должным образом.",
-    "component_error": "Ошибка компонента",
-    "component_crashed_refresh": "Компонент упал. Пожалуйста, попробуйте обновить страницу.",
-    "network_connection": "Ошибка сетевого соединения. Пожалуйста, проверьте ваше интернет-соединение.",
-    "request_timeout": "Тайм-аут запроса. Сервер слишком долго отвечает."
+    "something_went_wrong": "Something went wrong",
+    "unexpected_error_description": "An unexpected error occurred. Please try refreshing the page or return to the home page.",
+    "details": "Error details",
+    "try_again": "Try again",
+    "loading_data_failed": "An error occurred while loading data",
+    "submission_failed": "An error occurred",
+    "application_failed_to_load": "Application Failed to Load",
+    "react_mount_error": "There was an error mounting the React application.",
+    "check_console": "Please check the browser console for more details.",
+    "component_crashed": "A component has crashed. This might be due to a temporary issue.",
+    "technical_details": "Technical details",
+    "critical_error": "Critical Error",
+    "initialization_failed": "The application failed to initialize properly.",
+    "component_error": "Component Error",
+    "component_crashed_refresh": "A component has crashed. Please try refreshing the page.",
+    "network_connection": "Network connection error. Please check your internet connection.",
+    "request_timeout": "Request timeout. The server is taking too long to respond."
   },
   "validation": {
-    "username_required": "Имя пользователя обязательно",
-    "password_required": "Пароль обязателен",
-    "minimum_zero": "Минимальное число — 0",
-    "usage_duration_max": "usage_duration должно быть меньше 3649635",
-    "usage_duration_min": "usage_duration должно быть больше 0",
+    "username_required": "Username is required",
+    "password_required": "Password is required",
+    "minimum_zero": "The minimum number is 0",
+    "usage_duration_max": "usage_duration must be less than 3649635",
+    "usage_duration_min": "usage_duration must be more than 0",
     "services": {
-      "min_one_inbound": "Вы должны выбрать хотя бы одно входящее соединение."
+      "min_one_inbound": "You have to select at least one inbound."
     },
     "hosts": {
-      "remark_required": "Примечание обязательно",
-      "address_required": "Адрес обязателен",
-      "port_min": "Порт должен быть больше 1",
-      "port_max": "Порт не может быть больше 65535"
+      "remark_required": "Remark is required",
+      "address_required": "Address is required",
+      "port_min": "Port must be more than 1",
+      "port_max": "Port cannot be more than 65535"
     },
     "users": {
-      "username_required": "Имя пользователя обязательно",
-      "services_required": "Необходим хотя бы один сервис"
+      "username_required": "Username is required",
+      "services_required": "At least one service is required"
     }
   },
   "copyright": {
-    "text": "© 2025 WildosVPN. Все права защищены."
+    "text": "© 2025 WildosVPN. All rights reserved."
   },
   "not_found": {
-    "host": "Хост не найден"
-  }
+    "host": "Host not found"
+  },
+  "healthy": "Исправен",
+  "active-users": "Активные пользователи",
+  "total-nodes": "Всего узлов",
+  "total-users": "Всего пользователей",
+  "total-admins": "Всего администраторов",
+  "system-overview": "Обзор системы"
 }

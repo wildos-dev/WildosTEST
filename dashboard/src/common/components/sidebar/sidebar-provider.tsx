@@ -9,10 +9,15 @@ interface SidebarContextProps {
     setOpen?: (state: boolean) => void;
 }
 
-export const SidebarContext = React.createContext<SidebarContextProps | null>(null);
+// Safe createContext with fallback
+export const SidebarContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<SidebarContextProps | null>(null);
 
 export const useSidebarContext = () => {
-    const ctx = React.useContext(SidebarContext);
+    const ctx = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(SidebarContext);
     if (!ctx)
         throw new Error(
             "Sidebar.* component must be rendered as child of Sidebar ",

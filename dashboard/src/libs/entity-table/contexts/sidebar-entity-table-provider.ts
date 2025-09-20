@@ -10,10 +10,15 @@ interface SidebarEntityTableContextProps<SData> {
     sidebarCardProps: SidebarEntityCardSectionsProps<SData>;
 }
 
-export const SidebarEntityTableContext = React.createContext<SidebarEntityTableContextProps<any> | null>(null);
+// Safe createContext with fallback
+export const SidebarEntityTableContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<SidebarEntityTableContextProps<any> | null>(null);
 
 export const useSidebarEntityTableContext = () => {
-    const ctx = React.useContext(SidebarEntityTableContext);
+    const ctx = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(SidebarEntityTableContext);
     if (!ctx)
         throw new Error('SidebarEntityTable.* component must be rendered as child of SidebarEntityTable');
     return ctx;

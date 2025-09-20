@@ -98,10 +98,15 @@ type ChartContextProps = {
     config: ChartConfig
 }
 
-const ChartContext = React.createContext<ChartContextProps | null>(null)
+// Safe createContext with fallback
+const ChartContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<ChartContextProps | null>(null)
 
 function useChart() {
-    const context = React.useContext(ChartContext)
+    const context = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(ChartContext)
 
     if (!context) {
         throw new Error("useChart must be used within a <ChartContainer />")

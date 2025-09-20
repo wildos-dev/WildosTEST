@@ -14,10 +14,15 @@ interface EntityTableContextProps<TData> {
     refetch?: () => void
 }
 
-export const EntityTableContext = React.createContext<EntityTableContextProps<any> | null>(null);
+// Safe createContext with fallback
+export const EntityTableContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<EntityTableContextProps<any> | null>(null);
 
 export const useEntityTableContext = () => {
-    const ctx = React.useContext(EntityTableContext);
+    const ctx = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(EntityTableContext);
     if (!ctx)
         throw new Error('EntityTable.* component must be rendered as child of EntityTable');
     return ctx;

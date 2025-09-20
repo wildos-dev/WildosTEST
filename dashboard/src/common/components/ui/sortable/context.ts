@@ -8,7 +8,10 @@ interface SortableItemContextProps {
     listeners: DraggableSyntheticListeners | undefined
 }
 
-export const SortableItemContext = React.createContext<SortableItemContextProps>({
+// Safe createContext with fallback
+export const SortableItemContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<SortableItemContextProps>({
     attributes: {},
     listeners: undefined,
 })

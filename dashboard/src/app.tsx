@@ -322,7 +322,7 @@ declare module '@tanstack/react-router' {
 }
 
 // Handle hash routing initialization for direct dashboard access
-const initializeHashRouting = () => {
+const initializeHashRouting = async () => {
     // Since dashboard is compiled before install.sh, we need to detect the path at runtime
     // The dashboard is mounted on whatever path was configured in install.sh
     const currentPath = window.location.pathname;
@@ -341,9 +341,22 @@ const initializeHashRouting = () => {
         console.log(`🔍 Direct dashboard access detected: ${currentPath}`);
         console.log(`🌐 Full URL: ${window.location.href}`);
         
-        // Default redirect to root - auth guard will determine correct route
-        console.log('🔄 Redirecting to root, auth guard will handle routing');
-        window.location.hash = '#/';
+        // Check authentication and redirect accordingly
+        try {
+            const { useAuth } = await import('@wildosvpn/modules/auth');
+            const isLoggedIn = await useAuth.getState().isLoggedIn();
+            
+            if (isLoggedIn) {
+                console.log('🔄 User authenticated, redirecting to dashboard');
+                window.location.hash = '#/';
+            } else {
+                console.log('🔄 User not authenticated, redirecting to login');
+                window.location.hash = '#/login';
+            }
+        } catch (error) {
+            console.error('🔄 Auth check failed, redirecting to login:', error);
+            window.location.hash = '#/login';
+        }
     }
 };
 
@@ -448,15 +461,14 @@ const initializeApp = () => {
             };
             
             // Initialize hash routing BEFORE mounting React router
-            try {
-                initializeHashRouting();
+            initializeHashRouting().then(() => {
                 console.log('✅ Hash routing initialized successfully');
-            } catch (error) {
+            }).catch((error) => {
                 ErrorLogger.logError('INITIALIZATION_ERROR', error, {
                     type: 'Hash routing initialization failed'
                 });
                 console.warn('⚠️ Hash routing failed, proceeding with app render');
-            }
+            });
             renderApp().catch(err => 
                 ErrorLogger.logError('APP_INIT_ERROR', err, {
                     type: 'Failed to initialize application'

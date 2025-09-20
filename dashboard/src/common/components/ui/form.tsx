@@ -22,9 +22,10 @@ type FormFieldContextValue<
     name: TName
 }
 
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-    {} as FormFieldContextValue
-)
+// Safe createContext with fallback - use null as default to prevent runtime errors
+const FormFieldContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<FormFieldContextValue | null>(null)
 
 const FormField = <
     TFieldValues extends FieldValues = FieldValues,
@@ -40,15 +41,24 @@ const FormField = <
 }
 
 const useFormField = () => {
-    const fieldContext = React.useContext(FormFieldContext)
-    const itemContext = React.useContext(FormItemContext)
-    const { getFieldState, formState } = useFormContext()
+    const fieldContext = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(FormFieldContext)
+    const itemContext = (React?.useContext || (() => {
+        throw new Error("React is not available - check React imports and build configuration");
+    }))(FormItemContext)
 
-    const fieldState = getFieldState(fieldContext.name, formState)
-
+    // Early check to prevent runtime errors with undefined field names
     if (!fieldContext) {
         throw new Error("useFormField should be used within <FormField>")
     }
+    
+    if (!itemContext) {
+        throw new Error("useFormField should be used within <FormItem>")
+    }
+    
+    const { getFieldState, formState } = useFormContext()
+    const fieldState = getFieldState(fieldContext.name, formState)
 
     const { id } = itemContext
 
@@ -66,7 +76,10 @@ type FormItemContextValue = {
     id: string
 }
 
-const FormItemContext = React.createContext<FormItemContextValue>(
+// Safe createContext with fallback
+const FormItemContext = (React?.createContext || (() => {
+    throw new Error("React is not available - check React imports and build configuration");
+}))<FormItemContextValue>(
     {} as FormItemContextValue
 )
 
