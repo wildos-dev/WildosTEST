@@ -900,11 +900,13 @@ COPY requirements.txt ./
 
 # Установка зависимостей с исправлением проблемных версий
 RUN sed -i 's/v2share>=0.1.0/v2share==0.1.0b31/g' requirements.txt && \
-    sed -i 's/aioredis==2.0.1/redis[hiredis]==5.2.1/g' requirements.txt && \
+    sed -i 's/aioredis==2.0.1//g' requirements.txt && \
+    pip install --no-cache-dir redis[hiredis]==5.2.1 && \
     pip install --no-cache-dir -r requirements.txt || \
     (echo "Attempting alternative installation..." && \
      pip install --no-cache-dir --force-reinstall bcrypt==4.0.1 && \
      pip install --no-cache-dir --ignore-installed PyYAML==6.0.1 && \
+     pip install --no-cache-dir redis[hiredis]==5.2.1 && \
      pip install --no-cache-dir -r requirements.txt)
 
 # Исправление проблемы с bcrypt и установка alembic
@@ -1396,22 +1398,23 @@ get_admin_token() {
     
     # Попытка получить токен через API (только если API готов)
     if [ "$api_ready" = true ] && command -v curl >/dev/null 2>&1; then
-        print_info "🌐 Попытка получения токена через API..."
+        print_info "🌐 Попытка получения токена через единственный официальный endpoint..."
         
-        # Пробуем разные возможные endpoints
-        for endpoint in "/api/admins/token" "/api/admin/token" "/api/auth/login" "/api/token"; do
-            admin_token=$(curl -s -X POST "http://localhost:8000$endpoint" \
-                -H "Content-Type: application/x-www-form-urlencoded" \
-                -d "username=$SUDO_USERNAME&password=$SUDO_PASSWORD" \
-                2>/dev/null | jq -r '.access_token // .token // .access_token' 2>/dev/null)
-            
-            if [[ "$admin_token" != "null" && -n "$admin_token" && "$admin_token" =~ ^[A-Za-z0-9._-]+\.[A-Za-z0-9._-]+\.[A-Za-z0-9._-]+$ ]]; then
-                print_info "✅ Токен получен через API ($endpoint)"
-                echo "$admin_token"
-                return 0
-            fi
-        done
-        print_warning "❌ Не удалось получить токен через API"
+        # Используем только один правильный endpoint с JSON
+        admin_token=$(curl -s -X POST "http://localhost:8000/api/admins/token" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "{\"username\":\"$SUDO_USERNAME\",\"password\":\"$SUDO_PASSWORD\"}" \
+            --max-time 10 --retry 2 --retry-delay 2 \
+            2>/dev/null | jq -r '.access_token // .token // empty' 2>/dev/null)
+        
+        if [[ "$admin_token" != "null" && -n "$admin_token" && "$admin_token" =~ ^[A-Za-z0-9._-]+\.[A-Za-z0-9._-]+\.[A-Za-z0-9._-]+$ ]]; then
+            print_info "✅ Токен получен через API"
+            echo "$admin_token"
+            return 0
+        else
+            print_warning "❌ Не удалось получить токен через API (возможно rate limiting или неправильные credentials)"
+        fi
     else
         print_warning "❌ API недоступен, пропускаем попытку через HTTP"
     fi

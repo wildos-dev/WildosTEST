@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -58,6 +59,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Start node connections
     await nodes_startup()
+    
+    # Start rate limiting cleanup task  
+    try:
+        from app.middleware.rate_limiting import start_cleanup_task
+        asyncio.create_task(start_cleanup_task())
+        logger.info("Rate limiting cleanup task started")
+    except ImportError:
+        logger.info("Rate limiting cleanup task not available")
     
     logger.info("Application startup completed with enhanced monitoring")
     yield

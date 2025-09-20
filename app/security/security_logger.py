@@ -39,21 +39,42 @@ class SecurityLogger:
         self.security_log_file = os.path.join(log_dir, "security.log")
         self.audit_log_file = os.path.join(log_dir, "audit.log")
         self.intrusion_log_file = os.path.join(log_dir, "intrusion.log")
+        self._dir_created = False
         
-        # Create log directory if it doesn't exist
-        os.makedirs(log_dir, exist_ok=True)
+        # Defer directory creation until first use
         
-        # Setup security logger
-        self.security_logger = self._setup_security_logger()
-        self.audit_logger = self._setup_audit_logger()
-        self.intrusion_logger = self._setup_intrusion_logger()
+        # Setup loggers (directory creation deferred)
+        self.security_logger = None
+        self.audit_logger = None  
+        self.intrusion_logger = None
         
         # Event counters for rate limiting detection
         self.event_counters = {}
         self.suspicious_activity_threshold = 10  # events per minute
         
+    def _ensure_dir_created(self):
+        """Ensure log directory is created (called lazily)"""
+        if not self._dir_created:
+            try:
+                os.makedirs(self.log_dir, exist_ok=True)
+                self._dir_created = True
+            except OSError:
+                # If we can't create the directory, fall back to console logging
+                self.log_dir = "/tmp"
+                self.security_log_file = os.path.join(self.log_dir, "wildosvpn_security.log") 
+                self.audit_log_file = os.path.join(self.log_dir, "wildosvpn_audit.log")
+                self.intrusion_log_file = os.path.join(self.log_dir, "wildosvpn_intrusion.log")
+                try:
+                    os.makedirs(self.log_dir, exist_ok=True)
+                    self._dir_created = True
+                except OSError:
+                    # Complete fallback - just use console
+                    pass
+
     def _setup_security_logger(self) -> logging.Logger:
         """Setup dedicated security logger"""
+        self._ensure_dir_created()
+        
         logger = logging.getLogger("wildosvpn.security")
         logger.setLevel(logging.INFO)
         
@@ -61,20 +82,28 @@ class SecurityLogger:
         for handler in logger.handlers[:]:
             logger.removeHandler(handler)
         
-        # Create file handler
-        handler = logging.FileHandler(self.security_log_file)
-        handler.setLevel(logging.INFO)
-        
-        # Create formatter
-        formatter = logging.Formatter(
-            '%(asctime)s [%(levelname)s] %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-        )
-        handler.setFormatter(formatter)
-        
-        logger.addHandler(handler)
+        try:
+            # Create file handler
+            handler = logging.FileHandler(self.security_log_file)
+            handler.setLevel(logging.INFO)
+            
+            # Create formatter
+            formatter = logging.Formatter(
+                '%(asctime)s [%(levelname)s] %(message)s',
+                datefmt='%Y-%m-%d %H:%M:%S'
+            )
+            handler.setFormatter(formatter)
+            
+            logger.addHandler(handler)
+        except OSError:
+            # Fallback to console handler
+            handler = logging.StreamHandler()
+            handler.setLevel(logging.INFO)
+            formatter = logging.Formatter('%(asctime)s [SECURITY] %(message)s')
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            
         logger.propagate = False
-        
         return logger
     
     def _setup_audit_logger(self) -> logging.Logger:

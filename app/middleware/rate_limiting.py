@@ -10,23 +10,24 @@ import os
 import time
 from collections import defaultdict, deque
 from datetime import datetime, timedelta
-from typing import Dict, Optional, Tuple, Union, Protocol, TYPE_CHECKING
+from typing import Dict, Optional, Tuple, Union, Protocol, TYPE_CHECKING, Any
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 REDIS_AVAILABLE = False
-_aioredis_module = None
+_redis_module = None
 
-# Dynamic import to avoid LSP resolution issues
+# Use redis.asyncio instead of deprecated aioredis (Python 3.11 compatibility)
 try:
-    _aioredis_module = __import__('aioredis')
+    from redis import asyncio as _redis_module
     REDIS_AVAILABLE = True
-except ImportError:
+except Exception as e:
+    # Broad exception catch to handle import errors, version incompatibilities, etc.
+    _redis_module = None
     pass
 
 if TYPE_CHECKING:
-    from typing import Any
     Redis = Any  # Use Any type to avoid import resolution issues
 
 from ..security.security_logger import SecurityEventType, security_logger
@@ -64,14 +65,14 @@ class RedisRateLimitStorage:
         
     async def _get_redis_client(self) -> Any:
         """Get Redis client with lazy connection"""
-        if not REDIS_AVAILABLE or _aioredis_module is None:
-            raise RuntimeError("aioredis is not available")
+        if not REDIS_AVAILABLE or _redis_module is None:
+            raise RuntimeError("redis.asyncio is not available")
             
         if self.redis_client is None:
             async with self._connection_lock:
                 if self.redis_client is None:
                     try:
-                        self.redis_client = _aioredis_module.from_url(
+                        self.redis_client = _redis_module.from_url(
                             self.redis_url,
                             decode_responses=True,
                             retry_on_timeout=True,
@@ -287,15 +288,16 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
         # Initialize storage with Redis fallback
         self.storage = self._init_storage()
         
-        # Start cleanup task
-        asyncio.create_task(self._cleanup_task())
+        # Set global storage for cleanup task
+        global _global_storage
+        _global_storage = self.storage
     
     def _init_storage(self) -> RateLimitStorage:
         """Initialize rate limit storage with Redis fallback to in-memory"""
         redis_url = os.getenv("REDIS_URL")
         
-        # Only try Redis if both URL is provided AND aioredis is available
-        if redis_url and REDIS_AVAILABLE and _aioredis_module is not None:
+        # Only try Redis if both URL is provided AND redis.asyncio is available
+        if redis_url and REDIS_AVAILABLE and _redis_module is not None:
             try:
                 logger.info(f"Initializing Redis rate limiting with URL: {redis_url[:20]}...")
                 return RedisRateLimitStorage(redis_url)
@@ -303,7 +305,7 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
                 logger.warning(f"Failed to initialize Redis storage, falling back to in-memory: {e}")
         else:
             if redis_url and not REDIS_AVAILABLE:
-                logger.warning("REDIS_URL provided but aioredis not available, using in-memory rate limiting")
+                logger.warning("REDIS_URL provided but redis.asyncio not available, using in-memory rate limiting")
             elif not redis_url:
                 logger.info("No REDIS_URL provided, using in-memory rate limiting")
         
@@ -535,4 +537,19 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
                 logger.warning(f"Error closing rate limit storage: {e}")
 
 
-__all__ = ["RateLimitingMiddleware", "RateLimitConfig"]
+# Global storage instance for cleanup task
+_global_storage = None
+
+async def start_cleanup_task():
+    """Start cleanup task using global storage instance"""
+    global _global_storage
+    if _global_storage:
+        while True:
+            try:
+                await asyncio.sleep(300)  # Every 5 minutes
+                await _global_storage.cleanup_expired()
+            except Exception as e:
+                logger.error(f"Rate limit cleanup error: {e}")
+
+
+__all__ = ["RateLimitingMiddleware", "RateLimitConfig", "start_cleanup_task"]
