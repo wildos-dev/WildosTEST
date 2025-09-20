@@ -1040,28 +1040,20 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Установка системных зависимостей
-RUN apk add --no-cache curl unzip alpine-sdk libffi-dev wget
+RUN apk add --no-cache alpine-sdk libffi-dev
 
-# Установка Xray
-RUN wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \\
-    unzip Xray-linux-64.zip && \\
-    install -m 755 xray /usr/bin/xray && \\
-    mkdir -p /usr/share/xray && \\
-    install -m 644 geoip.dat /usr/share/xray/geoip.dat && \\
-    install -m 644 geosite.dat /usr/share/xray/geosite.dat && \\
-    rm -f Xray-linux-64.zip xray
+# Создание необходимых директорий
+RUN mkdir -p /usr/share/xray
 
-# Установка Hysteria (получаем последнюю версию)
-RUN HYSTERIA_VERSION=\$(wget -qO- https://api.github.com/repos/apernet/hysteria/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \\
-    wget https://github.com/apernet/hysteria/releases/download/\$HYSTERIA_VERSION/hysteria-linux-amd64 -O /usr/bin/hysteria && \\
-    chmod +x /usr/bin/hysteria
+# Копирование бэкендов из локальных папок
+COPY wildosnode/wildosnode/backends/binaries/xray/xray /usr/bin/xray
+COPY wildosnode/wildosnode/backends/binaries/xray/geoip.dat /usr/share/xray/geoip.dat
+COPY wildosnode/wildosnode/backends/binaries/xray/geosite.dat /usr/share/xray/geosite.dat
+COPY wildosnode/wildosnode/backends/binaries/hysteria2/hysteria /usr/bin/hysteria
+COPY wildosnode/wildosnode/backends/binaries/singbox/sing-box /usr/bin/sing-box
 
-# Установка Sing-box (получаем последнюю версию)
-RUN SINGBOX_VERSION=\$(wget -qO- https://api.github.com/repos/SagerNet/sing-box/releases/latest | grep '"tag_name"' | cut -d'"' -f4) && \\
-    wget https://github.com/SagerNet/sing-box/releases/download/\$SINGBOX_VERSION/sing-box-\${SINGBOX_VERSION#v}-linux-amd64.tar.gz && \\
-    tar -xzf sing-box-\${SINGBOX_VERSION#v}-linux-amd64.tar.gz && \\
-    install -m 755 sing-box-\${SINGBOX_VERSION#v}-linux-amd64/sing-box /usr/bin/sing-box && \\
-    rm -rf sing-box-*
+# Установка прав доступа для бинарных файлов
+RUN chmod +x /usr/bin/xray /usr/bin/hysteria /usr/bin/sing-box
 
 # Копирование исходного кода
 COPY wildosnode/ .
@@ -1070,7 +1062,7 @@ COPY wildosnode/ .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Очистка build dependencies
-RUN apk del alpine-sdk libffi-dev curl unzip
+RUN apk del alpine-sdk libffi-dev
 
 # Создание директорий для данных
 RUN mkdir -p /var/lib/wildosnode/configs /var/lib/wildosnode/ssl /var/lib/wildosnode/logs
