@@ -95,7 +95,7 @@ class Admin(Base):
         "Service",
         secondary=admins_services,
         back_populates="admins",
-        lazy="selectinload",
+        lazy="select",
     )
     enabled = Column(
         Boolean,
@@ -185,7 +185,7 @@ class User(Base):
         "Service",
         secondary=users_services,
         back_populates="users",
-        lazy="selectinload",
+        lazy="select",
     )
     inbounds = relationship(
         "Inbound",
@@ -490,7 +490,7 @@ class InboundHost(Base):
         foreign_keys="[HostChain.host_id]",
         order_by=HostChain.seq,
         collection_class=ordering_list("seq"),
-        lazy="selectinload",
+        lazy="select",
         cascade="all, delete-orphan",
     )
 
