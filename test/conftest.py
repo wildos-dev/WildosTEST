@@ -3,10 +3,21 @@ Global test configuration and fixtures for WildOS VPN
 """
 import asyncio
 import os
+import sys
 import pytest
 import pytest_asyncio
 from typing import AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock
+
+# Add mock path for missing backend modules and project root
+test_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(test_dir)
+mock_path = os.path.join(test_dir, 'mocks')
+
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+if mock_path not in sys.path:
+    sys.path.insert(0, mock_path)
 
 # Set test environment variables
 os.environ["TESTING"] = "1"
@@ -15,8 +26,7 @@ os.environ["SECRET_KEY"] = "test-secret-key-for-testing-only"
 os.environ["JWT_SECRET_KEY"] = "test-jwt-secret-key-for-testing-only"
 
 # Import test fixtures
-# Temporarily disabled due to import issues
-# from test.fixtures.grpc_fixtures import *
+from test.fixtures.grpc_fixtures import *
 from test.fixtures.data_fixtures import *
 
 
