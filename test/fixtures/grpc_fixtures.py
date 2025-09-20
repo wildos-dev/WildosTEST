@@ -7,8 +7,8 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from typing import AsyncGenerator
 
-from app.wildosnode.service_pb2_grpc import WildosServiceStub
-from app.wildosnode.service_pb2 import (
+from wildosnode.wildosnode.service.service_pb2_grpc import WildosServiceStub
+from wildosnode.wildosnode.service.service_pb2 import (
     Empty, Backend, BackendsResponse, User, UserData, UsersData,
     UsersStats, BackendConfig, BackendStats, HostSystemMetrics,
     NetworkInterface, PeakEvent, PeakQuery
@@ -101,11 +101,11 @@ def mock_peak_event():
     """Sample peak event for testing"""
     return PeakEvent(
         node_id=1,
-        category=0,  # CPU
+        category="CPU",  # PeakCategory
         metric="cpu_usage",
         value=95.0,
         threshold=90.0,
-        level=1,  # CRITICAL
+        level="CRITICAL",  # PeakLevel
         dedupe_key="cpu_95",
         context_json='{"details": "test"}',
         started_at_ms=1609459200000,
