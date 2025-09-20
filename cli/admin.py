@@ -164,12 +164,14 @@ def import_from_env(
             "Unable to get SUDO_USERNAME and/or SUDO_PASSWORD.\n"
             "Make sure you have set them in the env file or as environment variables."
         )
+        return
 
     if not (username and password):
         utils.error(
             "Unable to retrieve username and password.\n"
             "Make sure both SUDO_USERNAME and SUDO_PASSWORD are set."
         )
+        return
 
     with GetDB() as db:
         admin: Union[None, Admin] = None

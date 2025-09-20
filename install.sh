@@ -900,6 +900,7 @@ COPY requirements.txt ./
 
 # Установка зависимостей с исправлением проблемных версий
 RUN sed -i 's/v2share>=0.1.0/v2share==0.1.0b31/g' requirements.txt && \
+    sed -i 's/aioredis==2.0.1/redis[hiredis]==5.2.1/g' requirements.txt && \
     pip install --no-cache-dir -r requirements.txt || \
     (echo "Attempting alternative installation..." && \
      pip install --no-cache-dir --force-reinstall bcrypt==4.0.1 && \
