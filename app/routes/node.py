@@ -6,13 +6,26 @@ from datetime import datetime
 from fastapi import Depends, Request
 
 import sqlalchemy
-from fastapi import APIRouter, Body, Query, WebSocket, HTTPException
+from sqlalchemy.exc import IntegrityError
+from fastapi import APIRouter, Body, Query, WebSocket
+
+from ..exceptions import (
+    node_not_found_error, ConflictError, 
+    ValidationError, ServerError, ServiceUnavailableError,
+    ForbiddenError, BadRequestError
+)
 from fastapi_pagination.ext.sqlalchemy import paginate
-from fastapi_pagination.links import Page
+from fastapi_pagination import Page
 from sqlalchemy import select
 from starlette.websockets import WebSocketDisconnect
 
 from app import wildosnode
+from app.wildosnode.grpc_client import (
+    GRPC_FAST_TIMEOUT,
+    GRPC_SLOW_TIMEOUT, 
+    GRPC_PORT_ACTION_TIMEOUT,
+    GRPC_STREAM_TIMEOUT
+)
 from app.db import crud, get_tls_certificate
 from app.db.models import Node
 from app.dependencies import (
@@ -56,15 +69,42 @@ def _extract_ws_token(websocket: WebSocket) -> tuple[str | None, str | None]:
     """
     Extract authentication token from WebSocket handshake.
     
-    Supports:
-    1. Sec-WebSocket-Protocol header with 'bearer.<token>' format (preferred)
-    2. Query parameter 'token' (backward compatibility)  
-    3. Authorization header with 'Bearer <token>' format (backward compatibility)
+    Security Enhancement: Only supports secure Sec-WebSocket-Protocol header method.
+    Supports both 'bearer.<token>' and 'bearer <token>' formats in Sec-WebSocket-Protocol.
     
     Returns:
         tuple: (token, selected_subprotocol) where selected_subprotocol is used for handshake
     """
-    # Primary: Check Sec-WebSocket-Protocol header for secure token transmission
+    # Check for deprecated authentication methods and log security warnings
+    query_token = websocket.query_params.get('token')
+    if query_token:
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "event": "deprecated_websocket_auth_attempt",
+                "method": "query_parameter",
+                "reason": "Query parameter authentication is deprecated due to security risks",
+                "client_ip": websocket.client.host if websocket.client else "unknown"
+            },
+            severity="WARNING",
+            ip_address=websocket.client.host if websocket.client else None
+        )
+        
+    auth_header = websocket.headers.get('authorization', '')
+    if auth_header.lower().startswith('bearer ') and len(auth_header) > 7:
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "event": "deprecated_websocket_auth_attempt", 
+                "method": "authorization_header",
+                "reason": "Authorization header authentication is deprecated due to security risks",
+                "client_ip": websocket.client.host if websocket.client else "unknown"
+            },
+            severity="WARNING",
+            ip_address=websocket.client.host if websocket.client else None
+        )
+    
+    # ONLY secure method: Check Sec-WebSocket-Protocol header for secure token transmission
     proto_header = websocket.headers.get('sec-websocket-protocol', '')
     if proto_header:
         for raw_proto in proto_header.split(','):
@@ -78,17 +118,6 @@ def _extract_ws_token(websocket: WebSocket) -> tuple[str | None, str | None]:
             elif proto_lower.startswith('bearer ') and len(proto) > 7:
                 token = proto[7:]  # Extract token after 'bearer '
                 return token, proto
-    
-    # Fallback 1: Query parameter (deprecated for security)
-    query_token = websocket.query_params.get('token')
-    if query_token:
-        return query_token, None
-        
-    # Fallback 2: Authorization header (standard HTTP auth)  
-    auth_header = websocket.headers.get('authorization', '')
-    if auth_header.lower().startswith('bearer ') and len(auth_header) > 7:
-        token = auth_header[7:]
-        return token, None
         
     return None, None
 
@@ -147,7 +176,7 @@ async def add_node(
         
         db_node = crud.create_node(db, node_create)
         
-    except sqlalchemy.exc.IntegrityError:
+    except IntegrityError:
         db.rollback()
         
         # Log failed creation attempt
@@ -164,8 +193,8 @@ async def add_node(
             user_id=admin.id
         )
         
-        raise HTTPException(
-            status_code=409, detail=f'Node "{new_node.name}" already exists'
+        raise ConflictError(
+            f'Node "{new_node.name}" already exists'
         )
     
     certificate = get_tls_certificate(db)
@@ -200,7 +229,7 @@ def get_node_settings(db: DBDep, admin: SudoAdminDep):
 def get_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     return db_node
 
@@ -213,7 +242,7 @@ async def node_logs(
     db: DBDep,
     include_buffer: bool = True,
 ):
-    # Extract token using secure Sec-WebSocket-Protocol method with fallbacks
+    # Extract token using secure Sec-WebSocket-Protocol method only
     token, selected_subprotocol = _extract_ws_token(websocket)
     admin = get_admin(db, token or "")
 
@@ -247,7 +276,7 @@ async def modify_node(
 ):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     db_node = crud.update_node(db, db_node, modified_node)
 
@@ -264,7 +293,7 @@ async def modify_node(
 async def remove_node(node_id: int, db: DBDep, admin: SudoAdminDep):
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     crud.remove_node(db, db_node)
     await wildosnode.operations.remove_node(int(getattr(db_node, 'id', 0)))
@@ -274,12 +303,162 @@ async def remove_node(node_id: int, db: DBDep, admin: SudoAdminDep):
 
 
 @router.post("/{node_id}/resync")
-async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep):
+async def reconnect_node(node_id: int, db: DBDep, admin: SudoAdminDep, request: Request):
+    """Reconnect to a node with enhanced reliability and monitoring"""
+    client_ip = get_client_ip(request)
+    
+    # Check that node exists in database
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "operation": "reconnect_node_failed",
+                "reason": "Node not found",
+                "attempted_node_id": node_id,
+                "requested_by": admin.username
+            },
+            severity="WARNING",
+            ip_address=client_ip,
+            user_id=admin.id
+        )
+        raise node_not_found_error()
 
-    return {}
+    # Log reconnection attempt
+    security_logger.log_security_event(
+        event_type=SecurityEventType.AUTHENTICATION_SUCCESS,
+        details={
+            "operation": "reconnect_node_started",
+            "target_node_id": node_id,
+            "target_node_name": db_node.name,
+            "target_node_address": db_node.address,
+            "target_node_port": db_node.port,
+            "requested_by": admin.username
+        },
+        severity="INFO",
+        ip_address=client_ip,
+        user_id=admin.id
+    )
+
+    try:
+        # Get fresh TLS certificate
+        certificate = get_tls_certificate(db)
+        if not certificate:
+            security_logger.log_security_event(
+                event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+                details={
+                    "operation": "reconnect_node_failed",
+                    "reason": "TLS certificate not found",
+                    "node_id": node_id,
+                    "requested_by": admin.username
+                },
+                severity="ERROR",
+                ip_address=client_ip,
+                user_id=admin.id
+            )
+            raise ServerError("TLS certificate not configured")
+
+        # Call the reconnect operation with enhanced error handling
+        await wildosnode.operations.reconnect_node(node_id, db_node, certificate)
+        
+        # Log successful reconnection
+        security_logger.log_security_event(
+            event_type=SecurityEventType.AUTHENTICATION_SUCCESS,
+            details={
+                "operation": "reconnect_node_completed",
+                "node_id": node_id,
+                "node_name": db_node.name,
+                "requested_by": admin.username
+            },
+            severity="INFO",
+            ip_address=client_ip,
+            user_id=admin.id
+        )
+
+        logger.info("Node `%s` reconnected successfully", db_node.name)
+        
+        return {
+            "success": True,
+            "message": f"Node '{db_node.name}' reconnected successfully",
+            "node_id": node_id
+        }
+
+    except ValidationError as e:
+        # Handle validation errors (node configuration issues)
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "operation": "reconnect_node_failed",
+                "reason": "Validation error",
+                "error": str(e),
+                "node_id": node_id,
+                "requested_by": admin.username
+            },
+            severity="WARNING",
+            ip_address=client_ip,
+            user_id=admin.id
+        )
+        
+        logger.error("Validation error during node `%s` reconnect: %s", db_node.name, str(e))
+        raise ValidationError(f"Node configuration validation failed: {str(e)}")
+
+    except ServiceUnavailableError as e:
+        # Handle service unavailable errors (node unreachable)
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "operation": "reconnect_node_failed",
+                "reason": "Service unavailable",
+                "error": str(e),
+                "node_id": node_id,
+                "requested_by": admin.username
+            },
+            severity="WARNING",
+            ip_address=client_ip,
+            user_id=admin.id
+        )
+        
+        logger.error("Service unavailable during node `%s` reconnect: %s", db_node.name, str(e))
+        raise ServiceUnavailableError(f"Node '{db_node.name}' is unreachable", "NODE_UNREACHABLE")
+
+    except ConflictError as e:
+        # Handle conflict errors (node already connected, etc.)
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "operation": "reconnect_node_failed",
+                "reason": "Conflict error",
+                "error": str(e),
+                "node_id": node_id,
+                "requested_by": admin.username
+            },
+            severity="WARNING",
+            ip_address=client_ip,
+            user_id=admin.id
+        )
+        
+        logger.error("Conflict during node `%s` reconnect: %s", db_node.name, str(e))
+        raise ConflictError(f"Reconnection conflict for node '{db_node.name}': {str(e)}")
+
+    except Exception as e:
+        # Handle unexpected errors
+        security_logger.log_security_event(
+            event_type=SecurityEventType.SUSPICIOUS_ACTIVITY,
+            details={
+                "operation": "reconnect_node_failed",
+                "reason": "Unexpected error",
+                "error": str(e),
+                "error_type": type(e).__name__,
+                "node_id": node_id,
+                "requested_by": admin.username
+            },
+            severity="ERROR",
+            ip_address=client_ip,
+            user_id=admin.id
+        )
+        
+        logger.error("Unexpected error during node `%s` reconnect: %s", db_node.name, str(e))
+        raise ServerError(f"Failed to reconnect to node '{db_node.name}': {str(e)}")
 
 
 @router.get("/{node_id}/usage", response_model=TrafficUsageSeries)
@@ -295,7 +474,7 @@ def get_usage(
     """
     node = crud.get_node_by_id(db, node_id)
     if not node:
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     return crud.get_node_usage(db, start_date, end_date, node)
 
@@ -305,12 +484,12 @@ async def get_backend_stats(
     node_id: int, backend: str, db: DBDep, admin: SudoAdminDep
 ):
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        stats = await node.get_backend_stats(backend)
+        stats = await asyncio.wait_for(node.get_backend_stats(backend), timeout=GRPC_FAST_TIMEOUT)
     except Exception:
-        raise HTTPException(502)
+        raise ServerError("Backend service error")
     else:
         return BackendStats(running=stats.running if stats else False)
 
@@ -320,12 +499,12 @@ async def get_node_xray_config(
     node_id: int, backend: str, admin: SudoAdminDep
 ):
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        config, config_format = await node.get_backend_config(name=backend)
+        config, config_format = await asyncio.wait_for(node.get_backend_config(name=backend), timeout=GRPC_FAST_TIMEOUT)
     except Exception:
-        raise HTTPException(status_code=502, detail="Node isn't responsive")
+        raise ServiceUnavailableError("Node isn't responsive", "NODE_UNRESPONSIVE")
     else:
         return {"config": config, "format": config_format}
 
@@ -338,7 +517,7 @@ async def alter_node_xray_config(
     config: Annotated[BackendConfig, Body()],
 ):
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
         await asyncio.wait_for(
@@ -347,12 +526,10 @@ async def alter_node_xray_config(
                 config=config.config,
                 config_format=config.format.value,
             ),
-            5,
+            timeout=GRPC_SLOW_TIMEOUT,
         )
     except:
-        raise HTTPException(
-            status_code=502, detail="No response from the node."
-        )
+        raise ServerError("No response from the node.")
     return {}
 
 
@@ -363,16 +540,14 @@ async def get_host_system_metrics(
 ):
     """Get host system metrics (CPU, RAM, disk, network, uptime)"""
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        metrics = await node.get_host_system_metrics()
+        metrics = await asyncio.wait_for(node.get_host_system_metrics(), timeout=GRPC_FAST_TIMEOUT)
         return metrics
     except Exception as e:
         logger.error(f"Failed to get host metrics for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502, detail="Failed to retrieve host system metrics"
-        )
+        raise ServerError("Failed to retrieve host system metrics")
 
 
 @router.get("/{node_id}/host/ports", response_model=list[PortInfo])
@@ -381,16 +556,14 @@ async def get_host_open_ports(
 ):
     """Get list of open ports on host system"""
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        ports = await node.get_host_open_ports()
+        ports = await asyncio.wait_for(node.get_host_open_ports(), timeout=GRPC_FAST_TIMEOUT)
         return ports
     except Exception as e:
         logger.error(f"Failed to get open ports for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502, detail="Failed to retrieve open ports"
-        )
+        raise ServerError("Failed to retrieve open ports")
 
 
 @router.post("/{node_id}/host/ports/open", response_model=PortActionResponse)
@@ -411,25 +584,23 @@ async def open_host_port(
         critical_ports.append(int(getattr(db_node, 'port', 0)))  # Node's own port
     
     if port in critical_ports:
-        raise HTTPException(
-            status_code=403, 
-            detail=f"Cannot modify critical port {port} - access would be compromised"
+        raise ForbiddenError(
+            f"Cannot modify critical port {port} - access would be compromised"
         )
 
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        result = await node.open_host_port(port)
+        result = await asyncio.wait_for(node.open_host_port(port), timeout=GRPC_PORT_ACTION_TIMEOUT)
         return PortActionResponse(
             success=result if result is not None else False,
             message=f"Port {port} opened successfully" if result else f"Failed to open port {port}"
         )
     except Exception as e:
         logger.error(f"Failed to open port {port} on node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502,
-            detail=f"Error opening port {port}: {str(e)}"
+        raise ServerError(
+            f"Error opening port {port}: {str(e)}"
         )
 
 
@@ -451,25 +622,23 @@ async def close_host_port(
         critical_ports.append(int(getattr(db_node, 'port', 0)))  # Node's own port
     
     if port in critical_ports:
-        raise HTTPException(
-            status_code=403, 
-            detail=f"Cannot close critical port {port} - system access would be lost"
+        raise ForbiddenError(
+            f"Cannot close critical port {port} - system access would be lost"
         )
 
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        result = await node.close_host_port(port)
+        result = await asyncio.wait_for(node.close_host_port(port), timeout=GRPC_PORT_ACTION_TIMEOUT)
         return PortActionResponse(
             success=result if result is not None else False,
             message=f"Port {port} closed successfully" if result else f"Failed to close port {port}"
         )
     except Exception as e:
         logger.error(f"Failed to close port {port} on node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502,
-            detail=f"Error closing port {port}: {str(e)}"
+        raise ServerError(
+            f"Error closing port {port}: {str(e)}"
         )
 
 
@@ -483,16 +652,14 @@ async def get_container_logs(
 ):
     """Get container logs"""
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        logs = await node.get_container_logs(tail=tail)
+        logs = await asyncio.wait_for(node.get_container_logs(tail=tail), timeout=GRPC_STREAM_TIMEOUT)
         return logs
     except Exception as e:
         logger.error(f"Failed to get container logs for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502, detail="Failed to retrieve container logs"
-        )
+        raise ServerError("Failed to retrieve container logs")
 
 
 @router.get("/{node_id}/container/files", response_model=list[ContainerFile])
@@ -505,31 +672,27 @@ async def get_container_files(
     """Get list of files in container directory"""
     # Validate path to prevent directory traversal attacks
     if ".." in path or path.startswith("/etc") or path.startswith("/root"):
-        raise HTTPException(
-            status_code=400, 
-            detail="Invalid path - directory traversal and system directories are not allowed"
+        raise BadRequestError(
+            "Invalid path - directory traversal and system directories are not allowed"
         )
     
     # Normalize and validate the path
     normalized_path = os.path.normpath(path)
     allowed_prefixes = ["/app", "/var", "/tmp", "/opt"]
     if not any(normalized_path.startswith(prefix) for prefix in allowed_prefixes):
-        raise HTTPException(
-            status_code=403, 
-            detail="Access denied - only specific directories are allowed"
+        raise ForbiddenError(
+            "Access denied - only specific directories are allowed"
         )
     
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        files = await node.get_container_files(path=normalized_path)
+        files = await asyncio.wait_for(node.get_container_files(path=normalized_path), timeout=GRPC_FAST_TIMEOUT)
         return files
     except Exception as e:
         logger.error(f"Failed to get container files for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502, detail="Failed to retrieve container files"
-        )
+        raise ServerError("Failed to retrieve container files")
 
 
 @router.post("/{node_id}/container/restart", response_model=ContainerRestartResponse)
@@ -538,19 +701,17 @@ async def restart_container(
 ):
     """Restart the node's container"""
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        result = await node.restart_container()
+        result = await asyncio.wait_for(node.restart_container(), timeout=GRPC_SLOW_TIMEOUT)
         return ContainerRestartResponse(
             success=result if result is not None else False, 
             message="Container restart initiated" if result else "Failed to restart container"
         )
     except Exception as e:
         logger.error(f"Failed to restart container for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502, detail="Failed to restart container"
-        )
+        raise ServerError("Failed to restart container")
 
 
 # Batch Backend Stats Endpoint (for performance optimization)
@@ -560,10 +721,10 @@ async def get_all_backends_stats(
 ):
     """Get stats for all backends of a node in one request"""
     if not (node := wildosnode.nodes.get(node_id)):
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
-        all_stats = await node.get_all_backends_stats()
+        all_stats = await asyncio.wait_for(node.get_all_backends_stats(), timeout=GRPC_FAST_TIMEOUT)
         
         # Convert protobuf BackendStats to model BackendStats with safe conversion
         converted_stats = {}
@@ -593,9 +754,7 @@ async def get_all_backends_stats(
         )
     except Exception as e:
         logger.error(f"Failed to get all backend stats for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=502, detail="Failed to retrieve backend stats"
-        )
+        raise ServerError("Failed to retrieve backend stats")
 
 
 # Peak Events Monitoring Endpoints
@@ -611,7 +770,7 @@ async def get_peak_events_history(
     """Get historical peak events from database"""
     db_node = crud.get_node_by_id(db, node_id)
     if not db_node:
-        raise HTTPException(status_code=404, detail="Node not found")
+        raise node_not_found_error()
 
     try:
         events = crud.get_peak_events(
@@ -642,9 +801,7 @@ async def get_peak_events_history(
         return result
     except Exception as e:
         logger.error(f"Failed to get peak events for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to retrieve peak events"
-        )
+        raise ServerError("Failed to retrieve peak events")
 
 
 @router.websocket("/{node_id}/peak/events/stream")
@@ -654,7 +811,7 @@ async def stream_peak_events(
     db: DBDep
 ):
     """WebSocket endpoint for real-time peak events streaming"""
-    # Extract token using secure Sec-WebSocket-Protocol method with fallbacks
+    # Extract token using secure Sec-WebSocket-Protocol method only
     token, selected_subprotocol = _extract_ws_token(websocket)
     admin = get_admin(db, token or "")
 
@@ -707,7 +864,7 @@ async def save_peak_event(
     """Save a peak event to the database (called by authenticated nodes)"""
     # Verify node ID matches authenticated node
     if node_auth["node_id"] != node_id:
-        raise HTTPException(status_code=403, detail="Node ID mismatch")
+        raise ForbiddenError("Node ID mismatch")
         
     try:
         # Convert timestamp to datetime object
@@ -735,6 +892,4 @@ async def save_peak_event(
         
     except Exception as e:
         logger.error(f"Failed to save peak event for node {node_id}: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to save peak event"
-        )
+        raise ServerError("Failed to save peak event")

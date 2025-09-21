@@ -30,6 +30,7 @@ export const HeaderMenu: React.FC = () => {
                     variant="secondary"
                     className="bg-slate-800/80 border border-slate-700/50 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-200"
                     size="icon"
+                    aria-label={t('navigation.menu-button')}
                 >
                     <Icon name="Menu" />
                 </Button>

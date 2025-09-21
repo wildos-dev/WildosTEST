@@ -19,7 +19,8 @@ from typing import Dict, List, Optional, Callable, Any, Union, Awaitable, TypeVa
 from weakref import WeakSet
 
 from .exceptions import (
-    WildosNodeBaseError, ErrorContext, ErrorSeverity, ErrorCategory, RecoveryStrategy,
+    WildosNodeBaseError, ErrorContext, ErrorSeverity, ErrorCategory, 
+    RecoveryStrategy as RecoveryStrategyEnum,
     NetworkError, ServiceError, TimeoutError, AuthenticationError, ConfigurationError,
     classify_grpc_error, classify_network_error, classify_ssl_error,
     create_error_with_context, ServiceUnavailableError, ConnectionError,
@@ -205,7 +206,7 @@ class RetryStrategy(RecoveryStrategy):
     
     def can_handle(self, error: WildosNodeBaseError) -> bool:
         """Check if error is retryable"""
-        return error.retryable and RecoveryStrategy.RETRY in error.recovery_strategies
+        return error.retryable and RecoveryStrategyEnum.RETRY in error.recovery_strategies
     
     async def execute(
         self, 
@@ -315,7 +316,7 @@ class ReconnectionStrategy(RecoveryStrategy):
     
     def can_handle(self, error: WildosNodeBaseError) -> bool:
         """Check if error requires reconnection"""
-        return RecoveryStrategy.RECONNECT in error.recovery_strategies
+        return RecoveryStrategyEnum.RECONNECT in error.recovery_strategies
     
     async def execute(
         self, 
@@ -364,7 +365,7 @@ class FallbackStrategy(RecoveryStrategy):
     
     def can_handle(self, error: WildosNodeBaseError) -> bool:
         """Check if fallback is appropriate for this error"""
-        return RecoveryStrategy.FALLBACK in error.recovery_strategies
+        return RecoveryStrategyEnum.FALLBACK in error.recovery_strategies
     
     async def execute(
         self, 
@@ -413,7 +414,7 @@ class DegradationStrategy(RecoveryStrategy):
     
     def can_handle(self, error: WildosNodeBaseError) -> bool:
         """Check if degradation is appropriate for this error"""
-        return RecoveryStrategy.DEGRADE in error.recovery_strategies
+        return RecoveryStrategyEnum.DEGRADE in error.recovery_strategies
     
     async def execute(
         self, 
@@ -443,10 +444,10 @@ class DegradationStrategy(RecoveryStrategy):
             # Return appropriate empty/minimal result based on function return type
             return self._get_minimal_result(func)
     
-    def _get_minimal_result(self, func: Callable) -> Any:
+    def _get_minimal_result(self, func: Callable) -> T:
         """Get minimal result for function when degraded"""
         # This is a simplified implementation - should be customized per function
-        return None
+        return None  # type: ignore
 
 
 class FallbackCache:
@@ -637,7 +638,9 @@ class RecoveryManager:
             if strategy.can_handle(structured_error):
                 try:
                     self._metrics['total_recoveries'] += 1
-                    result = await strategy.execute(func, structured_error, context, *args, **kwargs)
+                    # Ensure context is not None
+                    execution_context = context or ErrorContext()
+                    result = await strategy.execute(func, structured_error, execution_context, *args, **kwargs)
                     self._metrics['successful_recoveries'] += 1
                     
                     # Update recovery state on success

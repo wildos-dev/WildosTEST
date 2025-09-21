@@ -101,7 +101,7 @@ class WildosNodeDB:
         try:
             monitoring.logger.debug(
                 f"Setting status {status_str} for node {self.id}",
-                node_id=self.id, status=status_str, message=message
+                node_id=self.id, status=status_str, status_message=message
             )
             
             from app.db import crud, GetDB

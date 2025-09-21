@@ -31,6 +31,12 @@ interface DataTableProps<TData, TValue> {
     onOpen?: (object: TData) => void
     setSelectedRow?: OnChangeFn<RowSelectionState> | undefined
     selectedRow?: RowSelectionState | undefined
+    CardComponent?: React.ComponentType<{ 
+        entity: TData;
+        actions: any;
+        onRowClick?: (entity: TData) => void;
+    }>
+    cardActions?: any
 }
 
 export function DataTable<TData, TValue>({
@@ -40,6 +46,8 @@ export function DataTable<TData, TValue>({
     onOpen,
     selectedRow,
     setSelectedRow,
+    CardComponent,
+    cardActions,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -74,7 +82,12 @@ export function DataTable<TData, TValue>({
                 {onCreate && (<Button onClick={onCreate}>{t('create')}</Button>)}
             </div>
             <div className="rounded-md border">
-                <EntityDataTable columns={columns} onRowClick={onOpen} />
+                <EntityDataTable 
+                    columns={columns} 
+                    onRowClick={onOpen} 
+                    CardComponent={CardComponent}
+                    cardActions={cardActions}
+                />
                 <DataTablePagination table={table} />
             </div>
         </div>

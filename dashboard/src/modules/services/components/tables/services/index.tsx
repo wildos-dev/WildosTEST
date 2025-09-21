@@ -7,6 +7,7 @@ import {
 import { columns as columnsFn } from "./columns";
 import { EntityTable } from "@wildosvpn/libs/entity-table";
 import { useNavigate } from "@tanstack/react-router";
+import { ServiceCard } from "./service-card";
 
 export const ServicesTable: React.FC = () => {
     const navigate = useNavigate({ from: "/services" });
@@ -32,6 +33,7 @@ export const ServicesTable: React.FC = () => {
     }
 
     const columns = columnsFn({ onEdit, onDelete, onOpen });
+    const cardActions = { onEdit, onDelete, onOpen };
 
     return (
         <EntityTable
@@ -41,6 +43,8 @@ export const ServicesTable: React.FC = () => {
             entityKey={ServicesQueryFetchKey}
             onCreate={() => navigate({ to: "/services/create" })}
             onOpen={onOpen}
+            CardComponent={ServiceCard}
+            cardActions={cardActions}
         />
     );
 };

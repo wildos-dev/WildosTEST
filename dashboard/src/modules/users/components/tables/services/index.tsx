@@ -9,6 +9,7 @@ import {
 } from "@wildosvpn/modules/users";
 import { useTranslation } from "react-i18next";
 import { fetchUserServices } from "@wildosvpn/modules/services";
+import { ServiceCard } from "@wildosvpn/modules/services/components/tables/services/service-card";
 
 interface UserServicesTableProps {
     user: UserType;
@@ -29,6 +30,18 @@ export const UserServicesTable: React.FC<UserServicesTableProps> = ({ user }) =>
         updateUser({ ...user, service_ids: selectedService });
     }, [selectedService, user, updateUser]);
 
+    const handleToggleSelection = (entityId: number, isSelected: boolean) => {
+        setSelectedService(prev => 
+            isSelected 
+                ? [...new Set([...prev, entityId])]  // Add if not already present
+                : prev.filter(id => id !== entityId)  // Remove if present
+        );
+    };
+
+    const isServiceSelected = (id: number) => {
+        return selectedService.includes(id);
+    };
+
     return (
         <div className="flex flex-col gap-4">
             <SelectableEntityTable
@@ -41,6 +54,11 @@ export const UserServicesTable: React.FC<UserServicesTableProps> = ({ user }) =>
                 parentEntityId={user.username}
                 rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
                 entitySelection={{ selectedEntity: selectedService, setSelectedEntity: setSelectedService }}
+                CardComponent={ServiceCard}
+                cardActions={{ 
+                    onToggleSelection: handleToggleSelection,
+                    isSelected: isServiceSelected
+                }}
             />
 
             <Button onClick={handleApply} disabled={selectedService.length === 0}>

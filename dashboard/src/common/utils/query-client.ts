@@ -1,10 +1,10 @@
 import { QueryClient } from '@tanstack/react-query';
-import apiClient from './http';
+import { apiClient, ApiError } from '../api/client';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Use the unified HTTP client as default fetcher
+      // Use the standardized API client as default fetcher
       queryFn: ({ queryKey }) => {
         const [url, ...params] = queryKey as [string, ...any[]];
         
@@ -31,13 +31,21 @@ export const queryClient = new QueryClient({
       },
       // Retry failed requests up to 3 times with exponential backoff
       retry: (failureCount, error: any) => {
-        // Extract status code from different error formats (Axios-style or direct Response)
-        const status = error?.response?.status || error?.status || 0;
+        // Use standardized ApiError if available
+        if (ApiError.isApiError(error)) {
+          const status = error.status;
+          // Don't retry on client errors (4xx) except 408 Request Timeout
+          if (status >= 400 && status < 500 && status !== 408) {
+            return false;
+          }
+        }
         
-        // Don't retry on client errors (4xx) except 408 Request Timeout
+        // Fallback to previous logic for compatibility
+        const status = error?.response?.status || error?.status || 0;
         if (status >= 400 && status < 500 && status !== 408) {
           return false;
         }
+        
         // Retry up to 3 times for server errors (5xx) and network errors
         return failureCount < 3;
       },
@@ -55,13 +63,21 @@ export const queryClient = new QueryClient({
     mutations: {
       // Retry mutations once on network errors
       retry: (failureCount, error: any) => {
-        // Extract status code from different error formats (Axios-style or direct Response)
-        const status = error?.response?.status || error?.status || 0;
+        // Use standardized ApiError if available
+        if (ApiError.isApiError(error)) {
+          const status = error.status;
+          // Don't retry client errors (4xx)
+          if (status >= 400 && status < 500) {
+            return false;
+          }
+        }
         
-        // Don't retry client errors (4xx)
+        // Fallback to previous logic for compatibility
+        const status = error?.response?.status || error?.status || 0;
         if (status >= 400 && status < 500) {
           return false;
         }
+        
         return failureCount < 1; // Retry once for server/network errors
       },
       retryDelay: 1000,

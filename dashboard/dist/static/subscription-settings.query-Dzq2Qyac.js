@@ -1,0 +1,1 @@
+import{u as t}from"./query-BGTG4bZD.js";import{a as s}from"./index-D9xJNTt9.js";import"./react-core-Bcdk_OeX.js";async function e(){return s("/system/settings/subscription")}const i=["system","settings","subscription"],o=()=>t({queryKey:i,queryFn:e,initialData:{template_on_acceptance:!1,profile_title:"",support_link:"",update_interval:0,rules:[]}});export{i as s,o as u};

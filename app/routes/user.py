@@ -8,7 +8,13 @@ import sqlalchemy
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from fastapi import APIRouter, Request
-from fastapi import HTTPException, Query
+from fastapi import Query
+
+from ..exceptions import (
+    user_not_found_error, admin_not_found_error, 
+    user_already_exists_error, ConflictError, 
+    ValidationError, ServerError, ForbiddenError, NotFoundError
+)
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
 
@@ -97,10 +103,10 @@ def get_users(
                     )
             elif name == "owner_username":
                 if not bool(getattr(dbadmin, 'is_sudo', False)):
-                    raise HTTPException(403, "You're not allowed.")
+                    raise ForbiddenError("You're not allowed.", "INSUFFICIENT_PERMISSIONS")
                 filter_admin = crud.get_admin(db, value)
                 if not filter_admin:
-                    raise HTTPException(404, "owner_username not found.")
+                    raise NotFoundError("Owner username not found", "OWNER_NOT_FOUND")
                 query = query.where(User.admin_id == filter_admin.id)
             else:
                 query = query.where(getattr(User, name) == value)
@@ -148,9 +154,9 @@ async def add_user(
             ip_address=client_ip,
             user_id=admin.id
         )
-        raise HTTPException(
-            status_code=403, 
-            detail="Insufficient permissions for user creation"
+        raise ForbiddenError(
+            "Insufficient permissions for user creation",
+            "INSUFFICIENT_PERMISSIONS"
         )
     
     # Log user creation attempt
@@ -248,7 +254,7 @@ async def add_user(
             user_id=admin.id
         )
         
-        raise HTTPException(status_code=409, detail="User already exists")
+        raise user_already_exists_error()
 
 
 @router.post("/reset")
@@ -291,7 +297,7 @@ async def delete_expired(
         if expire_date is not None and expire_date <= expiration_threshold:
             expired_users.append(user)
     if not expired_users:
-        raise HTTPException(status_code=404, detail="No expired user found.")
+        raise NotFoundError("No expired user found", "NO_EXPIRED_USERS")
 
     for db_user in expired_users:
         crud.remove_user(db, db_user)
@@ -475,7 +481,7 @@ async def enable_user(
     Enables a user
     """
     if bool(getattr(db_user, 'enabled', False)):
-        raise HTTPException(409, "User is already enabled")
+        raise ConflictError("User is already enabled", "USER_ALREADY_ENABLED")
 
     setattr(db_user, 'enabled', True)
 
@@ -509,7 +515,7 @@ async def disable_user(
     Disables a user
     """
     if not bool(getattr(db_user, 'enabled', False)):
-        raise HTTPException(409, "User is not enabled")
+        raise ConflictError("User is not enabled", "USER_NOT_ENABLED")
     setattr(db_user, 'enabled', False)
     setattr(db_user, 'activated', False)
     db.commit()
@@ -577,11 +583,11 @@ def set_owner(
 ):
     db_user = crud.get_user(db, username)
     if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise user_not_found_error()
 
     new_admin = crud.get_admin(db, username=admin_username)
     if not new_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     db_user = crud.set_owner(db, db_user, new_admin)
     user = UserResponse.model_validate(db_user)

@@ -22,10 +22,7 @@ type FormFieldContextValue<
     name: TName
 }
 
-// Safe createContext with fallback - use null as default to prevent runtime errors
-const FormFieldContext = (React?.createContext || (() => {
-    throw new Error("React is not available - check React imports and build configuration");
-}))<FormFieldContextValue | null>(null)
+const FormFieldContext = React.createContext<FormFieldContextValue | null>(null)
 
 const FormField = <
     TFieldValues extends FieldValues = FieldValues,
@@ -41,12 +38,8 @@ const FormField = <
 }
 
 const useFormField = () => {
-    const fieldContext = (React?.useContext || (() => {
-        throw new Error("React is not available - check React imports and build configuration");
-    }))(FormFieldContext)
-    const itemContext = (React?.useContext || (() => {
-        throw new Error("React is not available - check React imports and build configuration");
-    }))(FormItemContext)
+    const fieldContext = React.useContext(FormFieldContext)
+    const itemContext = React.useContext(FormItemContext)
 
     // Early check to prevent runtime errors with undefined field names
     if (!fieldContext) {
@@ -76,10 +69,7 @@ type FormItemContextValue = {
     id: string
 }
 
-// Safe createContext with fallback - use null as default to prevent runtime errors
-const FormItemContext = (React?.createContext || (() => {
-    throw new Error("React is not available - check React imports and build configuration");
-}))<FormItemContextValue | null>(null)
+const FormItemContext = React.createContext<FormItemContextValue | null>(null)
 
 const FormItem = React.forwardRef<
     HTMLDivElement,

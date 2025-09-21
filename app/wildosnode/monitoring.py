@@ -633,7 +633,7 @@ class PerformanceMonitor:
                 else:
                     self.metrics_collector.increment(
                         "operation_error_total",
-                        tags={**(tags or {}), 'operation': operation_name, 'error_type': error_type}
+                        tags={**(tags or {}), 'operation': operation_name, 'error_type': error_type or 'unknown'}
                     )
     
     def _record_measurement(self, operation_name: str, duration_ms: float, success: bool, error_type: Optional[str]):
@@ -1016,7 +1016,7 @@ class StatusReporter:
         self.overall_status = 'healthy'
         self.status_history: List[Dict[str, Any]] = []
         
-    def update_component_status(self, component: str, status: str, details: Dict[str, Any] = None):
+    def update_component_status(self, component: str, status: str, details: Optional[Dict[str, Any]] = None):
         """Update status for a specific component"""
         self.component_statuses[component] = {
             'status': status,  # 'healthy', 'degraded', 'critical', 'down'

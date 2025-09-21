@@ -124,7 +124,7 @@ const Cards: React.FC<Readonly<DataTableProps<any, any>>> = ({
 
     return (
         <div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 min-w-0 w-full h-full"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 min-w-0 w-full h-full"
             role="list"
             aria-label={t('table.entities_list', 'Entities list')}
             data-testid="list-entities"
@@ -162,7 +162,7 @@ const Cards: React.FC<Readonly<DataTableProps<any, any>>> = ({
 
 const CardLoading = () => (
     <div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 min-w-0 w-full h-full"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 min-w-0 w-full h-full"
         role="list"
         aria-label="Loading entities"
         data-testid="list-entities"
@@ -281,41 +281,43 @@ export function EntityDataTable<TData, TValue>({
     
     const { isLoading, isError } = context;
 
-    // Render cards when CardComponent is available, otherwise render table
-    if (CardComponent) {
-        return (
-            <div className="w-full">
-                {isLoading ? (
-                    <CardLoading />
-                ) : isError ? (
-                    <CardError />
-                ) : (
-                    <Cards 
-                        onRowClick={onRowClick} 
-                        CardComponent={CardComponent}
-                        cardActions={cardActions}
-                        columns={columns}
-                    />
-                )}
-            </div>
-        );
-    }
-
-    // Render traditional table when no CardComponent is provided
     return (
-        <ScrollableTable minWidth="640px">
-            <Table className="w-full min-w-0">
-                <TableHeader><Headers /></TableHeader>
-                <TableBody>
+        <div className="w-full">
+            {/* Always show cards when CardComponent is available */}
+            {CardComponent ? (
+                <div>
                     {isLoading ? (
-                        <Loading />
+                        <CardLoading />
                     ) : isError ? (
-                        <ErrorDisplay columns={columns.length} />
+                        <CardError />
                     ) : (
-                        <Rows onRowClick={onRowClick} columns={columns} />
+                        <Cards 
+                            onRowClick={onRowClick} 
+                            CardComponent={CardComponent}
+                            cardActions={cardActions}
+                            columns={columns}
+                        />
                     )}
-                </TableBody>
-            </Table>
-        </ScrollableTable>
+                </div>
+            ) : (
+                // Fallback to table view only when no CardComponent is available
+                <div>
+                    <ScrollableTable minWidth="640px">
+                        <Table className="w-full min-w-0">
+                            <TableHeader><Headers /></TableHeader>
+                            <TableBody>
+                                {isLoading ? (
+                                    <Loading />
+                                ) : isError ? (
+                                    <ErrorDisplay columns={columns.length} />
+                                ) : (
+                                    <Rows onRowClick={onRowClick} columns={columns} />
+                                )}
+                            </TableBody>
+                        </Table>
+                    </ScrollableTable>
+                </div>
+            )}
+        </div>
     );
 }

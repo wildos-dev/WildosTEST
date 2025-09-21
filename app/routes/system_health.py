@@ -1,15 +1,59 @@
 """
 System health and monitoring endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from typing import Dict, Any
 
 from ..dependencies import SudoAdminDep, DBDep
+from ..exceptions import ServerError, ServiceUnavailableError, APIError
 from ..utils.system_monitor import disk_monitor
 from ..db.maintenance import db_maintenance, scheduled_database_cleanup
 from ..utils.logging_config import system_monitor_logger
+from .. import __version__
 
 router = APIRouter(prefix="/api/system", tags=["system"])
+
+
+@router.get("/version")
+async def get_version():
+    """Get application version information"""
+    return {
+        "version": __version__,
+        "name": "WildosVPN API",
+        "description": "Unified GUI Censorship Resistant Solution Powered by Xray"
+    }
+
+
+@router.get("/ready")
+async def readiness_check():
+    """Readiness check for load balancers and orchestrators"""
+    try:
+        # Basic readiness checks
+        is_safe, disk_info = disk_monitor.check_disk_space()
+        db_health = db_maintenance.check_database_health()
+        
+        # Simple pass/fail readiness logic
+        ready = is_safe and db_health["healthy"]
+        
+        if ready:
+            return {
+                "status": "ready",
+                "message": "Service is ready to accept traffic"
+            }
+        else:
+            # Return 503 Service Unavailable if not ready
+            raise ServiceUnavailableError(
+                f"Service is not ready - disk_safe: {is_safe}, db_healthy: {db_health['healthy']}",
+                "SERVICE_NOT_READY"
+            )
+    except APIError:
+        # Re-raise APIError to preserve original error code and semantics
+        raise
+    except Exception as e:
+        raise ServiceUnavailableError(
+            f"Readiness check failed: {str(e)}",
+            "READINESS_CHECK_FAILED"
+        )
 
 
 @router.get("/health")
@@ -23,19 +67,28 @@ async def system_health():
             "status": "healthy" if is_safe and db_health["healthy"] else "warning",
             "disk": {
                 "safe": is_safe,
-                "usage_percent": disk_info.get("usage_percent", 0),
-                "free_gb": disk_info.get("free_gb", 0),
-                "total_gb": disk_info.get("total_gb", 0)
+                "details": {
+                    "usage_percent": disk_info.get("usage_percent", 0),
+                    "free_gb": disk_info.get("free_gb", 0),
+                    "total_gb": disk_info.get("total_gb", 0),
+                    "timestamp": disk_info.get("timestamp")
+                }
             },
             "database": {
                 "healthy": db_health["healthy"],
-                "size_mb": db_health["info"].get("size_mb", 0),
+                "info": {
+                    "size_mb": db_health["info"].get("size_mb", 0),
+                    "last_modified": db_health["info"].get("last_modified")
+                },
                 "issues": db_health.get("issues", [])
             },
             "timestamp": disk_info.get("timestamp")
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
+        raise ServerError(
+            f"Health check failed: {str(e)}",
+            "HEALTH_CHECK_ERROR"
+        )
 
 
 @router.get("/disk-info")
@@ -48,7 +101,10 @@ async def disk_info(_: SudoAdminDep):
             "details": disk_info
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get disk info: {str(e)}")
+        raise ServerError(
+            f"Failed to get disk info: {str(e)}",
+            "DISK_INFO_ERROR"
+        )
 
 
 @router.get("/database-health")
@@ -58,7 +114,10 @@ async def database_health(_: SudoAdminDep):
         health = db_maintenance.check_database_health()
         return health
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to check database health: {str(e)}")
+        raise ServerError(
+            f"Failed to check database health: {str(e)}",
+            "DATABASE_HEALTH_ERROR"
+        )
 
 
 @router.post("/database-cleanup")
@@ -75,7 +134,10 @@ async def database_cleanup(db: DBDep, _: SudoAdminDep, days_to_keep: int = 30, d
         }
     except Exception as e:
         system_monitor_logger.error(f"Manual database cleanup failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Database cleanup failed: {str(e)}")
+        raise ServerError(
+            f"Database cleanup failed: {str(e)}",
+            "DATABASE_CLEANUP_ERROR"
+        )
 
 
 @router.post("/database-optimize")
@@ -92,7 +154,10 @@ async def database_optimize(_: SudoAdminDep):
         }
     except Exception as e:
         system_monitor_logger.error(f"Manual database optimization failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Database optimization failed: {str(e)}")
+        raise ServerError(
+            f"Database optimization failed: {str(e)}",
+            "DATABASE_OPTIMIZATION_ERROR"
+        )
 
 
 @router.get("/monitoring-status")
@@ -119,7 +184,10 @@ async def monitoring_status(_: SudoAdminDep):
             }
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get monitoring status: {str(e)}")
+        raise ServerError(
+            f"Failed to get monitoring status: {str(e)}",
+            "MONITORING_STATUS_ERROR"
+        )
 
 
 __all__ = ["router"]

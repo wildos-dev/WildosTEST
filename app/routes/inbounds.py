@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query
-from fastapi import HTTPException
+from ..exceptions import NotFoundError
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
 
@@ -47,7 +47,7 @@ def get_host(id: int, db: DBDep):
     """
     host = crud.get_host(db, id)
     if not host:
-        raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
+        raise NotFoundError(HOST_NOT_FOUND_ERROR_MSG, "HOST_NOT_FOUND")
 
     return host
 
@@ -60,7 +60,7 @@ def update_host(id: int, host: InboundHost, db: DBDep):
 
     db_host = crud.get_host(db, id)
     if not db_host:
-        raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
+        raise NotFoundError(HOST_NOT_FOUND_ERROR_MSG, "HOST_NOT_FOUND")
 
     return crud.update_host(db, db_host, host)
 
@@ -72,7 +72,7 @@ def delete_host(id: int, db: DBDep):
     """
     db_host = crud.get_host(db, id)
     if not db_host:
-        raise HTTPException(status_code=404, detail=HOST_NOT_FOUND_ERROR_MSG)
+        raise NotFoundError(HOST_NOT_FOUND_ERROR_MSG, "HOST_NOT_FOUND")
 
     db.delete(db_host)
     db.commit()
@@ -86,7 +86,7 @@ def get_inbound(id: int, db: DBDep):
     """
     inbound = crud.get_inbound(db, id)
     if not inbound:
-        raise HTTPException(status_code=404, detail="Inbound not found")
+        raise NotFoundError("Inbound not found", "INBOUND_NOT_FOUND")
 
     return inbound
 
@@ -98,7 +98,7 @@ def get_inbound_hosts(id: int, db: DBDep):
     """
     inbound = crud.get_inbound(db, id)
     if not inbound:
-        raise HTTPException(status_code=404, detail="Inbound not found")
+        raise NotFoundError("Inbound not found", "INBOUND_NOT_FOUND")
 
     return paginate(
         db, db.query(DBInboundHost).filter(DBInboundHost.inbound_id == id)
@@ -112,6 +112,6 @@ def create_host(id: int, host: InboundHost, db: DBDep):
     """
     inbound = crud.get_inbound(db, id)
     if not inbound:
-        raise HTTPException(status_code=404, detail="Inbound not found")
+        raise NotFoundError("Inbound not found", "INBOUND_NOT_FOUND")
 
     return crud.add_host(db, inbound, host)

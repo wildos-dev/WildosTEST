@@ -30,6 +30,13 @@ export interface SelectableEntityTableProps<T extends { id: number }> {
         setSelectedEntity: (s: number[]) => void;
     }
     existingEntityIds: number[];
+    CardComponent?: React.ComponentType<{ 
+        entity: T;
+        actions: any;
+        onRowClick?: (entity: T) => void;
+    }>;
+    cardActions?: any;
+    onOpen?: (entity: T) => void;
 }
 
 export function SelectableEntityTable<T extends { id: number }>({
@@ -42,6 +49,9 @@ export function SelectableEntityTable<T extends { id: number }>({
     parentEntityKey,
     parentEntityId,
     existingEntityIds,
+    CardComponent,
+    cardActions,
+    onOpen,
 }: SelectableEntityTableProps<T>) {
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
     const filters = useFilters();
@@ -134,7 +144,12 @@ export function SelectableEntityTable<T extends { id: number }>({
                     <TableSearch />
                 </div>
                 <div className="w-full rounded-md border">
-                    <EntityDataTable columns={columns} />
+                    <EntityDataTable 
+                        columns={columns} 
+                        onRowClick={onOpen}
+                        CardComponent={CardComponent}
+                        cardActions={cardActions}
+                    />
                     <DataTablePagination table={table} />
                 </div>
             </div>

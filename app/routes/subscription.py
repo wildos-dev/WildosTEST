@@ -2,7 +2,8 @@ import re
 from collections import defaultdict
 
 from fastapi import APIRouter
-from fastapi import Header, HTTPException, Path, Request, Response
+from fastapi import Header, Path, Request, Response
+from ..exceptions import NotFoundError
 from starlette.responses import HTMLResponse
 
 from app.db import crud
@@ -96,7 +97,7 @@ def user_subscription(
                     )
                 )
             elif rule.result.value == "block":
-                raise HTTPException(404)
+                raise NotFoundError("Access blocked by subscription rule", "SUBSCRIPTION_BLOCKED")
             elif rule.result.value == "base64-links":
                 b64 = True
                 config_format = "links"

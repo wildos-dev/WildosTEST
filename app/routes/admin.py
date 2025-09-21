@@ -4,7 +4,13 @@ import sqlalchemy
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from fastapi import APIRouter, Request
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
+
+from ..exceptions import (
+    admin_not_found_error, admin_already_exists_error,
+    ConflictError, ValidationError, ServerError,
+    UnauthorizedError, ForbiddenError
+)
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -123,7 +129,7 @@ def create_admin(
             user_id=admin.id
         )
         
-        raise HTTPException(status_code=409, detail="Admin already exists")
+        raise admin_already_exists_error()
 
 
 @router.get("/current", response_model=Admin)
@@ -152,10 +158,9 @@ def admin_token(
             ),
         )
 
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Incorrect username or password",
-        headers={"WWW-Authenticate": "Bearer"},
+    raise UnauthorizedError(
+        "Incorrect username or password", 
+        "INVALID_CREDENTIALS"
     )
 
 
@@ -167,7 +172,7 @@ def get_admin(
 ):
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
     return dbadmin
 
 
@@ -180,13 +185,13 @@ def modify_admin(
 ):
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     # If a sudoer admin wants to edit another sudoer
     if username != admin.username and bool(getattr(dbadmin, 'is_sudo', False)):
-        raise HTTPException(
-            status_code=403,
-            detail="You're not allowed to edit another sudoers account. Use wildosvpn-cli instead.",
+        raise ForbiddenError(
+            "You're not allowed to edit another sudoers account. Use wildosvpn-cli instead.",
+            "CANNOT_EDIT_SUDO_ADMIN"
         )
 
     dbadmin = crud.update_admin(db, dbadmin, modified_admin)
@@ -200,7 +205,7 @@ def get_admin_services(username: str, db: DBDep, admin: SudoAdminDep):
     """
     db_admin = crud.get_admin(db, username)
     if not db_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     if bool(getattr(db_admin, 'is_sudo', False)) or bool(getattr(db_admin, 'all_services_access', False)):
         query = select(Service)
@@ -221,7 +226,7 @@ def get_admin_users(username: str, db: DBDep, admin: SudoAdminDep):
     """
     db_admin = crud.get_admin(db, username)
     if not db_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     query = select(User).where(User.admin_id == db_admin.id)
 
@@ -232,12 +237,12 @@ def get_admin_users(username: str, db: DBDep, admin: SudoAdminDep):
 async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
     db_admin = crud.get_admin(db, username)
     if not db_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     if bool(getattr(db_admin, 'is_sudo', False)) and getattr(db_admin, 'username', '') != admin.username:
-        raise HTTPException(
-            status_code=403,
-            detail="You're not allowed.",
+        raise ForbiddenError(
+            "You're not allowed.",
+            "ACCESS_DENIED"
         )
 
     for user in crud.get_users(db, admin=db_admin, enabled=True):
@@ -254,12 +259,12 @@ async def disable_users(username: str, db: DBDep, admin: SudoAdminDep):
 async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
     db_admin = crud.get_admin(db, username)
     if not db_admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     if bool(getattr(db_admin, 'is_sudo', False)) and getattr(db_admin, 'username', '') != admin.username:
-        raise HTTPException(
-            status_code=403,
-            detail="You're not allowed.",
+        raise ForbiddenError(
+            "You're not allowed.",
+            "ACCESS_DENIED"
         )
 
     for user in crud.get_users(db, admin=db_admin, enabled=False):
@@ -276,12 +281,12 @@ async def enable_users(username: str, db: DBDep, admin: SudoAdminDep):
 def remove_admin(username: str, db: DBDep, admin: SudoAdminDep):
     dbadmin = crud.get_admin(db, username)
     if not dbadmin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        raise admin_not_found_error()
 
     if bool(getattr(dbadmin, 'is_sudo', False)):
-        raise HTTPException(
-            status_code=403,
-            detail="You're not allowed to delete sudoers accounts. Use wildosvpn-cli instead.",
+        raise ForbiddenError(
+            "You're not allowed to delete sudoers accounts. Use wildosvpn-cli instead.",
+            "CANNOT_DELETE_SUDO_ADMIN"
         )
 
     crud.remove_admin(db, dbadmin)

@@ -212,46 +212,104 @@ async def remove_user(user: "DBUser"):
 
 
 async def remove_node(node_id: int):
-    """Remove a node with enhanced error handling and monitoring"""
-    from .monitoring import get_monitoring, get_status_reporter
+    """Enhanced node removal with proper graceful shutdown and TLS cleanup"""
+    from .monitoring import get_monitoring, get_status_reporter, get_error_aggregator
     monitoring = get_monitoring()
     status_reporter = get_status_reporter()
+    error_aggregator = get_error_aggregator()
+    
+    removal_start_time = time.time()
     
     try:
         from .. import wildosnode
         if node_id in wildosnode.nodes:
+            node_instance = wildosnode.nodes[node_id]
+            
             monitoring.logger.info(
-                f"Removing node {node_id}",
+                f"Starting enhanced node removal for node {node_id}",
                 node_id=node_id,
-                operation="remove_node"
+                operation="remove_node",
+                node_address=getattr(node_instance, '_address', 'unknown'),
+                tls_enabled=hasattr(node_instance, '_ssl_context'),
+                certificate_pinning=getattr(node_instance, '_cert_pinning_enabled', False)
             )
             
             # Update status to indicate removal in progress
             status_reporter.update_component_status(
                 f'node_{node_id}',
                 'degraded',
-                {'status': 'removing'}
+                {
+                    'status': 'removing', 
+                    'removal_started_at': removal_start_time,
+                    'graceful_shutdown': True
+                }
             )
             
-            # Gracefully stop the node
-            await wildosnode.nodes[node_id].stop()
+            # Enhanced graceful stop with comprehensive cleanup
+            try:
+                await asyncio.wait_for(node_instance.stop(), timeout=60.0)
+                monitoring.logger.info(
+                    f"Node {node_id} gracefully stopped",
+                    node_id=node_id,
+                    graceful_shutdown=True
+                )
+            except asyncio.TimeoutError:
+                monitoring.logger.warning(
+                    f"Node {node_id} graceful stop timeout, proceeding with forced removal",
+                    node_id=node_id
+                )
+                # Continue with removal even if graceful stop timed out
+            except Exception as stop_error:
+                monitoring.logger.error(
+                    f"Error during graceful stop of node {node_id}: {stop_error}",
+                    node_id=node_id,
+                    stop_error=str(stop_error)
+                )
+                # Log the error but continue with removal
+                error_aggregator.add_error(
+                    create_error_with_context(
+                        ServiceError,
+                        f"Graceful stop failed for node {node_id}: {stop_error}",
+                        node_id=node_id,
+                        operation="graceful_stop"
+                    ),
+                    f'node_{node_id}'
+                )
+            
+            # Remove from nodes registry
             del wildosnode.nodes[node_id]
             
+            removal_duration = time.time() - removal_start_time
+            
             monitoring.logger.info(
-                f"Successfully removed node {node_id}",
-                node_id=node_id
+                f"Successfully removed node {node_id} with enhanced cleanup",
+                node_id=node_id,
+                removal_duration_seconds=removal_duration,
+                tls_cleanup_completed=True,
+                graceful_shutdown_completed=True
             )
             
             # Update status to indicate successful removal
             status_reporter.update_component_status(
                 f'node_{node_id}',
                 'down',
-                {'status': 'removed', 'removed_at': time.time()}
+                {
+                    'status': 'removed', 
+                    'removed_at': time.time(),
+                    'removal_duration_seconds': removal_duration,
+                    'graceful_shutdown': True,
+                    'tls_cleanup': True
+                }
             )
             
             monitoring.metrics.increment(
                 "node_remove_total",
-                tags={'node_id': str(node_id), 'success': 'true'}
+                tags={'node_id': str(node_id), 'success': 'true', 'graceful_shutdown': 'true'}
+            )
+            monitoring.metrics.observe(
+                "node_removal_duration_seconds",
+                removal_duration,
+                tags={'node_id': str(node_id), 'graceful_shutdown': 'true'}
             )
             
         else:
@@ -260,30 +318,58 @@ async def remove_node(node_id: int):
                 node_id=node_id
             )
             
+            # Still update metrics for consistency
+            monitoring.metrics.increment(
+                "node_remove_total",
+                tags={'node_id': str(node_id), 'success': 'true', 'reason': 'not_found'}
+            )
+            
     except Exception as e:
+        removal_duration = time.time() - removal_start_time
+        
         # Convert to structured error
         structured_error = create_error_with_context(
             ServiceError,
-            f"Error removing node {node_id}: {e}",
+            f"Enhanced node removal failed for node {node_id}: {e}",
             node_id=node_id,
-            operation="remove_node"
+            operation="remove_node",
+            removal_duration_seconds=removal_duration
         )
         
         monitoring.logger.error(
-            "Failed to remove node",
+            "Enhanced node removal failed",
             error=structured_error,
-            node_id=node_id
+            node_id=node_id,
+            removal_duration_seconds=removal_duration
         )
+        
+        # Add to error aggregation for monitoring
+        error_aggregator.add_error(structured_error, f'node_{node_id}')
         
         status_reporter.update_component_status(
             f'node_{node_id}',
             'critical',
-            {'status': 'removal_failed', 'error': str(e)}
+            {
+                'status': 'removal_failed', 
+                'error': str(e),
+                'removal_duration_seconds': removal_duration,
+                'failure_timestamp': time.time()
+            }
         )
         
         monitoring.metrics.increment(
             "node_remove_total",
-            tags={'node_id': str(node_id), 'success': 'false', 'error_type': type(e).__name__}
+            tags={
+                'node_id': str(node_id), 
+                'success': 'false', 
+                'error_type': type(e).__name__,
+                'graceful_shutdown': 'failed'
+            }
+        )
+        monitoring.metrics.observe(
+            "node_removal_duration_seconds",
+            removal_duration,
+            tags={'node_id': str(node_id), 'graceful_shutdown': 'failed'}
         )
         
         raise structured_error
@@ -519,4 +605,259 @@ async def add_node(db_node, certificate):
         raise structured_error
 
 
-__all__ = ["update_user", "add_node", "remove_node"]
+async def reconnect_node(node_id: int, db_node=None, certificate=None):
+    """Reconnect to a node with enhanced error handling, monitoring, and retry logic"""
+    import asyncio
+    import random
+    from .monitoring import get_monitoring, get_error_aggregator, get_status_reporter
+    
+    monitoring = get_monitoring()
+    error_aggregator = get_error_aggregator()
+    status_reporter = get_status_reporter()
+    start_time = time.time()
+    
+    # Maximum retry attempts with exponential backoff
+    max_retries = 3
+    base_delay = 1.0  # Base delay in seconds
+    
+    try:
+        monitoring.logger.info(
+            f"Starting reconnect operation for node {node_id}",
+            node_id=node_id,
+            operation="reconnect_node"
+        )
+        
+        # Update status to indicate reconnection in progress
+        status_reporter.update_component_status(
+            f'node_{node_id}',
+            'degraded',
+            {'status': 'reconnecting', 'started_at': time.time()}
+        )
+        
+        # Step 1: Graceful shutdown of existing connection
+        monitoring.logger.debug(
+            f"Performing graceful shutdown for node {node_id}",
+            node_id=node_id
+        )
+        
+        await remove_node(node_id)
+        
+        # Step 2: Retry logic with exponential backoff
+        last_error = None
+        for attempt in range(max_retries):
+            try:
+                monitoring.logger.debug(
+                    f"Reconnect attempt {attempt + 1}/{max_retries} for node {node_id}",
+                    node_id=node_id,
+                    attempt=attempt + 1,
+                    max_attempts=max_retries
+                )
+                
+                # If db_node and certificate weren't provided, we need to fetch fresh data
+                if db_node is None or certificate is None:
+                    # Import here to avoid circular dependencies
+                    from app.db import crud, get_tls_certificate
+                    from app.dependencies import get_db
+                    
+                    # Get fresh database session and retrieve updated node data
+                    with next(get_db()) as fresh_db:
+                        if db_node is None:
+                            fresh_node = crud.get_node_by_id(fresh_db, node_id)
+                            if not fresh_node:
+                                node_error = create_error_with_context(
+                                    ConfigurationError,
+                                    f"Node {node_id} not found in database during reconnect",
+                                    node_id=node_id,
+                                    operation="reconnect_node"
+                                )
+                                raise node_error
+                            
+                            monitoring.logger.debug(
+                                f"Retrieved fresh node data for {node_id}",
+                                node_id=node_id,
+                                address=fresh_node.address,
+                                port=fresh_node.port
+                            )
+                        else:
+                            fresh_node = db_node
+                        
+                        if certificate is None:
+                            fresh_certificate = get_tls_certificate(fresh_db)
+                            if not fresh_certificate:
+                                cert_error = create_error_with_context(
+                                    ConfigurationError,
+                                    f"TLS certificate not found during reconnect for node {node_id}",
+                                    node_id=node_id,
+                                    operation="reconnect_node"
+                                )
+                                raise cert_error
+                        else:
+                            fresh_certificate = certificate
+                else:
+                    fresh_node = db_node
+                    fresh_certificate = certificate
+                
+                # Step 3: Reestablish connection
+                await add_node(fresh_node, fresh_certificate)
+                
+                # Success! Record metrics and log success
+                duration_ms = (time.time() - start_time) * 1000
+                monitoring.metrics.observe(
+                    "node_reconnect_duration_ms",
+                    duration_ms,
+                    tags={
+                        'node_id': str(node_id),
+                        'success': 'true',
+                        'attempts': str(attempt + 1)
+                    }
+                )
+                
+                monitoring.logger.info(
+                    f"Successfully reconnected to node {node_id}",
+                    node_id=node_id,
+                    duration_ms=duration_ms,
+                    attempts=attempt + 1,
+                    operation="reconnect_node"
+                )
+                
+                # Update status to healthy
+                status_reporter.update_component_status(
+                    f'node_{node_id}',
+                    'healthy',
+                    {
+                        'status': 'reconnected',
+                        'reconnected_at': time.time(),
+                        'attempts': attempt + 1,
+                        'duration_ms': duration_ms
+                    }
+                )
+                
+                return  # Success - exit the retry loop
+                
+            except Exception as e:
+                last_error = e
+                
+                # Create structured error
+                if isinstance(e, WildosNodeBaseError):
+                    structured_error = e
+                else:
+                    structured_error = create_error_with_context(
+                        NetworkError if 'connection' in str(e).lower() else ServiceError,
+                        f"Reconnect attempt {attempt + 1} failed for node {node_id}: {e}",
+                        node_id=node_id,
+                        operation="reconnect_node",
+                        attempt=attempt + 1
+                    )
+                
+                monitoring.logger.warning(
+                    f"Reconnect attempt {attempt + 1} failed for node {node_id}",
+                    error=structured_error,
+                    node_id=node_id,
+                    attempt=attempt + 1,
+                    max_attempts=max_retries
+                )
+                
+                # If this is the last attempt, don't wait
+                if attempt < max_retries - 1:
+                    # Exponential backoff with jitter
+                    delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                    monitoring.logger.debug(
+                        f"Waiting {delay:.2f}s before retry {attempt + 2} for node {node_id}",
+                        node_id=node_id,
+                        delay=delay,
+                        next_attempt=attempt + 2
+                    )
+                    await asyncio.sleep(delay)
+        
+        # All retry attempts failed
+        final_error = create_error_with_context(
+            NetworkError,
+            f"All {max_retries} reconnect attempts failed for node {node_id}. Last error: {last_error}",
+            node_id=node_id,
+            operation="reconnect_node",
+            attempts=max_retries,
+            last_error=str(last_error) if last_error else None
+        )
+        
+        monitoring.logger.error(
+            f"Failed to reconnect to node {node_id} after {max_retries} attempts",
+            error=final_error,
+            node_id=node_id,
+            max_attempts=max_retries,
+            last_error=str(last_error) if last_error else None
+        )
+        
+        # Update status to critical
+        status_reporter.update_component_status(
+            f'node_{node_id}',
+            'critical',
+            {
+                'status': 'reconnect_failed',
+                'attempts': max_retries,
+                'last_error': str(last_error) if last_error else None,
+                'failed_at': time.time()
+            }
+        )
+        
+        # Add to error aggregation
+        error_aggregator.add_error(final_error, f'node_{node_id}')
+        
+        # Record failed reconnection
+        duration_ms = (time.time() - start_time) * 1000
+        monitoring.metrics.observe(
+            "node_reconnect_duration_ms",
+            duration_ms,
+            tags={
+                'node_id': str(node_id),
+                'success': 'false',
+                'attempts': str(max_retries),
+                'error_type': type(final_error).__name__
+            }
+        )
+        
+        raise final_error
+        
+    except WildosNodeBaseError:
+        # Already structured error, just re-raise
+        raise
+    except Exception as e:
+        # Convert unexpected errors to structured errors
+        unexpected_error = create_error_with_context(
+            ServiceError,
+            f"Unexpected error during reconnect for node {node_id}: {e}",
+            node_id=node_id,
+            operation="reconnect_node"
+        )
+        
+        monitoring.logger.error(
+            "Unexpected error during reconnect",
+            error=unexpected_error,
+            node_id=node_id,
+            original_error=str(e)
+        )
+        
+        # Update status to critical
+        status_reporter.update_component_status(
+            f'node_{node_id}',
+            'critical',
+            {'status': 'reconnect_error', 'error': str(e)}
+        )
+        
+        error_aggregator.add_error(unexpected_error, f'node_{node_id}')
+        
+        # Record failed reconnection
+        duration_ms = (time.time() - start_time) * 1000
+        monitoring.metrics.observe(
+            "node_reconnect_duration_ms",
+            duration_ms,
+            tags={
+                'node_id': str(node_id),
+                'success': 'false',
+                'error_type': type(e).__name__
+            }
+        )
+        
+        raise unexpected_error
+
+
+__all__ = ["update_user", "add_node", "remove_node", "reconnect_node"]

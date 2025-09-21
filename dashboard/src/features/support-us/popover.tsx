@@ -14,7 +14,11 @@ export const SupportUsPopover: React.FC<SupportUsPopoverProps> = ({ className, d
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button size="icon" variant="secondary">
+                <Button 
+                    size="icon" 
+                    variant="secondary"
+                    aria-label={t('support-us.button-label')}
+                >
                     <Icon name="HeartHandshake" />
                 </Button>
             </PopoverTrigger>

@@ -4,6 +4,7 @@ import { SelectableEntityTable, useRowSelection } from "@wildosvpn/libs/entity-t
 import { columns } from "./columns";
 import { type ServiceType, useServicesUpdateMutation, fetchSelectableServiceInbounds } from "@wildosvpn/modules/services";
 import { useTranslation } from "react-i18next";
+import { InboundCard } from "./inbound-card";
 
 interface ServiceInboundsTableProps {
     service: ServiceType;
@@ -22,7 +23,19 @@ export const ServiceInboundsTable: React.FC<ServiceInboundsTableProps> = ({
         updateService({ id: service.id, name: service.name, inbound_ids: selectedInbound });
     }, [selectedInbound, service, updateService]);
 
-    const disabled = Object.keys(selectedRow).length < 1;
+    const disabled = selectedInbound.length < 1;
+
+    const handleToggleSelection = (entityId: number, isSelected: boolean) => {
+        setSelectedInbound(prev => 
+            isSelected 
+                ? [...new Set([...prev, entityId])]  // Add if not already present
+                : prev.filter(id => id !== entityId)  // Remove if present
+        );
+    };
+
+    const isInboundSelected = (id: number) => {
+        return selectedInbound.includes(id);
+    };
 
     return (
         <div className="flex flex-col gap-4 p-4 sm:p-6">
@@ -36,6 +49,11 @@ export const ServiceInboundsTable: React.FC<ServiceInboundsTableProps> = ({
                 primaryFilter="tag"
                 rowSelection={{ selectedRow: selectedRow, setSelectedRow: setSelectedRow }}
                 entitySelection={{ selectedEntity: selectedInbound, setSelectedEntity: setSelectedInbound }}
+                CardComponent={InboundCard}
+                cardActions={{ 
+                    onToggleSelection: handleToggleSelection,
+                    isSelected: isInboundSelected
+                }}
             />
 
             <Button 

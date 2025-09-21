@@ -28,6 +28,12 @@ export interface DoubleEntityTableProps<T> {
     fetchEntity: ({ queryKey }: DoubleEntityQueryKeyType) => FetchEntityReturn<T>;
     onCreate?: () => void;
     onOpen?: (entity: any) => void;
+    CardComponent?: React.ComponentType<{ 
+        entity: T;
+        actions: any;
+        onRowClick?: (entity: T) => void;
+    }>;
+    cardActions?: any;
 }
 
 export function DoubleEntityTable<T>({
@@ -39,6 +45,8 @@ export function DoubleEntityTable<T>({
     entityId,
     onCreate,
     onOpen,
+    CardComponent,
+    cardActions,
 }: DoubleEntityTableProps<T>) {
     const { t } = useTranslation();
     const columnPrimaryFilter = usePrimaryFiltering({ column: primaryFilter });
@@ -109,7 +117,12 @@ export function DoubleEntityTable<T>({
                     <TableSearch />
                 </div>
                 <div className="w-full rounded-md border">
-                    <EntityDataTable columns={columns} onRowClick={onOpen} />
+                    <EntityDataTable 
+                        columns={columns} 
+                        onRowClick={onOpen}
+                        CardComponent={CardComponent}
+                        cardActions={cardActions}
+                    />
                     <DataTablePagination table={table} />
                 </div>
             </div>

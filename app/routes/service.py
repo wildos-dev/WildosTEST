@@ -1,6 +1,6 @@
 import sqlalchemy
 from fastapi import APIRouter, Query, Request
-from fastapi import HTTPException
+from ..exceptions import BadRequestError, ForbiddenError, ConflictError
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination.links import Page
 
@@ -79,9 +79,9 @@ def add_service(
                     ip_address=client_ip,
                     user_id=admin.id
                 )
-                raise HTTPException(
-                    status_code=400, 
-                    detail=f"Inbound at index {i} missing required 'id' field"
+                raise BadRequestError(
+                    f"Inbound at index {i} missing required 'id' field",
+                    "MISSING_INBOUND_ID"
                 )
             
             try:
@@ -104,9 +104,9 @@ def add_service(
                     ip_address=client_ip,
                     user_id=admin.id
                 )
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Invalid inbound ID at index {i}: must be a positive integer"
+                raise BadRequestError(
+                    f"Invalid inbound ID at index {i}: must be a positive integer",
+                    "INVALID_INBOUND_ID"
                 )
         
         # Convert strict request to ServiceCreate model
@@ -150,8 +150,9 @@ def add_service(
             user_id=admin.id
         )
         
-        raise HTTPException(
-            status_code=409, detail="Service by this name already exists"
+        raise ConflictError(
+            "Service by this name already exists",
+            "SERVICE_NAME_EXISTS"
         )
 
 
@@ -163,7 +164,10 @@ def get_service(service: ServiceDep, db: DBDep, admin: AdminDep):
     if not (
         admin.is_sudo or admin.all_services_access or service.id in admin.service_ids
     ):
-        raise HTTPException(status_code=403, detail="You're not allowed")
+        raise ForbiddenError(
+            "You're not allowed",
+            "ACCESS_DENIED"
+        )
 
     return service
 
@@ -216,8 +220,9 @@ async def modify_service(
         response = crud.update_service(db, service, modification)
     except sqlalchemy.exc.IntegrityError:
         db.rollback()
-        raise HTTPException(
-            status_code=409, detail="problem updating the service"
+        raise ConflictError(
+            "Problem updating the service",
+            "SERVICE_UPDATE_ERROR"
         )
     else:
         for user in response.users:

@@ -10,6 +10,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi_pagination import add_pagination
 from starlette.staticfiles import StaticFiles
 from uvicorn import Config, Server
@@ -160,12 +161,66 @@ scheduler.add_job(
 def validation_exception_handler(
     request: Request, exc: RequestValidationError
 ):
-    details = {}
+    """Handle Pydantic validation errors with structured response"""
+    errors = []
     for error in exc.errors():
-        details[error["loc"][-1]] = error.get("msg")
+        errors.append({
+            "loc": list(error.get("loc", [])),
+            "msg": error.get("msg", "Validation error"),
+            "type": error.get("type", "validation_error")
+        })
+    
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=jsonable_encoder({"detail": details}),
+        content=jsonable_encoder({
+            "detail": "Validation failed",
+            "status_code": 422,
+            "code": "VALIDATION_ERROR",
+            "errors": errors
+        }),
+    )
+
+
+@app.exception_handler(StarletteHTTPException)
+def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """Handle HTTP exceptions with consistent format while preserving headers"""
+    # Check if detail is already structured (from our APIError class)
+    if isinstance(exc.detail, dict) and "detail" in exc.detail:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=jsonable_encoder(exc.detail),
+            headers=getattr(exc, 'headers', None)
+        )
+    
+    # Handle standard HTTPException with string detail
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=jsonable_encoder({
+            "detail": str(exc.detail),
+            "status_code": exc.status_code
+        }),
+        headers=getattr(exc, 'headers', None)
+    )
+
+
+@app.exception_handler(Exception)
+def general_exception_handler(request: Request, exc: Exception):
+    """Handle unexpected exceptions with logging"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    logger.error(
+        f"Unhandled exception in {request.method} {request.url.path}: {exc}", 
+        exc_info=True
+    )
+    
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content=jsonable_encoder({
+            "detail": "Internal server error",
+            "status_code": 500,
+            "code": "INTERNAL_ERROR"
+        })
     )
 
 

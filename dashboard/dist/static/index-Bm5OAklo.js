@@ -1,1 +1,0 @@
-import{O as c}from"./index-DRsjEK3q.js";import{r as e}from"./react-core-Bcdk_OeX.js";import"./layout-Y81SaLgb.js";import"./react-ecosystem-6S3Qhx2r.js";import"./dnd-kit-BufO2FBr.js";const p=({children:s})=>{const{isSudo:o,isLoggedIn:t}=c();return e.useEffect(()=>{(async()=>{(!await t()||!o())&&(window.location.hash="#/login")})()},[o,t]),o?s:null};export{p as S};
